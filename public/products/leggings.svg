@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#faf5ff"/>
+  <ellipse cx="200" cy="340" rx="120" ry="18" fill="#ede9fe"/>
+  <path d="M155 95h90v25c-15 5-30 5-45 5s-30 0-45-5V95z" fill="#8b5cf6"/>
+  <path d="M155 120v200l-20 15V120h20zm90 0v215l-20-15V120h20z" fill="#7c3aed"/>
+  <path d="M175 120v200l25 15V120h-25zm50 0v215l25-15V120h-25z" fill="#a78bfa" opacity="0.4"/>
+  <path d="M175 200h50M175 260h50" stroke="#6d28d9" stroke-width="2" opacity="0.2"/>
+</svg>
