@@ -1,15 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { Product, RentalLocation } from "@/lib/types";
-import {
-  getAggregatedProductInventory,
-  getStockTotal,
-  rentalLocations as fallbackLocations,
-} from "@/lib/locations";
-import { products as fallbackProducts } from "@/lib/products";
+import { getAggregatedProductInventory, getStockTotal } from "@/lib/locations";
 import { getProductById } from "@/lib/products";
 import LocationCard from "./LocationCard";
 import ProductCard from "./ProductCard";
@@ -28,42 +23,21 @@ const RentalMap = dynamic(() => import("./RentalMap"), {
 
 type Props = {
   initialProductId?: string | null;
+  locations: RentalLocation[];
+  products: Product[];
 };
 
-export default function RentalApp({ initialProductId = null }: Props) {
-  const [locations, setLocations] = useState<RentalLocation[]>(fallbackLocations);
-  const [products, setProducts] = useState<Product[]>(fallbackProducts);
+export default function RentalApp({
+  initialProductId = null,
+  locations,
+  products,
+}: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(
-    fallbackLocations[0]?.id ?? null,
+    locations[0]?.id ?? null,
   );
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     initialProductId,
   );
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-
-  const fetchData = useCallback(async () => {
-    try {
-      const [locRes, prodRes] = await Promise.all([
-        fetch("/api/locations"),
-        fetch("/api/products"),
-      ]);
-      if (locRes.ok) {
-        setLocations(await locRes.json());
-        setLastUpdated(new Date());
-      }
-      if (prodRes.ok) {
-        setProducts(await prodRes.json());
-      }
-    } catch {
-      /* keep fallback data */
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30_000);
-    return () => clearInterval(interval);
-  }, [fetchData]);
 
   useEffect(() => {
     if (initialProductId) {
@@ -145,20 +119,9 @@ export default function RentalApp({ initialProductId = null }: Props) {
         id="locations"
         className="mx-auto w-full max-w-6xl flex-1 scroll-mt-4 px-4 pb-8 sm:px-6"
       >
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-semibold text-zinc-900">
-            จุดเช่าชุดกีฬา
-          </h2>
-          <p className="text-xs text-zinc-500">
-            อัปเดตล่าสุด{" "}
-            {lastUpdated.toLocaleTimeString("th-TH", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-            {" · "}
-            รีเฟรชอัตโนมัติทุก 30 วินาที
-          </p>
-        </div>
+        <h2 className="mb-4 text-lg font-semibold text-zinc-900">
+          จุดเช่าชุดกีฬา
+        </h2>
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="h-[320px] overflow-hidden rounded-xl border border-zinc-200 shadow-sm sm:h-[420px] lg:h-[600px] lg:sticky lg:top-4">
