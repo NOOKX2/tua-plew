@@ -14,6 +14,7 @@ import { getProductById } from "@/lib/products";
 import LocationCard from "./LocationCard";
 import ProductCard from "./ProductCard";
 import ProductCatalog from "./ProductCatalog";
+import AuthButton from "./AuthButton";
 import StockBadge from "./StockBadge";
 
 const RentalMap = dynamic(() => import("./RentalMap"), {
@@ -86,15 +87,20 @@ export default function RentalApp({ initialProductId = null }: Props) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <section className="bg-gradient-to-br from-emerald-600 to-teal-700 px-4 py-8 text-white sm:px-6 sm:py-10">
+      <section className="bg-gradient-to-br from-emerald-600 to-teal-700 px-4 py-4 text-white sm:px-6 sm:py-5">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-1 text-sm font-medium text-emerald-100">
-            On-Site Activewear Rental
+          <div className="mb-1 flex items-start justify-between gap-3">
+            <p className="text-xs font-medium text-emerald-100 sm:text-sm">
+              On-Site Activewear Rental
+            </p>
+            <div className="shrink-0">
+              <AuthButton variant="light" />
+            </div>
           </div>
-          <h1 className="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="mb-1 text-2xl font-bold tracking-tight sm:text-3xl">
             Fit-to-Go
           </h1>
-          <p className="max-w-xl text-emerald-50/90">
+          <p className="max-w-xl text-sm leading-snug text-emerald-50/90 sm:text-base">
             เช่าชุดกีฬาสะอาด พร้อมออกกำลังกายทันที — เลือกสินค้า ดูสต็อกแต่ละไซส์
             และค้นหาจุดเช่าใกล้คุณบนแผนที่
           </p>
