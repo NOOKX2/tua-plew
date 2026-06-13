@@ -19,16 +19,18 @@ const RentalMap = dynamic(() => import("./RentalMap"), {
 
 type Props = {
   initialProductId?: string | null;
+  initialLocationId?: string | null;
   locations: RentalLocation[];
   products: Product[];
 };
 
 export default function RentalMapView({
   initialProductId = null,
+  initialLocationId = null,
   locations,
 }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(
-    locations[0]?.id ?? null,
+    initialLocationId ?? locations[0]?.id ?? null,
   );
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     initialProductId,
@@ -45,6 +47,15 @@ export default function RentalMapView({
       setSelectedProductId(initialProductId);
     }
   }, [initialProductId]);
+
+  useEffect(() => {
+    if (
+      initialLocationId &&
+      locations.some((loc) => loc.id === initialLocationId)
+    ) {
+      setSelectedId(initialLocationId);
+    }
+  }, [initialLocationId, locations]);
 
   useEffect(() => {
     if (!expandedProductId || !expandedLocationId) return;

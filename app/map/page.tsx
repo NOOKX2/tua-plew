@@ -9,15 +9,16 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  searchParams: Promise<{ product?: string }>;
+  searchParams: Promise<{ product?: string; location?: string }>;
 };
 
 export default async function MapPage({ searchParams }: Props) {
-  const { product } = await searchParams;
+  const { product, location } = await searchParams;
 
   return (
     <RentalMapView
       initialProductId={product ?? null}
+      initialLocationId={location ?? null}
       locations={rentalLocations}
       products={products}
     />

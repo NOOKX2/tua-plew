@@ -15,6 +15,11 @@ const NAV_ITEMS = [
     label: "ชุมชน",
     match: (path: string) => path.startsWith("/community"),
   },
+  {
+    href: "/campaigns",
+    label: "แคมเปญ",
+    match: (path: string) => path.startsWith("/campaigns"),
+  },
 ] as const;
 
 export default function Navbar() {

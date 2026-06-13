@@ -95,3 +95,21 @@ export type CommunityEvent = {
   image: string;
   featured?: boolean;
 };
+
+export type CampaignType = "loyalty" | "first-time" | "bundle" | "seasonal";
+
+export type Campaign = {
+  id: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  campaignType: CampaignType;
+  image: string;
+  discountPercent: number;
+  requiredRentals?: number;
+  partnerLocationIds: string[];
+  startDate: string;
+  endDate: string;
+  terms: string[];
+  featured?: boolean;
+};
