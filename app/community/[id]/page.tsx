@@ -18,11 +18,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const event = await getCommunityEventByIdAsync(id);
 
   if (!event) {
-    return { title: "ไม่พบกิจกรรม | Fit-to-Go" };
+    return { title: "ไม่พบกิจกรรม | Tua Plew" };
   }
 
   return {
-    title: `${event.title} | Fit-to-Go Community`,
+    title: `${event.title} | Tua Plew Community`,
     description: event.shortDescription,
   };
 }

@@ -19,11 +19,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await getProductByIdAsync(id);
 
   if (!product) {
-    return { title: "ไม่พบสินค้า | Fit-to-Go" };
+    return { title: "ไม่พบสินค้า | Tua Plew" };
   }
 
   return {
-    title: `${product.name} | Fit-to-Go`,
+    title: `${product.name} | Tua Plew`,
     description: product.description,
   };
 }

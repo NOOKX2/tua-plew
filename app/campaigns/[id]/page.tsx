@@ -17,11 +17,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const campaign = await getCampaignByIdAsync(id);
 
   if (!campaign) {
-    return { title: "ไม่พบแคมเปญ | Fit-to-Go" };
+    return { title: "ไม่พบแคมเปญ | Tua Plew" };
   }
 
   return {
-    title: `${campaign.title} | Fit-to-Go`,
+    title: `${campaign.title} | Tua Plew`,
     description: campaign.shortDescription,
   };
 }

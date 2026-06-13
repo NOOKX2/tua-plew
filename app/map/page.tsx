@@ -6,8 +6,8 @@ import { getProducts } from "@/lib/products.server";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "แผนที่จุดเช่า | Fit-to-Go",
-  description: "ค้นหาจุดเช่าชุดกีฬา Fit-to-Go ใกล้คุณบนแผนที่",
+  title: "แผนที่จุดเช่า | Tua Plew",
+  description: "ค้นหาจุดเช่าชุดกีฬา Tua Plew ใกล้คุณบนแผนที่",
 };
 
 type Props = {

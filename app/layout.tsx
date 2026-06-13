@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fit-to-Go | เช่าชุดกีฬา",
+  title: "Tua Plew | เช่าชุดกีฬา",
   description:
     "เช่าชุดกีฬาสะอาด พร้อมออกกำลังกายทันที — ค้นหาจุดเช่าใกล้คุณและดูสต็อกเสื้อแต่ละไซส์",
 };

@@ -45,7 +45,7 @@ export default function AuthLayout({ variant, children }: Props) {
             href="/"
             className="inline-flex w-fit items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-lg font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
           >
-            Fit-to-Go
+            Tua Plew
           </Link>
 
           <div className="max-w-lg">
@@ -71,7 +71,7 @@ export default function AuthLayout({ variant, children }: Props) {
             href="/"
             className="mb-8 inline-block text-lg font-bold text-emerald-600 lg:hidden"
           >
-            Fit-to-Go
+            Tua Plew
           </Link>
 
           <div className="mb-8">

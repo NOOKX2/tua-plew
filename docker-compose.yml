@@ -1,9 +1,9 @@
-name: fit-to-go
+name: tua-plew
 
 services:
   app:
     build: .
-    container_name: fit-to-go-app
+    container_name: tua-plew-app
     ports:
       - "3000:3000"
     env_file:

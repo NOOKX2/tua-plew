@@ -36,7 +36,7 @@ export default function Navbar() {
           href="/"
           className="shrink-0 text-lg font-bold text-emerald-600"
         >
-          Fit-to-Go
+          Tua Plew
         </Link>
 
         <nav className="flex flex-1 items-center justify-center gap-1 sm:gap-2">

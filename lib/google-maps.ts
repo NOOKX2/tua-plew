@@ -3,7 +3,7 @@ const raw = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
 
 export const GOOGLE_MAPS_API_KEY = raw.trim();
 
-export const GOOGLE_MAPS_LOADER_ID = "fit-to-go-google-maps";
+export const GOOGLE_MAPS_LOADER_ID = "tua-plew-google-maps";
 
 export function hasGoogleMapsApiKey(): boolean {
   return (

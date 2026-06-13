@@ -23,7 +23,7 @@ export default function RentalApp({ locations, products }: Props) {
             On-Site Activewear Rental
           </p>
           <h1 className="mb-2 text-2xl font-bold tracking-tight sm:text-3xl">
-            Fit-to-Go
+            Tua Plew
           </h1>
           <p className="max-w-xl text-sm leading-snug text-emerald-50/90 sm:text-base">
             เช่าชุดกีฬาสะอาด พร้อมออกกำลังกายทันที — เลือกสินค้า ดูสต็อกแต่ละไซส์
@@ -49,7 +49,7 @@ export default function RentalApp({ locations, products }: Props) {
       <ProductCatalog products={products} locations={locations} />
 
       <footer className="border-t border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500 sm:px-6">
-        <p>Fit-to-Go · Workout to Hangout · ชุดกีฬาสะอาด มาตรฐานซักฆ่า Ozone</p>
+        <p>Tua Plew · Workout to Hangout · ชุดกีฬาสะอาด มาตรฐานซักฆ่า Ozone</p>
       </footer>
     </div>
   );
