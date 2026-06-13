@@ -3,31 +3,30 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthButton from "./AuthButton";
-
-const NAV_ITEMS = [
-  {
-    href: "/map",
-    label: "แผนที่",
-    match: (path: string) => path === "/map",
-  },
-  {
-    href: "/community",
-    label: "ชุมชน",
-    match: (path: string) => path.startsWith("/community"),
-  },
-  {
-    href: "/campaigns",
-    label: "แคมเปญ",
-    match: (path: string) => path.startsWith("/campaigns"),
-  },
-] as const;
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslations } from "@/lib/i18n/client";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const t = useTranslations();
 
   if (pathname === "/login" || pathname === "/register") {
     return null;
   }
+
+  const navItems = [
+    { href: "/map", label: t("nav.map"), match: (path: string) => path === "/map" },
+    {
+      href: "/community",
+      label: t("nav.community"),
+      match: (path: string) => path.startsWith("/community"),
+    },
+    {
+      href: "/campaigns",
+      label: t("nav.campaigns"),
+      match: (path: string) => path.startsWith("/campaigns"),
+    },
+  ] as const;
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
@@ -40,7 +39,7 @@ export default function Navbar() {
         </Link>
 
         <nav className="flex flex-1 items-center justify-center gap-1 sm:gap-2">
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const active = item.match(pathname);
             return (
               <Link
@@ -58,7 +57,8 @@ export default function Navbar() {
           })}
         </nav>
 
-        <div className="shrink-0">
+        <div className="flex shrink-0 items-center gap-2">
+          <LanguageSwitcher />
           <AuthButton />
         </div>
       </div>

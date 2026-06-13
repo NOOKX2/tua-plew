@@ -1,14 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { CommunityEvent } from "@/lib/types";
+import { ACTIVITY_EMOJI, spotsLeft } from "@/lib/community";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
 import {
-  ACTIVITY_EMOJI,
-  ACTIVITY_LABELS,
-  DIFFICULTY_LABELS,
   formatEventDate,
   formatEventTime,
-  spotsLeft,
-} from "@/lib/community";
+} from "@/lib/i18n/format";
+import {
+  getActivityLabel,
+  getDifficultyLabel,
+} from "@/lib/i18n/labels";
 
 type Props = {
   event: CommunityEvent;
@@ -16,6 +20,8 @@ type Props = {
 };
 
 export default function CommunityCard({ event, compact = false }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
   const remaining = spotsLeft(event);
 
   return (
@@ -37,7 +43,7 @@ export default function CommunityCard({ event, compact = false }: Props) {
         <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
           <div className="mb-2 flex items-start justify-between gap-2">
             <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium backdrop-blur-sm">
-              {ACTIVITY_LABELS[event.activityType]}
+              {getActivityLabel(event.activityType, locale, messages)}
             </span>
             <span className="text-2xl drop-shadow-sm" aria-hidden>
               {ACTIVITY_EMOJI[event.activityType]}
@@ -57,13 +63,19 @@ export default function CommunityCard({ event, compact = false }: Props) {
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-3 flex flex-wrap gap-2 text-xs text-zinc-600">
           <span className="rounded-md bg-zinc-100 px-2 py-1">
-            📅 {formatEventDate(event.date)}
+            📅 {formatEventDate(event.date, locale)}
           </span>
           <span className="rounded-md bg-zinc-100 px-2 py-1">
-            🕐 {formatEventTime(event.startTime, event.endTime)}
+            🕐{" "}
+            {formatEventTime(
+              event.startTime,
+              event.endTime,
+              locale,
+              t("community.timeSuffix"),
+            )}
           </span>
           <span className="rounded-md bg-zinc-100 px-2 py-1">
-            {DIFFICULTY_LABELS[event.difficulty]}
+            {getDifficultyLabel(event.difficulty, locale, messages)}
           </span>
         </div>
 
@@ -72,15 +84,16 @@ export default function CommunityCard({ event, compact = false }: Props) {
         <div className="mt-auto flex items-center justify-between gap-2">
           <p className="text-xs text-zinc-500">
             👥 {event.participantCount}
-            {event.maxParticipants ? ` / ${event.maxParticipants}` : ""} คน
+            {event.maxParticipants ? ` / ${event.maxParticipants}` : ""}{" "}
+            {t("common.people")}
             {remaining !== null && remaining <= 10 && (
               <span className="ml-1 font-medium text-amber-600">
-                เหลือ {remaining} ที่
+                {t("common.spotsLeftShort", { count: remaining })}
               </span>
             )}
           </p>
           <span className="text-xs font-medium text-emerald-600">
-            ดูรายละเอียด →
+            {t("common.viewDetails")}
           </span>
         </div>
       </div>

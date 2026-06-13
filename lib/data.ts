@@ -18,6 +18,14 @@ import {
   Product as ProductModel,
   RentalLocation as RentalLocationModel,
 } from "./models";
+import type { Locale } from "./i18n/config";
+import { getLocale } from "./i18n/server";
+import {
+  localizeCampaign,
+  localizeCommunityEvent,
+  localizeLocation,
+  localizeProduct,
+} from "./i18n/localize-catalog";
 
 type ProductRow = {
   _id: string;
@@ -166,16 +174,23 @@ function mapCampaign(row: CampaignRow): Campaign {
   };
 }
 
-export async function fetchProducts(): Promise<Product[]> {
+export async function fetchProducts(locale?: Locale): Promise<Product[]> {
+  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
   const rows = await ProductModel.find().sort({ _id: 1 }).lean<ProductRow[]>();
-  return rows.map(mapProduct);
+  return rows.map((row) => localizeProduct(mapProduct(row), resolvedLocale));
 }
 
-export async function fetchProductById(id: string): Promise<Product | undefined> {
+export async function fetchProductById(
+  id: string,
+  locale?: Locale,
+): Promise<Product | undefined> {
+  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
   const row = await ProductModel.findById(id).lean<ProductRow | null>();
-  return row ? mapProduct(row) : undefined;
+  return row
+    ? localizeProduct(mapProduct(row), resolvedLocale)
+    : undefined;
 }
 
 export async function fetchProductIds(): Promise<string[]> {
@@ -184,36 +199,53 @@ export async function fetchProductIds(): Promise<string[]> {
   return rows.map((row) => row._id as string);
 }
 
-export async function fetchLocations(): Promise<RentalLocation[]> {
+export async function fetchLocations(locale?: Locale): Promise<RentalLocation[]> {
+  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
   const rows = await RentalLocationModel.find()
     .sort({ _id: 1 })
     .lean<LocationRow[]>();
-  return Promise.all(rows.map(mapLocation));
+  const locations = await Promise.all(rows.map(mapLocation));
+  return locations.map((location) =>
+    localizeLocation(location, resolvedLocale),
+  );
 }
 
 export async function fetchLocationById(
   id: string,
+  locale?: Locale,
 ): Promise<RentalLocation | undefined> {
+  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
   const row = await RentalLocationModel.findById(id).lean<LocationRow | null>();
-  return row ? mapLocation(row) : undefined;
+  if (!row) return undefined;
+  const location = await mapLocation(row);
+  return localizeLocation(location, resolvedLocale);
 }
 
-export async function fetchCommunityEvents(): Promise<CommunityEvent[]> {
+export async function fetchCommunityEvents(
+  locale?: Locale,
+): Promise<CommunityEvent[]> {
+  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
   const rows = await CommunityEventModel.find()
     .sort({ date: 1 })
     .lean<CommunityEventRow[]>();
-  return rows.map(mapCommunityEvent);
+  return rows.map((row) =>
+    localizeCommunityEvent(mapCommunityEvent(row), resolvedLocale),
+  );
 }
 
 export async function fetchCommunityEventById(
   id: string,
+  locale?: Locale,
 ): Promise<CommunityEvent | undefined> {
+  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
   const row = await CommunityEventModel.findById(id).lean<CommunityEventRow | null>();
-  return row ? mapCommunityEvent(row) : undefined;
+  return row
+    ? localizeCommunityEvent(mapCommunityEvent(row), resolvedLocale)
+    : undefined;
 }
 
 export async function fetchCommunityEventIds(): Promise<string[]> {
@@ -222,20 +254,27 @@ export async function fetchCommunityEventIds(): Promise<string[]> {
   return rows.map((row) => row._id as string);
 }
 
-export async function fetchCampaigns(): Promise<Campaign[]> {
+export async function fetchCampaigns(locale?: Locale): Promise<Campaign[]> {
+  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
   const rows = await CampaignModel.find()
     .sort({ startDate: 1 })
     .lean<CampaignRow[]>();
-  return rows.map(mapCampaign);
+  return rows.map((row) =>
+    localizeCampaign(mapCampaign(row), resolvedLocale),
+  );
 }
 
 export async function fetchCampaignById(
   id: string,
+  locale?: Locale,
 ): Promise<Campaign | undefined> {
+  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
   const row = await CampaignModel.findById(id).lean<CampaignRow | null>();
-  return row ? mapCampaign(row) : undefined;
+  return row
+    ? localizeCampaign(mapCampaign(row), resolvedLocale)
+    : undefined;
 }
 
 export async function fetchCampaignIds(): Promise<string[]> {

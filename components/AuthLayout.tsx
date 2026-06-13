@@ -1,38 +1,40 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { getTranslator } from "@/lib/i18n/server";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 type Props = {
   variant: "login" | "register";
   children: ReactNode;
 };
 
-const COPY = {
-  login: {
-    title: "ยินดีต้อนรับกลับ!",
-    subtitle: "กรุณากรอกข้อมูลเพื่อเข้าสู่ระบบ",
-    altPrompt: "ยังไม่มีบัญชี?",
-    altLink: "สมัครฟรี",
-    altHref: "/register",
-  },
-  register: {
-    title: "สร้างบัญชีใหม่",
-    subtitle: "กรอกข้อมูลเพื่อเริ่มเช่าชุดกีฬาได้ทันที",
-    altPrompt: "มีบัญชีอยู่แล้ว?",
-    altLink: "เข้าสู่ระบบ",
-    altHref: "/login",
-  },
-} as const;
+export default async function AuthLayout({ variant, children }: Props) {
+  const t = await getTranslator();
 
-export default function AuthLayout({ variant, children }: Props) {
-  const copy = COPY[variant];
+  const copy =
+    variant === "login"
+      ? {
+          title: t("auth.loginTitle"),
+          subtitle: t("auth.loginSubtitle"),
+          altPrompt: t("auth.noAccount"),
+          altLink: t("auth.signUpFree"),
+          altHref: "/register",
+        }
+      : {
+          title: t("auth.registerTitle"),
+          subtitle: t("auth.registerSubtitle"),
+          altPrompt: t("auth.hasAccount"),
+          altLink: t("auth.login"),
+          altHref: "/login",
+        };
 
   return (
     <div className="flex min-h-screen bg-white">
       <aside className="relative hidden overflow-hidden lg:flex lg:w-1/2 xl:w-[55%]">
         <Image
           src="/community/lumpini-run-club.jpg"
-          alt="นักวิ่งในสวนลุมพินี"
+          alt={t("auth.heroImageAlt")}
           fill
           priority
           sizes="55vw"
@@ -50,16 +52,15 @@ export default function AuthLayout({ variant, children }: Props) {
 
           <div className="max-w-lg">
             <span className="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-emerald-100 backdrop-blur-sm">
-              เช่า · ออกกำลัง · ไปต่อ
+              {t("auth.heroBadge")}
             </span>
             <h2 className="mb-4 text-4xl font-bold leading-tight text-white xl:text-5xl">
-              ออกกำลังได้ทันที
+              {t("auth.heroTitle")}
               <br />
-              <span className="text-emerald-300">ไม่ต้องรอซัก</span>
+              <span className="text-emerald-300">{t("auth.heroTitleAccent")}</span>
             </h2>
             <p className="text-sm leading-relaxed text-white/80 sm:text-base">
-              เช่าชุดกีฬาสะอาดจากจุดเช่าใกล้คุณ — วิ่ง โยคะ หรือออกกำลังกาย
-              แล้วคืนชุดได้สะดวก มาตรฐานซักฆ่า Ozone ทุกครั้ง
+              {t("auth.heroDescription")}
             </p>
           </div>
         </div>
@@ -73,6 +74,10 @@ export default function AuthLayout({ variant, children }: Props) {
           >
             Tua Plew
           </Link>
+
+          <div className="mb-6 flex justify-end lg:justify-start">
+            <LanguageSwitcher />
+          </div>
 
           <div className="mb-8">
             <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
@@ -95,7 +100,7 @@ export default function AuthLayout({ variant, children }: Props) {
 
           <p className="mt-4 text-center text-xs text-zinc-400">
             <Link href="/" className="hover:text-emerald-600 hover:underline">
-              ข้ามไปดูสินค้าและจุดเช่า →
+              {t("common.skipToCatalog")}
             </Link>
           </p>
         </div>

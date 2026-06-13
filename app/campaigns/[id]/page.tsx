@@ -4,6 +4,7 @@ import CampaignDetail from "@/components/CampaignDetail";
 import {
   getCampaignByIdAsync,
 } from "@/lib/campaigns.server";
+import { getTranslator } from "@/lib/i18n/server";
 import { getRentalLocations } from "@/lib/locations.server";
 
 export const dynamic = "force-dynamic";
@@ -14,10 +15,13 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const campaign = await getCampaignByIdAsync(id);
+  const [campaign, t] = await Promise.all([
+    getCampaignByIdAsync(id),
+    getTranslator(),
+  ]);
 
   if (!campaign) {
-    return { title: "ไม่พบแคมเปญ | Tua Plew" };
+    return { title: t("meta.campaignNotFound") };
   }
 
   return {

@@ -8,6 +8,8 @@ import type { Product, RentalLocation } from "@/lib/types";
 import { hasGoogleMapsApiKey } from "@/lib/google-maps";
 import { getProductById } from "@/lib/products";
 import { getStockTotal, getTotalStock } from "@/lib/locations";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { getSizeUnitLabel } from "@/lib/i18n/labels";
 import GoogleMapsLoader from "./GoogleMapsLoader";
 
 const BANGKOK_CENTER = { lat: 13.7563, lng: 100.5018 };
@@ -54,6 +56,7 @@ function GoogleMapsSetupHelp({
 }: {
   variant: "missing-key" | "error";
 }) {
+  const t = useTranslations();
   const isMissingKey = variant === "missing-key";
 
   return (
@@ -67,32 +70,28 @@ function GoogleMapsSetupHelp({
           isMissingKey ? "text-zinc-800" : "text-red-800"
         }`}
       >
-        {isMissingKey
-          ? "ต้องตั้งค่า Google Maps API Key"
-          : "โหลด Google Maps ไม่สำเร็จ"}
+        {isMissingKey ? t("map.apiKeyMissing") : t("map.loadFailed")}
       </p>
 
       {isMissingKey ? (
         <p className="max-w-sm text-xs leading-relaxed text-zinc-500">
-          ใส่ Key ใน{" "}
+          {t("map.addKeyTo")}{" "}
           <code className="rounded bg-white px-1 py-0.5">.env.local</code>{" "}
-          แล้วรัน{" "}
+          {t("map.thenRun")}{" "}
           <code className="rounded bg-white px-1 py-0.5">bun run dev:restart</code>{" "}
-          ใหม่
+          {t("map.again")}
         </p>
       ) : (
         <div className="max-w-sm space-y-2 text-left text-xs text-red-900/80">
-          <p className="font-medium text-red-800">
-            ถ้าเห็น ApiNotActivatedMapError ใน console:
-          </p>
+          <p className="font-medium text-red-800">{t("map.apiHintTitle")}</p>
           <ol className="list-decimal space-y-1 pl-4">
             <li>
-              เปิด{" "}
-              <strong>Maps JavaScript API</strong> ในโปรเจกต์ Google Cloud
+              {t("map.apiHint1")}{" "}
+              <strong>{t("map.apiHint1Api")}</strong> {t("map.apiHint1Suffix")}
             </li>
-            <li>ผูกบัญชี Billing (มีเครดิตฟรี $200/เดือน)</li>
-            <li>เลือกโปรเจกต์เดียวกับที่สร้าง API Key</li>
-            <li>รอ 1–2 นาที แล้ว refresh หน้าเว็บ</li>
+            <li>{t("map.apiHint2")}</li>
+            <li>{t("map.apiHint3")}</li>
+            <li>{t("map.apiHint4")}</li>
           </ol>
         </div>
       )}
@@ -103,7 +102,7 @@ function GoogleMapsSetupHelp({
         rel="noopener noreferrer"
         className="text-xs font-medium text-emerald-600 underline hover:no-underline"
       >
-        เปิด Maps JavaScript API →
+        {t("map.enableApi")}
       </a>
     </div>
   );
@@ -139,6 +138,8 @@ function GoogleRentalMap({
   highlightProductId,
   onProductClick,
 }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [infoLocationId, setInfoLocationId] = useState<string | null>(null);
   const mapRenderError = useGoogleMapRenderError();
@@ -199,7 +200,9 @@ function GoogleRentalMap({
             <h3 className="mb-1 font-bold text-zinc-900">{infoLocation.name}</h3>
             <p className="mb-2 text-xs text-zinc-500">{infoLocation.address}</p>
             <p className="mb-3 text-xs font-medium text-emerald-600">
-              เหลือทั้งหมด {getTotalStock(infoLocation)} ชิ้น
+              {t("common.totalRemaining", {
+                count: getTotalStock(infoLocation),
+              })}
             </p>
             <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
               {infoLocation.products.map((stock) => {
@@ -239,7 +242,16 @@ function GoogleRentalMap({
                             qty === 0 ? "text-red-500" : "text-emerald-600"
                           }`}
                         >
-                          {qty === 0 ? "หมด" : `เหลือ ${qty} ${product.sizeUnit}`}
+                          {qty === 0
+                            ? t("stock.out")
+                            : t("stock.remaining", {
+                                count: qty,
+                                unit: getSizeUnitLabel(
+                                  product.sizeUnit,
+                                  locale,
+                                  messages,
+                                ),
+                              })}
                         </p>
                       </div>
                     </button>
@@ -271,7 +283,16 @@ function GoogleRentalMap({
                           qty === 0 ? "text-red-500" : "text-emerald-600"
                         }`}
                       >
-                        {qty === 0 ? "หมด" : `เหลือ ${qty} ${product.sizeUnit}`}
+                        {qty === 0
+                          ? t("stock.out")
+                          : t("stock.remaining", {
+                              count: qty,
+                              unit: getSizeUnitLabel(
+                                product.sizeUnit,
+                                locale,
+                                messages,
+                              ),
+                            })}
                       </p>
                     </div>
                   </Link>
@@ -287,6 +308,8 @@ function GoogleRentalMap({
 }
 
 export default function RentalMap(props: Props) {
+  const t = useTranslations();
+
   if (!hasGoogleMapsApiKey()) {
     return <MissingApiKeyMessage />;
   }
@@ -295,7 +318,7 @@ export default function RentalMap(props: Props) {
     <GoogleMapsLoader
       loading={
         <div className="flex h-full items-center justify-center rounded-xl bg-zinc-100">
-          <p className="text-sm text-zinc-500">กำลังโหลด Google Maps...</p>
+          <p className="text-sm text-zinc-500">{t("map.loadingMaps")}</p>
         </div>
       }
       error={<GoogleMapsSetupHelp variant="error" />}

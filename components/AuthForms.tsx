@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "@/lib/i18n/client";
 
 const inputClass =
   "w-full rounded-xl border-0 bg-zinc-100 px-4 py-3 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:bg-white focus:ring-2 focus:ring-emerald-500/25";
@@ -50,6 +51,8 @@ function PasswordInput({
   autoComplete,
   placeholder,
   minLength,
+  showLabel,
+  hideLabel,
 }: {
   id: string;
   label: string;
@@ -58,6 +61,8 @@ function PasswordInput({
   autoComplete: string;
   placeholder: string;
   minLength?: number;
+  showLabel: string;
+  hideLabel: string;
 }) {
   const [visible, setVisible] = useState(false);
 
@@ -82,7 +87,7 @@ function PasswordInput({
           type="button"
           onClick={() => setVisible((v) => !v)}
           className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-zinc-400 transition-colors hover:text-zinc-600"
-          aria-label={visible ? "ซ่อนรหัสผ่าน" : "แสดงรหัสผ่าน"}
+          aria-label={visible ? hideLabel : showLabel}
         >
           <EyeIcon open={visible} />
         </button>
@@ -93,6 +98,7 @@ function PasswordInput({
 
 export function CredentialsSignInForm() {
   const router = useRouter();
+  const t = useTranslations();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -112,7 +118,7 @@ export function CredentialsSignInForm() {
     setLoading(false);
 
     if (result?.error) {
-      setError("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+      setError(t("auth.errors.invalidCredentials"));
       return;
     }
 
@@ -124,7 +130,7 @@ export function CredentialsSignInForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label htmlFor="login-email" className="mb-2 block text-sm font-medium text-zinc-700">
-          อีเมล
+          {t("auth.email")}
         </label>
         <div className="relative">
           <input
@@ -145,11 +151,13 @@ export function CredentialsSignInForm() {
 
       <PasswordInput
         id="login-password"
-        label="รหัสผ่าน"
+        label={t("auth.password")}
         value={password}
         onChange={setPassword}
         autoComplete="current-password"
         placeholder="••••••••"
+        showLabel={t("auth.showPassword")}
+        hideLabel={t("auth.hidePassword")}
       />
 
       {error && (
@@ -161,7 +169,7 @@ export function CredentialsSignInForm() {
         disabled={loading}
         className="w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 disabled:opacity-60"
       >
-        {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
+        {loading ? t("auth.signingIn") : t("auth.login")}
       </button>
     </form>
   );
@@ -169,6 +177,7 @@ export function CredentialsSignInForm() {
 
 export function RegisterForm() {
   const router = useRouter();
+  const t = useTranslations();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -181,7 +190,7 @@ export function RegisterForm() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+      setError(t("auth.errors.passwordMismatch"));
       return;
     }
 
@@ -201,7 +210,7 @@ export function RegisterForm() {
 
     if (!response.ok) {
       setLoading(false);
-      setError(data.error ?? "สมัครสมาชิกไม่สำเร็จ");
+      setError(data.error ?? t("auth.errors.registerFailed"));
       return;
     }
 
@@ -227,7 +236,7 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label htmlFor="register-name" className="mb-2 block text-sm font-medium text-zinc-700">
-          ชื่อ
+          {t("auth.name")}
         </label>
         <input
           id="register-name"
@@ -237,13 +246,13 @@ export function RegisterForm() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className={inputClass}
-          placeholder="ชื่อของคุณ"
+          placeholder={t("auth.namePlaceholder")}
         />
       </div>
 
       <div>
         <label htmlFor="register-email" className="mb-2 block text-sm font-medium text-zinc-700">
-          อีเมล
+          {t("auth.email")}
         </label>
         <div className="relative">
           <input
@@ -264,22 +273,26 @@ export function RegisterForm() {
 
       <PasswordInput
         id="register-password"
-        label="รหัสผ่าน"
+        label={t("auth.password")}
         value={password}
         onChange={setPassword}
         autoComplete="new-password"
-        placeholder="อย่างน้อย 8 ตัวอักษร"
+        placeholder={t("auth.passwordMinPlaceholder")}
         minLength={8}
+        showLabel={t("auth.showPassword")}
+        hideLabel={t("auth.hidePassword")}
       />
 
       <PasswordInput
         id="register-confirm-password"
-        label="ยืนยันรหัสผ่าน"
+        label={t("auth.confirmPassword")}
         value={confirmPassword}
         onChange={setConfirmPassword}
         autoComplete="new-password"
-        placeholder="พิมพ์รหัสผ่านอีกครั้ง"
+        placeholder={t("auth.confirmPasswordPlaceholder")}
         minLength={8}
+        showLabel={t("auth.showPassword")}
+        hideLabel={t("auth.hidePassword")}
       />
 
       {error && (
@@ -291,20 +304,22 @@ export function RegisterForm() {
         disabled={loading}
         className="w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 disabled:opacity-60"
       >
-        {loading ? "กำลังสมัคร..." : "สมัครสมาชิก"}
+        {loading ? t("auth.signingUp") : t("auth.register")}
       </button>
     </form>
   );
 }
 
 export function AuthDivider() {
+  const t = useTranslations();
+
   return (
     <div className="relative my-6">
       <div className="absolute inset-0 flex items-center">
         <div className="w-full border-t border-zinc-200" />
       </div>
       <div className="relative flex justify-center text-xs">
-        <span className="bg-white px-3 text-zinc-400">หรือ</span>
+        <span className="bg-white px-3 text-zinc-400">{t("common.or")}</span>
       </div>
     </div>
   );

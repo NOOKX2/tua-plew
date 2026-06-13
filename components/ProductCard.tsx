@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type {
@@ -5,8 +7,9 @@ import type {
   Product,
   SizeInventory as SizeInventoryType,
 } from "@/lib/types";
-import { CATEGORY_LABELS } from "@/lib/types";
 import { getStockTotal } from "@/lib/locations";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { getCategoryLabel } from "@/lib/i18n/labels";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
 
@@ -16,6 +19,9 @@ type Props = {
   globalInventory?: SizeInventoryType;
   variant?: "catalog" | "location";
   selected?: boolean;
+  categoryLabel?: string;
+  colorLabel?: string;
+  perRentalLabel?: string;
 };
 
 export default function ProductCard({
@@ -24,7 +30,17 @@ export default function ProductCard({
   globalInventory,
   variant = "catalog",
   selected,
+  categoryLabel: categoryLabelProp,
+  colorLabel: colorLabelProp,
+  perRentalLabel: perRentalLabelProp,
 }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
+  const categoryLabel =
+    categoryLabelProp ?? getCategoryLabel(product.category, locale, messages);
+  const colorLabel = colorLabelProp ?? t("common.color");
+  const perRentalLabel = perRentalLabelProp ?? t("common.perRental");
+
   const locationTotal = stock ? getStockTotal(stock.inventory) : null;
   const globalTotal = globalInventory
     ? getStockTotal(globalInventory)
@@ -54,7 +70,7 @@ export default function ProductCard({
           sizes={isCatalog ? "(max-width: 640px) 50vw, 20vw" : "128px"}
         />
         <span className="absolute left-1.5 top-1.5 rounded bg-white/90 px-1.5 py-0.5 text-[9px] font-semibold text-zinc-600 shadow-sm">
-          {CATEGORY_LABELS[product.category]}
+          {categoryLabel}
         </span>
       </div>
 
@@ -100,11 +116,13 @@ export default function ProductCard({
         )}
 
         {isCatalog ? (
-          <p className="mb-2 text-[11px] text-zinc-500">สี {product.color}</p>
+          <p className="mb-2 text-[11px] text-zinc-500">
+            {colorLabel} {product.color}
+          </p>
         ) : (
           <div className="mb-3 flex flex-wrap gap-2 text-[11px] text-zinc-500">
             <span className="rounded-md bg-zinc-100 px-2 py-0.5">
-              สี {product.color}
+              {colorLabel} {product.color}
             </span>
             <span className="rounded-md bg-zinc-100 px-2 py-0.5">
               {product.material}
@@ -116,7 +134,7 @@ export default function ProductCard({
           <div className={isCatalog ? "mb-2" : "mb-3 border-t border-zinc-100 pt-3"}>
             {!isCatalog && (
               <p className="mb-2 text-xs font-medium text-zinc-600">
-                สต็อกคงเหลือตามไซส์
+                {t("stock.remainingBySize")}
               </p>
             )}
             <SizeInventory
@@ -131,7 +149,10 @@ export default function ProductCard({
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
           <p className="text-sm font-bold text-emerald-600">
             ฿{product.pricePerRental}
-            <span className="text-[11px] font-normal text-zinc-500"> /ครั้ง</span>
+            <span className="text-[11px] font-normal text-zinc-500">
+              {" "}
+              {perRentalLabel}
+            </span>
           </p>
           {isCatalog && displayTotal !== null && (
             <StockBadge
@@ -149,10 +170,11 @@ export default function ProductCard({
     return (
       <Link
         href={`/products/${product.id}`}
-        className={`block rounded-xl border bg-white transition-all hover:border-emerald-300 hover:shadow-sm ${selected
+        className={`block rounded-xl border bg-white transition-all hover:border-emerald-300 hover:shadow-sm ${
+          selected
             ? "border-emerald-500 shadow-md ring-2 ring-emerald-500/20"
             : "border-zinc-200"
-          }`}
+        }`}
       >
         {content}
       </Link>

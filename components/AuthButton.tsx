@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useTranslations } from "@/lib/i18n/client";
 
 type Props = {
   variant?: "light" | "dark";
@@ -11,6 +12,7 @@ type Props = {
 
 export default function AuthButton({ variant = "dark" }: Props) {
   const { data: session, status } = useSession();
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const isLight = variant === "light";
@@ -44,7 +46,7 @@ export default function AuthButton({ variant = "dark" }: Props) {
       <span
         className={`text-xs ${isLight ? "text-emerald-100" : "text-zinc-400"}`}
       >
-        กำลังโหลด...
+        {t("common.loading")}
       </span>
     );
   }
@@ -66,7 +68,7 @@ export default function AuthButton({ variant = "dark" }: Props) {
           {session.user.image ? (
             <Image
               src={session.user.image}
-              alt={session.user.name ?? "ผู้ใช้"}
+              alt={session.user.name ?? t("common.user")}
               width={32}
               height={32}
               className={`rounded-full ${isLight ? "ring-2 ring-white/30" : "ring-2 ring-zinc-200"}`}
@@ -153,7 +155,7 @@ export default function AuthButton({ variant = "dark" }: Props) {
                   clipRule="evenodd"
                 />
               </svg>
-              ออกจากระบบ
+              {t("auth.logout")}
             </button>
           </div>
         )}
@@ -170,12 +172,14 @@ export default function AuthButton({ variant = "dark" }: Props) {
           : "bg-emerald-600 text-white hover:bg-emerald-700"
       }`}
     >
-      เข้าสู่ระบบ
+      {t("auth.login")}
     </Link>
   );
 }
 
 export function GoogleSignInButton() {
+  const t = useTranslations();
+
   return (
     <button
       type="button"
@@ -183,7 +187,7 @@ export function GoogleSignInButton() {
       className="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
     >
       <GoogleIcon />
-      เข้าสู่ระบบด้วย Google
+      {t("auth.loginWithGoogle")}
     </button>
   );
 }

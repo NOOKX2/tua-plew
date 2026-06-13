@@ -2,13 +2,17 @@ import type { Metadata } from "next";
 import RentalMapView from "@/components/RentalMapView";
 import { getRentalLocations } from "@/lib/locations.server";
 import { getProducts } from "@/lib/products.server";
+import { getTranslator } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "แผนที่จุดเช่า | Tua Plew",
-  description: "ค้นหาจุดเช่าชุดกีฬา Tua Plew ใกล้คุณบนแผนที่",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator();
+  return {
+    title: t("meta.mapTitle"),
+    description: t("meta.mapDescription"),
+  };
+}
 
 type Props = {
   searchParams: Promise<{ product?: string; location?: string }>;

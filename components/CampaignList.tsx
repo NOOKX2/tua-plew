@@ -2,10 +2,9 @@
 
 import { useMemo, useState } from "react";
 import type { Campaign, CampaignType } from "@/lib/types";
-import {
-  CAMPAIGN_TYPE_LABELS,
-  getActiveCampaigns,
-} from "@/lib/campaigns";
+import { getActiveCampaigns } from "@/lib/campaigns";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { getCampaignTypeLabel } from "@/lib/i18n/labels";
 import CampaignCard from "./CampaignCard";
 
 type Props = {
@@ -16,6 +15,8 @@ const ALL = "all" as const;
 type Filter = typeof ALL | CampaignType;
 
 export default function CampaignList({ campaigns }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
   const [filter, setFilter] = useState<Filter>(ALL);
 
   const active = useMemo(() => getActiveCampaigns(campaigns), [campaigns]);
@@ -36,21 +37,21 @@ export default function CampaignList({ campaigns }: Props) {
         <FilterButton
           active={filter === ALL}
           onClick={() => setFilter(ALL)}
-          label="ทั้งหมด"
+          label={t("common.all")}
         />
         {campaignTypes.map((type) => (
           <FilterButton
             key={type}
             active={filter === type}
             onClick={() => setFilter(type)}
-            label={CAMPAIGN_TYPE_LABELS[type]}
+            label={getCampaignTypeLabel(type, locale, messages)}
           />
         ))}
       </div>
 
       {filtered.length === 0 ? (
         <p className="rounded-xl border border-zinc-200 bg-white px-4 py-8 text-center text-sm text-zinc-500">
-          ยังไม่มีแคมเปญในหมวดนี้
+          {t("common.noCampaignsInCategory")}
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

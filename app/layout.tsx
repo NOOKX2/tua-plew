@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
+import { getLocale, getTranslator } from "@/lib/i18n/server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,24 +15,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Tua Plew | เช่าชุดกีฬา",
-  description:
-    "เช่าชุดกีฬาสะอาด พร้อมออกกำลังกายทันที — ค้นหาจุดเช่าใกล้คุณและดูสต็อกเสื้อแต่ละไซส์",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator();
+  return {
+    title: t("meta.title"),
+    description: t("meta.description"),
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="th"
+      lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col bg-zinc-50 text-zinc-900">
-        <Providers>
+        <Providers locale={locale}>
           <Navbar />
           {children}
         </Providers>

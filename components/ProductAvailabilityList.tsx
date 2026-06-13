@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import type { ProductAvailability } from "@/lib/locations";
 import { getStockTotal } from "@/lib/locations";
+import { useTranslations } from "@/lib/i18n/client";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
 
@@ -11,11 +14,12 @@ type Props = {
 };
 
 export default function ProductAvailabilityList({ items, product }: Props) {
+  const t = useTranslations();
 
   if (items.length === 0) {
     return (
       <p className="rounded-xl border border-zinc-200 bg-zinc-50 p-6 text-center text-sm text-zinc-500">
-        ขณะนี้ยังไม่มีจุดเช่าที่มีสินค้านี้
+        {t("stock.noAvailability")}
       </p>
     );
   }
@@ -60,7 +64,7 @@ export default function ProductAvailabilityList({ items, product }: Props) {
         href={`/map?product=${product.id}`}
         className="mt-1 inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
       >
-        ดูบนแผนที่
+        {t("common.viewOnMap")}
       </Link>
     </div>
   );

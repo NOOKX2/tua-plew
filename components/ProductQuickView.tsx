@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { LocationProductStock, Product } from "@/lib/types";
-import { CATEGORY_LABELS } from "@/lib/types";
 import { getStockTotal } from "@/lib/locations";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { getCategoryLabel } from "@/lib/i18n/labels";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
 
@@ -21,6 +22,8 @@ export default function ProductQuickView({
   onClose,
   embedded = false,
 }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
   const total = getStockTotal(stock.inventory);
 
   return (
@@ -37,9 +40,9 @@ export default function ProductQuickView({
             type="button"
             onClick={onClose}
             className="rounded-lg px-2 py-0.5 text-xs text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600"
-            aria-label="ปิด"
+            aria-label={t("common.close")}
           >
-            ✕ ปิด
+            ✕ {t("common.close")}
           </button>
         </div>
       )}
@@ -57,13 +60,16 @@ export default function ProductQuickView({
           </div>
           <div className="min-w-0 flex-1">
             <span className="text-[10px] font-medium text-zinc-400">
-              {CATEGORY_LABELS[product.category]}
+              {getCategoryLabel(product.category, locale, messages)}
             </span>
             <h3 className="text-sm font-bold text-zinc-900">{product.name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-2">
               <p className="text-sm font-bold text-emerald-600">
                 ฿{product.pricePerRental}
-                <span className="font-normal text-zinc-500"> /ครั้ง</span>
+                <span className="font-normal text-zinc-500">
+                  {" "}
+                  {t("common.perRental")}
+                </span>
               </p>
               <StockBadge total={total} unit={product.sizeUnit} size="sm" />
             </div>
@@ -73,7 +79,7 @@ export default function ProductQuickView({
               type="button"
               onClick={onClose}
               className="shrink-0 rounded-lg px-2 py-0.5 text-xs text-zinc-400 hover:bg-zinc-100"
-              aria-label="ปิด"
+              aria-label={t("common.close")}
             >
               ✕
             </button>
@@ -82,7 +88,7 @@ export default function ProductQuickView({
 
         <div className="mt-3 rounded-lg bg-zinc-50 p-3">
           <p className="mb-2 text-xs font-medium text-zinc-600">
-            สต็อกที่จุดนี้ (แต่ละไซส์)
+            {t("stock.stockAtLocation")}
           </p>
           <SizeInventory
             inventory={stock.inventory}
@@ -97,13 +103,13 @@ export default function ProductQuickView({
             type="button"
             className="w-full rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
           >
-            เช่าที่จุดนี้
+            {t("product.rentHere")}
           </button>
           <Link
             href={`/products/${product.id}?from=map`}
             className="flex w-full items-center justify-center rounded-xl border border-zinc-200 px-4 py-2 text-xs font-medium text-zinc-600 transition-colors hover:border-emerald-200 hover:text-emerald-700"
           >
-            รายละเอียดเต็ม →
+            {t("common.fullDetails")}
           </Link>
         </div>
       </div>

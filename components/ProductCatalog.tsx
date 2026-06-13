@@ -1,5 +1,6 @@
 import type { Product, RentalLocation } from "@/lib/types";
 import { getAggregatedProductInventory } from "@/lib/locations";
+import { getTranslator } from "@/lib/i18n/server";
 import ProductCard from "./ProductCard";
 
 type Props = {
@@ -7,15 +8,17 @@ type Props = {
   locations: RentalLocation[];
 };
 
-export default function ProductCatalog({ products, locations }: Props) {
+export default async function ProductCatalog({ products, locations }: Props) {
+  const t = await getTranslator();
+
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
       <div className="mb-5">
         <h2 className="text-lg font-bold text-zinc-900 sm:text-xl">
-          สินค้าให้เช่า
+          {t("home.catalogTitle")}
         </h2>
         <p className="mt-0.5 text-xs text-zinc-500 sm:text-sm">
-          ดูจำนวนเสื้อที่เหลือแต่ละไซส์แบบเรียลไทม์ — คลิกสินค้าเพื่อดูรายละเอียดเพิ่มเติม
+          {t("home.catalogSubtitle")}
         </p>
       </div>
 

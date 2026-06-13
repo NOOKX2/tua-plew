@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Product, RentalLocation } from "@/lib/types";
 import { getAggregatedProductInventory, getStockTotal } from "@/lib/locations";
+import { getTranslator } from "@/lib/i18n/server";
 import ProductCatalog from "./ProductCatalog";
 
 type Props = {
@@ -8,7 +9,8 @@ type Props = {
   products: Product[];
 };
 
-export default function RentalApp({ locations, products }: Props) {
+export default async function RentalApp({ locations, products }: Props) {
+  const t = await getTranslator();
   const totalStock = products.reduce(
     (sum, p) =>
       sum + getStockTotal(getAggregatedProductInventory(p.id, locations, products)),
@@ -20,14 +22,13 @@ export default function RentalApp({ locations, products }: Props) {
       <section className="bg-gradient-to-br from-emerald-600 to-teal-700 px-4 py-6 text-white sm:px-6 sm:py-8">
         <div className="mx-auto max-w-6xl">
           <p className="mb-1 text-xs font-medium uppercase tracking-wider text-emerald-100 sm:text-sm">
-            On-Site Activewear Rental
+            {t("home.tagline")}
           </p>
           <h1 className="mb-2 text-2xl font-bold tracking-tight sm:text-3xl">
             Tua Plew
           </h1>
           <p className="max-w-xl text-sm leading-snug text-emerald-50/90 sm:text-base">
-            เช่าชุดกีฬาสะอาด พร้อมออกกำลังกายทันที — เลือกสินค้า ดูสต็อกแต่ละไซส์
-            แล้วไปหาจุดเช่าใกล้คุณ
+            {t("home.subtitle")}
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -35,12 +36,12 @@ export default function RentalApp({ locations, products }: Props) {
               href="/map"
               className="inline-flex items-center rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-50"
             >
-              ดูแผนที่จุดเช่า →
+              {t("home.viewMap")}
             </Link>
             <div className="flex gap-4 text-sm text-emerald-100">
-              <span>{products.length} สินค้า</span>
-              <span>{locations.length} จุดเช่า</span>
-              <span>{totalStock} พร้อมเช่า</span>
+              <span>{t("home.productCount", { count: products.length })}</span>
+              <span>{t("home.locationCount", { count: locations.length })}</span>
+              <span>{t("home.readyCount", { count: totalStock })}</span>
             </div>
           </div>
         </div>
@@ -49,7 +50,7 @@ export default function RentalApp({ locations, products }: Props) {
       <ProductCatalog products={products} locations={locations} />
 
       <footer className="border-t border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500 sm:px-6">
-        <p>Tua Plew · Workout to Hangout · ชุดกีฬาสะอาด มาตรฐานซักฆ่า Ozone</p>
+        <p>{t("home.footer")}</p>
       </footer>
     </div>
   );

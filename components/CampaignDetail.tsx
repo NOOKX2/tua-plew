@@ -1,12 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { Campaign, RentalLocation } from "@/lib/types";
+import { CAMPAIGN_TYPE_EMOJI } from "@/lib/campaigns";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { formatCampaignPeriod } from "@/lib/i18n/format";
 import {
-  CAMPAIGN_TYPE_EMOJI,
-  CAMPAIGN_TYPE_LABELS,
-  formatCampaignPeriod,
   formatDiscount,
-} from "@/lib/campaigns";
+  getCampaignTypeLabel,
+} from "@/lib/i18n/labels";
 
 type Props = {
   campaign: Campaign;
@@ -14,6 +17,9 @@ type Props = {
 };
 
 export default function CampaignDetail({ campaign, partnerLocations }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
+
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
       <div className="relative mb-6 overflow-hidden rounded-2xl">
@@ -31,11 +37,11 @@ export default function CampaignDetail({ campaign, partnerLocations }: Props) {
         <div className="absolute inset-0 flex flex-col justify-end p-6 text-white sm:p-8">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-amber-500 px-3 py-1 text-sm font-bold">
-              {formatDiscount(campaign.discountPercent)}
+              {formatDiscount(campaign.discountPercent, locale, messages)}
             </span>
             <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-medium backdrop-blur-sm">
               {CAMPAIGN_TYPE_EMOJI[campaign.campaignType]}{" "}
-              {CAMPAIGN_TYPE_LABELS[campaign.campaignType]}
+              {getCampaignTypeLabel(campaign.campaignType, locale, messages)}
             </span>
           </div>
           <h1 className="mb-2 text-2xl font-bold drop-shadow-sm sm:text-3xl">
@@ -47,17 +53,23 @@ export default function CampaignDetail({ campaign, partnerLocations }: Props) {
 
       <div className="mb-6 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl border border-zinc-200 bg-white p-4">
-          <p className="text-xs font-medium text-zinc-500">ช่วงเวลาแคมเปญ</p>
+          <p className="text-xs font-medium text-zinc-500">
+            {t("campaign.period")}
+          </p>
           <p className="mt-1 text-sm font-semibold text-zinc-900">
-            {formatCampaignPeriod(campaign.startDate, campaign.endDate)}
+            {formatCampaignPeriod(campaign.startDate, campaign.endDate, locale)}
           </p>
         </div>
         <div className="rounded-xl border border-zinc-200 bg-white p-4">
-          <p className="text-xs font-medium text-zinc-500">ส่วนลด</p>
+          <p className="text-xs font-medium text-zinc-500">
+            {t("campaign.discount")}
+          </p>
           <p className="mt-1 text-sm font-semibold text-amber-600">
-            {formatDiscount(campaign.discountPercent)}
+            {formatDiscount(campaign.discountPercent, locale, messages)}
             {campaign.requiredRentals
-              ? ` เมื่อเช่าครบ ${campaign.requiredRentals} ครั้ง`
+              ? t("campaign.discountWhenRentals", {
+                  count: campaign.requiredRentals,
+                })
               : ""}
           </p>
         </div>
@@ -65,7 +77,7 @@ export default function CampaignDetail({ campaign, partnerLocations }: Props) {
 
       <section className="mb-6 rounded-xl border border-zinc-200 bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold text-zinc-900">
-          รายละเอียดแคมเปญ
+          {t("campaign.details")}
         </h2>
         <p className="text-sm leading-relaxed text-zinc-600">
           {campaign.description}
@@ -75,21 +87,23 @@ export default function CampaignDetail({ campaign, partnerLocations }: Props) {
       {campaign.requiredRentals && (
         <section className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
           <h2 className="mb-3 text-sm font-semibold text-amber-900">
-            วิธีรับสิทธิ์
+            {t("campaign.howToClaim")}
           </h2>
           <ol className="space-y-2 text-sm text-amber-900/90">
             <li className="flex gap-2">
               <span className="font-bold">1.</span>
-              เช่าชุดกีฬาที่จุดพาร์ทเนอร์ร่วมรายการ
+              {t("campaign.step1")}
             </li>
             <li className="flex gap-2">
               <span className="font-bold">2.</span>
-              คืนชุดภายในเวลาที่กำหนด — ระบบจะนับ 1 ครั้ง
+              {t("campaign.step2")}
             </li>
             <li className="flex gap-2">
               <span className="font-bold">3.</span>
-              สะสมครบ {campaign.requiredRentals} ครั้ง รับส่วนลด{" "}
-              {campaign.discountPercent}% อัตโนมัติครั้งถัดไป
+              {t("campaign.step3", {
+                rentals: campaign.requiredRentals,
+                percent: campaign.discountPercent,
+              })}
             </li>
           </ol>
         </section>
@@ -97,7 +111,7 @@ export default function CampaignDetail({ campaign, partnerLocations }: Props) {
 
       <section className="mb-6 rounded-xl border border-zinc-200 bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold text-zinc-900">
-          ร้านค้า / จุดเช่าร่วมรายการ ({partnerLocations.length})
+          {t("campaign.partners", { count: partnerLocations.length })}
         </h2>
         <ul className="space-y-2">
           {partnerLocations.map((location) => (
@@ -117,7 +131,7 @@ export default function CampaignDetail({ campaign, partnerLocations }: Props) {
                   )}
                 </div>
                 <span className="text-xs font-medium text-amber-600">
-                  ดูบนแผนที่ →
+                  {t("common.viewOnMapArrow")}
                 </span>
               </Link>
             </li>
@@ -127,7 +141,7 @@ export default function CampaignDetail({ campaign, partnerLocations }: Props) {
 
       <section className="rounded-xl border border-zinc-200 bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold text-zinc-900">
-          เงื่อนไข
+          {t("campaign.terms")}
         </h2>
         <ul className="space-y-2">
           {campaign.terms.map((term) => (

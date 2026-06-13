@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
 import CommunityList from "@/components/CommunityList";
 import { getCommunityEvents } from "@/lib/community.server";
+import { getTranslator } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "ชุมชนกิจกรรม | Tua Plew",
-  description:
-    "รันนิ่งคลับ Hyrox โยคะ CrossFit และกิจกรรมออกกำลังกายใกล้จุดเช่าชุดกีฬา Tua Plew",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator();
+  return {
+    title: t("meta.communityTitle"),
+    description: t("meta.communityDescription"),
+  };
+}
 
 export default async function CommunityPage() {
-  const events = await getCommunityEvents();
+  const [events, t] = await Promise.all([
+    getCommunityEvents(),
+    getTranslator(),
+  ]);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
@@ -20,11 +26,10 @@ export default async function CommunityPage() {
           Tua Plew Community
         </p>
         <h1 className="mb-2 text-2xl font-bold text-zinc-900 sm:text-3xl">
-          ชุมชนกิจกรรมออกกำลังกาย
+          {t("community.title")}
         </h1>
         <p className="max-w-2xl text-sm text-zinc-500 sm:text-base">
-          ค้นหากิจกรรมที่ใช่สำหรับคุณ — จากรันนิ่งคลับและ Hyrox ไปจนถึงโยคะและเดินป่า
-          ทุกกิจกรรมอยู่ใกล้จุดเช่าชุดกีฬาสะอาดของเรา
+          {t("community.subtitle")}
         </p>
       </div>
 

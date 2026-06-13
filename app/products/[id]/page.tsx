@@ -6,6 +6,7 @@ import {
   getProductByIdAsync,
   getProducts,
 } from "@/lib/products.server";
+import { getTranslator } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -16,10 +17,13 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const product = await getProductByIdAsync(id);
+  const [product, t] = await Promise.all([
+    getProductByIdAsync(id),
+    getTranslator(),
+  ]);
 
   if (!product) {
-    return { title: "ไม่พบสินค้า | Tua Plew" };
+    return { title: t("meta.productNotFound") };
   }
 
   return {

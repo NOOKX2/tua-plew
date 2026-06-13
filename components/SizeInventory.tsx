@@ -1,4 +1,8 @@
+"use client";
+
 import type { SizeInventory as SizeInventoryType, SizeUnit } from "@/lib/types";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { getSizeUnitLabel } from "@/lib/i18n/labels";
 
 type Props = {
   inventory: SizeInventoryType;
@@ -25,6 +29,10 @@ export default function SizeInventory({
   unit = "ตัว",
   compact,
 }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
+  const unitLabel = getSizeUnitLabel(unit, locale, messages);
+
   const gridClass =
     sizes.length > 5
       ? "grid grid-cols-3 gap-1 sm:grid-cols-6"
@@ -50,7 +58,7 @@ export default function SizeInventory({
             </span>
             {!compact && (
               <span className="text-[10px] opacity-70">
-                {qty === 0 ? "หมด" : unit}
+                {qty === 0 ? t("stock.out") : unitLabel}
               </span>
             )}
           </div>

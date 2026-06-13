@@ -4,13 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product, RentalLocation } from "@/lib/types";
-import { CATEGORY_LABELS } from "@/lib/types";
 import {
   getAggregatedProductInventory,
   getLocationsWithProduct,
   getTotalProductStock,
 } from "@/lib/locations";
 import { getRelatedProducts } from "@/lib/products";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { getCategoryLabel } from "@/lib/i18n/labels";
 import ProductAvailabilityList from "./ProductAvailabilityList";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
@@ -26,10 +27,14 @@ function CollapsibleSection({
   title,
   defaultOpen = false,
   children,
+  showLabel,
+  hideLabel,
 }: {
   title: string;
   defaultOpen?: boolean;
   children: React.ReactNode;
+  showLabel: string;
+  hideLabel: string;
 }) {
   const [open, setOpen] = useState(defaultOpen);
 
@@ -41,7 +46,7 @@ function CollapsibleSection({
         className="flex w-full items-center justify-between px-4 py-3 text-left"
       >
         <h2 className="text-sm font-semibold text-zinc-900">{title}</h2>
-        <span className="text-xs text-zinc-400">{open ? "ซ่อน" : "ดู"}</span>
+        <span className="text-xs text-zinc-400">{open ? hideLabel : showLabel}</span>
       </button>
       {open && <div className="border-t border-zinc-100 px-4 pb-4 pt-3">{children}</div>}
     </section>
@@ -54,6 +59,8 @@ export default function ProductDetail({
   locations,
   compact = false,
 }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
   const availability = getLocationsWithProduct(product.id, locations);
   const aggregatedInventory = getAggregatedProductInventory(
     product.id,
@@ -73,7 +80,7 @@ export default function ProductDetail({
           href="/map"
           className="mb-4 inline-flex items-center text-sm font-medium text-emerald-600 hover:underline"
         >
-          ← กลับแผนที่
+          {t("common.backToMap")}
         </Link>
       )}
 
@@ -88,7 +95,7 @@ export default function ProductDetail({
             priority
           />
           <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-zinc-700 shadow-sm">
-            {CATEGORY_LABELS[product.category]}
+            {getCategoryLabel(product.category, locale, messages)}
           </span>
           <div className="absolute bottom-4 right-4">
             <StockBadge total={totalStock} unit={product.sizeUnit} size="lg" />
@@ -106,14 +113,17 @@ export default function ProductDetail({
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <p className="text-2xl font-bold text-emerald-600">
               ฿{product.pricePerRental}
-              <span className="text-base font-normal text-zinc-500"> /ครั้ง</span>
+              <span className="text-base font-normal text-zinc-500">
+                {" "}
+                {t("common.perRental")}
+              </span>
             </p>
             <StockBadge total={totalStock} unit={product.sizeUnit} size="md" />
           </div>
 
           <div className="mb-6 rounded-xl border border-zinc-200 bg-white p-4">
             <p className="mb-2 text-xs font-medium text-zinc-600">
-              สต็อกรวมทุกจุดเช่า
+              {t("stock.totalAllLocations")}
             </p>
             <SizeInventory
               inventory={aggregatedInventory}
@@ -127,7 +137,7 @@ export default function ProductDetail({
             href={`/map?product=${product.id}`}
             className="mt-auto inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 sm:w-auto"
           >
-            หาจุดเช่าใกล้ฉัน
+            {t("product.findNearby")}
           </Link>
         </div>
       </div>
@@ -146,7 +156,12 @@ export default function ProductDetail({
       )}
 
       <div className="mt-4 flex flex-col gap-3">
-        <CollapsibleSection title="รายละเอียดเพิ่มเติม" defaultOpen={!compact}>
+        <CollapsibleSection
+          title={t("product.moreDetails")}
+          defaultOpen={!compact}
+          showLabel={t("common.show")}
+          hideLabel={t("common.hide")}
+        >
           {!compact && (
             <p className="mb-4 text-sm leading-relaxed text-zinc-600">
               {product.longDescription}
@@ -154,11 +169,11 @@ export default function ProductDetail({
           )}
           <dl className="mb-4 grid grid-cols-2 gap-3 text-sm">
             <div className="rounded-lg bg-zinc-50 p-3">
-              <dt className="text-xs text-zinc-500">สี</dt>
+              <dt className="text-xs text-zinc-500">{t("common.color")}</dt>
               <dd className="font-medium text-zinc-900">{product.color}</dd>
             </div>
             <div className="rounded-lg bg-zinc-50 p-3">
-              <dt className="text-xs text-zinc-500">วัสดุ</dt>
+              <dt className="text-xs text-zinc-500">{t("product.material")}</dt>
               <dd className="font-medium text-zinc-900">{product.material}</dd>
             </div>
           </dl>
@@ -175,23 +190,33 @@ export default function ProductDetail({
           </ul>
         </CollapsibleSection>
 
-        <CollapsibleSection title="ตารางไซส์">
+        <CollapsibleSection
+          title={t("product.sizeGuide")}
+          showLabel={t("common.show")}
+          hideLabel={t("common.hide")}
+        >
           <div className="overflow-x-auto">
             <table className="w-full min-w-[280px] text-sm">
               <thead>
                 <tr className="border-b border-zinc-200 text-left">
                   <th className="pb-2 font-semibold text-zinc-700">
-                    {isShoe ? "ไซส์ EU" : "ไซส์"}
+                    {isShoe ? t("product.sizeEu") : t("product.size")}
                   </th>
                   {isShoe ? (
-                    <th className="pb-2 font-semibold text-zinc-700">ความยาวเท้า</th>
+                    <th className="pb-2 font-semibold text-zinc-700">
+                      {t("product.footLength")}
+                    </th>
                   ) : (
                     <>
                       {hasChest && (
-                        <th className="pb-2 font-semibold text-zinc-700">รอบอก</th>
+                        <th className="pb-2 font-semibold text-zinc-700">
+                          {t("product.chest")}
+                        </th>
                       )}
                       {hasWaist && (
-                        <th className="pb-2 font-semibold text-zinc-700">รอบเอว</th>
+                        <th className="pb-2 font-semibold text-zinc-700">
+                          {t("product.waist")}
+                        </th>
                       )}
                     </>
                   )}
@@ -220,12 +245,20 @@ export default function ProductDetail({
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection title="มาตรฐานความสะอาด">
+        <CollapsibleSection
+          title={t("product.hygiene")}
+          showLabel={t("common.show")}
+          hideLabel={t("common.hide")}
+        >
           <p className="text-sm leading-relaxed text-zinc-600">{product.careNote}</p>
         </CollapsibleSection>
 
         {!compact && (
-          <CollapsibleSection title={`จุดเช่าที่มีสินค้านี้ (${availability.length})`}>
+          <CollapsibleSection
+            title={t("product.availability", { count: availability.length })}
+            showLabel={t("common.show")}
+            hideLabel={t("common.hide")}
+          >
             <ProductAvailabilityList
               items={availability}
               product={product}
@@ -234,7 +267,11 @@ export default function ProductDetail({
         )}
 
         {!compact && related.length > 0 && (
-          <CollapsibleSection title="สินค้าอื่นที่น่าสนใจ">
+          <CollapsibleSection
+            title={t("product.related")}
+            showLabel={t("common.show")}
+            hideLabel={t("common.hide")}
+          >
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {related.map((item) => (
                 <Link
@@ -255,7 +292,8 @@ export default function ProductDetail({
                     {item.name}
                   </p>
                   <p className="text-xs font-semibold text-emerald-600">
-                    ฿{item.pricePerRental}/ครั้ง
+                    ฿{item.pricePerRental}
+                    {t("common.perRental")}
                   </p>
                 </Link>
               ))}

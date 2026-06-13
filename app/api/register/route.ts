@@ -2,17 +2,19 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoose";
 import { User } from "@/lib/models";
 import { hashPassword, isPasswordStrongEnough } from "@/lib/password";
+import { getTranslatorFromRequest } from "@/lib/i18n/server";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
+  const t = getTranslatorFromRequest(request);
   let body: unknown;
 
   try {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { error: "ข้อมูลไม่ถูกต้อง" },
+      { error: t("auth.errors.invalidData") },
       { status: 400 },
     );
   }
@@ -29,21 +31,21 @@ export async function POST(request: Request) {
 
   if (!trimmedName) {
     return NextResponse.json(
-      { error: "กรุณากรอกชื่อ" },
+      { error: t("auth.errors.nameRequired") },
       { status: 400 },
     );
   }
 
   if (!EMAIL_RE.test(normalizedEmail)) {
     return NextResponse.json(
-      { error: "รูปแบบอีเมลไม่ถูกต้อง" },
+      { error: t("auth.errors.invalidEmail") },
       { status: 400 },
     );
   }
 
   if (!isPasswordStrongEnough(rawPassword)) {
     return NextResponse.json(
-      { error: "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร" },
+      { error: t("auth.errors.passwordTooShort") },
       { status: 400 },
     );
   }
@@ -54,7 +56,7 @@ export async function POST(request: Request) {
 
   if (existing) {
     return NextResponse.json(
-      { error: "อีเมลนี้ถูกใช้งานแล้ว" },
+      { error: t("auth.errors.emailTaken") },
       { status: 409 },
     );
   }

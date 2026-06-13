@@ -1,18 +1,24 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { Campaign } from "@/lib/types";
+import { CAMPAIGN_TYPE_EMOJI } from "@/lib/campaigns";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { formatCampaignPeriod } from "@/lib/i18n/format";
 import {
-  CAMPAIGN_TYPE_EMOJI,
-  CAMPAIGN_TYPE_LABELS,
-  formatCampaignPeriod,
   formatDiscount,
-} from "@/lib/campaigns";
+  getCampaignTypeLabel,
+} from "@/lib/i18n/labels";
 
 type Props = {
   campaign: Campaign;
 };
 
 export default function CampaignCard({ campaign }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
+
   return (
     <Link
       href={`/campaigns/${campaign.id}`}
@@ -28,12 +34,12 @@ export default function CampaignCard({ campaign }: Props) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/10" />
         <span className="absolute left-3 top-3 rounded-full bg-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
-          {formatDiscount(campaign.discountPercent)}
+          {formatDiscount(campaign.discountPercent, locale, messages)}
         </span>
         <div className="absolute inset-x-0 bottom-0 p-4 text-white">
           <span className="mb-2 inline-flex rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium backdrop-blur-sm">
             {CAMPAIGN_TYPE_EMOJI[campaign.campaignType]}{" "}
-            {CAMPAIGN_TYPE_LABELS[campaign.campaignType]}
+            {getCampaignTypeLabel(campaign.campaignType, locale, messages)}
           </span>
           <h3 className="text-lg font-bold leading-snug drop-shadow-sm group-hover:underline">
             {campaign.title}
@@ -47,26 +53,28 @@ export default function CampaignCard({ campaign }: Props) {
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-3 flex flex-wrap gap-2 text-xs text-zinc-600">
           <span className="rounded-md bg-zinc-100 px-2 py-1">
-            📅 {formatCampaignPeriod(campaign.startDate, campaign.endDate)}
+            📅 {formatCampaignPeriod(campaign.startDate, campaign.endDate, locale)}
           </span>
           {campaign.requiredRentals && (
             <span className="rounded-md bg-amber-50 px-2 py-1 font-medium text-amber-700">
-              เช่า {campaign.requiredRentals} ครั้ง
+              {t("campaign.rentCount", { count: campaign.requiredRentals })}
             </span>
           )}
           <span className="rounded-md bg-zinc-100 px-2 py-1">
-            🏪 {campaign.partnerLocationIds.length} จุดร่วมรายการ
+            {t("campaign.partnerCount", {
+              count: campaign.partnerLocationIds.length,
+            })}
           </span>
         </div>
 
         <div className="mt-auto flex items-center justify-between">
           <span className="text-xs text-zinc-500">
             {campaign.campaignType === "loyalty"
-              ? "สะสมครบรับส่วนลด"
-              : "ใช้สิทธิ์ได้ทันที"}
+              ? t("campaign.loyaltyCta")
+              : t("campaign.instantCta")}
           </span>
           <span className="text-xs font-medium text-amber-600">
-            ดูรายละเอียด →
+            {t("common.viewDetails")}
           </span>
         </div>
       </div>

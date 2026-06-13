@@ -5,13 +5,9 @@ import Link from "next/link";
 import type { Product, RentalLocation } from "@/lib/types";
 import { getProductById } from "@/lib/products";
 import { getStockTotal, getTotalStock } from "@/lib/locations";
+import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { getLocationTypeLabel, getSizeUnitLabel } from "@/lib/i18n/labels";
 import ProductQuickView from "./ProductQuickView";
-
-const typeLabels = {
-  booth: "ตู้เช่าอัตโนมัติ",
-  qr: "สแกน QR",
-  partner: "พาร์ทเนอร์",
-};
 
 type Props = {
   location: RentalLocation;
@@ -34,6 +30,8 @@ export default function LocationCard({
   onProductClick,
   onCloseProduct,
 }: Props) {
+  const t = useTranslations();
+  const { locale, messages } = useLocale();
   const total = getTotalStock(location);
   const expandedStock = location.products.find(
     (p) => p.productId === expandedProductId,
@@ -65,7 +63,7 @@ export default function LocationCard({
             <p className="mt-0.5 text-xs text-zinc-500">{location.address}</p>
           </div>
           <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-600">
-            {typeLabels[location.type]}
+            {getLocationTypeLabel(location.type, locale, messages)}
           </span>
         </div>
 
@@ -80,7 +78,10 @@ export default function LocationCard({
                   : "font-medium text-emerald-600"
             }
           >
-            รวม {total} ชิ้น · {location.products.length} สินค้า
+            {t("common.totalItems", {
+              total,
+              products: location.products.length,
+            })}
           </span>
         </div>
       </button>
@@ -90,6 +91,7 @@ export default function LocationCard({
           const product = getProductById(stock.productId, products);
           if (!product) return null;
           const qty = getStockTotal(stock.inventory);
+          const unitLabel = getSizeUnitLabel(product.sizeUnit, locale, messages);
           const isActive =
             expandedProductId === stock.productId ||
             highlightProductId === stock.productId;
@@ -119,10 +121,15 @@ export default function LocationCard({
                   qty === 0 ? "text-red-400" : "text-zinc-600"
                 }`}
               >
-                {qty === 0 ? "หมด" : qty}
+                {qty === 0 ? t("stock.out") : qty}
               </span>
             </>
           );
+
+          const title =
+            qty === 0
+              ? `${product.name} — ${t("stock.out")}`
+              : `${product.name} — ${t("stock.remaining", { count: qty, unit: unitLabel })}`;
 
           if (onProductClick) {
             return (
@@ -134,7 +141,7 @@ export default function LocationCard({
                   onProductClick(stock.productId);
                 }}
                 className={thumbClass}
-                title={`${product.name} — เหลือ ${qty} ${product.sizeUnit}`}
+                title={title}
               >
                 {thumbContent}
               </button>
@@ -146,7 +153,7 @@ export default function LocationCard({
               key={stock.productId}
               href={`/products/${product.id}`}
               className={thumbClass}
-              title={`${product.name} — เหลือ ${qty} ${product.sizeUnit}`}
+              title={title}
             >
               {thumbContent}
             </Link>

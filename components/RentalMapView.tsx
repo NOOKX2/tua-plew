@@ -5,17 +5,23 @@ import dynamic from "next/dynamic";
 import type { Product, RentalLocation } from "@/lib/types";
 import { getAggregatedProductInventory, getStockTotal } from "@/lib/locations";
 import { getProductById } from "@/lib/products";
+import { useTranslations } from "@/lib/i18n/client";
 import LocationCard from "./LocationCard";
 import StockBadge from "./StockBadge";
 
 const RentalMap = dynamic(() => import("./RentalMap"), {
   ssr: false,
-  loading: () => (
-    <div className="flex h-full items-center justify-center bg-zinc-100">
-      <p className="text-sm text-zinc-500">กำลังโหลดแผนที่...</p>
-    </div>
-  ),
+  loading: () => <MapLoadingFallback />,
 });
+
+function MapLoadingFallback() {
+  const t = useTranslations();
+  return (
+    <div className="flex h-full items-center justify-center bg-zinc-100">
+      <p className="text-sm text-zinc-500">{t("map.loading")}</p>
+    </div>
+  );
+}
 
 type Props = {
   initialProductId?: string | null;
@@ -30,6 +36,7 @@ export default function RentalMapView({
   locations,
   products,
 }: Props) {
+  const t = useTranslations();
   const [selectedId, setSelectedId] = useState<string | null>(
     initialLocationId ?? locations[0]?.id ?? null,
   );
@@ -102,7 +109,7 @@ export default function RentalMapView({
       {selectedProductId && selectedProduct && (
         <div className="shrink-0 border-b border-zinc-200 bg-emerald-50 px-4 py-2 sm:px-6">
           <div className="flex flex-wrap items-center gap-2 text-sm text-emerald-800">
-            <span className="text-xs font-medium">กรองตาม:</span>
+            <span className="text-xs font-medium">{t("common.filterBy")}</span>
             <span className="font-semibold">{selectedProduct.name}</span>
             <StockBadge
               total={getStockTotal(
@@ -120,7 +127,7 @@ export default function RentalMapView({
               onClick={() => setSelectedProductId(null)}
               className="ml-auto text-xs font-medium underline hover:no-underline"
             >
-              ล้างตัวกรอง
+              {t("common.clearFilter")}
             </button>
           </div>
         </div>

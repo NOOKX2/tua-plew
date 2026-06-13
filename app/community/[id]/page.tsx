@@ -5,6 +5,7 @@ import {
   getCommunityEventByIdAsync,
 } from "@/lib/community.server";
 import { getRentalLocations } from "@/lib/locations.server";
+import { getTranslator } from "@/lib/i18n/server";
 import { getProducts } from "@/lib/products.server";
 
 export const dynamic = "force-dynamic";
@@ -15,10 +16,13 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const event = await getCommunityEventByIdAsync(id);
+  const [event, t] = await Promise.all([
+    getCommunityEventByIdAsync(id),
+    getTranslator(),
+  ]);
 
   if (!event) {
-    return { title: "ไม่พบกิจกรรม | Tua Plew" };
+    return { title: t("meta.eventNotFound") };
   }
 
   return {
