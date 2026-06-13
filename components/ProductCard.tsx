@@ -140,11 +140,10 @@ export default function ProductCard({
     return (
       <Link
         href={`/products/${product.id}`}
-        className={`block rounded-2xl border bg-white transition-all hover:border-emerald-300 hover:shadow-md ${
-          selected
+        className={`block rounded-2xl border bg-white transition-all hover:border-emerald-300 hover:shadow-md ${selected
             ? "border-emerald-500 shadow-md ring-2 ring-emerald-500/20"
             : "border-zinc-200"
-        }`}
+          }`}
       >
         {content}
       </Link>

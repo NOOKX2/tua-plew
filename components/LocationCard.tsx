@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import type { RentalLocation } from "@/lib/types";
 import { getProductById } from "@/lib/products";
 import { getStockTotal, getTotalStock } from "@/lib/locations";
+import ProductQuickView from "./ProductQuickView";
 
 const typeLabels = {
   booth: "ตู้เช่าอัตโนมัติ",
@@ -16,6 +18,9 @@ type Props = {
   selected: boolean;
   onSelect: (id: string) => void;
   highlightProductId?: string | null;
+  expandedProductId?: string | null;
+  onProductClick?: (productId: string) => void;
+  onCloseProduct?: () => void;
 };
 
 export default function LocationCard({
@@ -23,64 +28,81 @@ export default function LocationCard({
   selected,
   onSelect,
   highlightProductId,
+  expandedProductId,
+  onProductClick,
+  onCloseProduct,
 }: Props) {
   const total = getTotalStock(location);
+  const expandedStock = location.products.find(
+    (p) => p.productId === expandedProductId,
+  );
+  const expandedProduct = expandedProductId
+    ? getProductById(expandedProductId)
+    : null;
 
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(location.id)}
-      className={`w-full rounded-xl border p-4 text-left transition-all ${
+    <div
+      id={`location-card-${location.id}`}
+      className={`w-full scroll-mt-3 rounded-xl border transition-all ${
         selected
           ? "border-emerald-500 bg-emerald-50 shadow-md ring-2 ring-emerald-500/20"
           : "border-zinc-200 bg-white hover:border-emerald-300 hover:shadow-sm"
       }`}
     >
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <div>
-          <h3 className="font-semibold text-zinc-900">{location.name}</h3>
-          {location.partnerName && (
-            <p className="text-xs text-emerald-600">{location.partnerName}</p>
-          )}
-          <p className="mt-0.5 text-xs text-zinc-500">{location.address}</p>
+      <button
+        type="button"
+        onClick={() => onSelect(location.id)}
+        className="w-full p-4 pb-3 text-left"
+      >
+        <div className="mb-3 flex items-start justify-between gap-2">
+          <div>
+            <h3 className="font-semibold text-zinc-900">{location.name}</h3>
+            {location.partnerName && (
+              <p className="text-xs text-emerald-600">{location.partnerName}</p>
+            )}
+            <p className="mt-0.5 text-xs text-zinc-500">{location.address}</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-600">
+            {typeLabels[location.type]}
+          </span>
         </div>
-        <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-600">
-          {typeLabels[location.type]}
-        </span>
-      </div>
 
-      <div className="mb-3 flex items-center gap-3 text-xs text-zinc-500">
-        <span>🕐 {location.openHours}</span>
-        <span
-          className={
-            total === 0
-              ? "font-medium text-red-500"
-              : total <= 5
-                ? "font-medium text-amber-600"
-                : "font-medium text-emerald-600"
-          }
-        >
-          รวม {total} ชิ้น · {location.products.length} สินค้า
-        </span>
-      </div>
+        <div className="flex items-center gap-3 text-xs text-zinc-500">
+          <span>🕐 {location.openHours}</span>
+          <span
+            className={
+              total === 0
+                ? "font-medium text-red-500"
+                : total <= 5
+                  ? "font-medium text-amber-600"
+                  : "font-medium text-emerald-600"
+            }
+          >
+            รวม {total} ชิ้น · {location.products.length} สินค้า
+          </span>
+        </div>
+      </button>
 
-      {/* Product thumbnails */}
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="flex gap-2 overflow-x-auto px-4 pb-3">
         {location.products.map((stock) => {
           const product = getProductById(stock.productId);
           if (!product) return null;
           const qty = getStockTotal(stock.inventory);
-          const highlighted = highlightProductId === stock.productId;
-          return (
-            <div
-              key={stock.productId}
-              className={`relative shrink-0 rounded-lg border p-1.5 ${
-                highlighted
-                  ? "border-emerald-400 bg-emerald-50"
-                  : "border-zinc-100 bg-zinc-50"
-              }`}
-              title={`${product.name} — เหลือ ${qty} ${product.sizeUnit}`}
-            >
+          const isActive =
+            expandedProductId === stock.productId ||
+            highlightProductId === stock.productId;
+          const thumbClass = `relative shrink-0 rounded-lg border p-1.5 transition-colors ${
+            onProductClick
+              ? "cursor-pointer hover:border-emerald-300 hover:shadow-sm"
+              : ""
+          } ${
+            isActive
+              ? "border-emerald-500 bg-emerald-100 ring-2 ring-emerald-500/30"
+              : "border-zinc-100 bg-zinc-50"
+          }`;
+
+          const thumbContent = (
+            <>
               <div className="relative h-12 w-12">
                 <Image
                   src={product.image}
@@ -97,10 +119,47 @@ export default function LocationCard({
               >
                 {qty === 0 ? "หมด" : qty}
               </span>
-            </div>
+            </>
+          );
+
+          if (onProductClick) {
+            return (
+              <button
+                key={stock.productId}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onProductClick(stock.productId);
+                }}
+                className={thumbClass}
+                title={`${product.name} — เหลือ ${qty} ${product.sizeUnit}`}
+              >
+                {thumbContent}
+              </button>
+            );
+          }
+
+          return (
+            <Link
+              key={stock.productId}
+              href={`/products/${product.id}`}
+              className={thumbClass}
+              title={`${product.name} — เหลือ ${qty} ${product.sizeUnit}`}
+            >
+              {thumbContent}
+            </Link>
           );
         })}
       </div>
-    </button>
+
+      {expandedProduct && expandedStock && onCloseProduct && (
+        <ProductQuickView
+          embedded
+          product={expandedProduct}
+          stock={expandedStock}
+          onClose={onCloseProduct}
+        />
+      )}
+    </div>
   );
 }

@@ -36,16 +36,14 @@ export default function AuthButton({ variant = "dark" }: Props) {
         )}
         <div className="hidden text-right sm:block">
           <p
-            className={`max-w-[120px] truncate text-xs font-medium ${
-              isLight ? "text-white" : "text-zinc-800"
-            }`}
+            className={`max-w-[120px] truncate text-xs font-medium ${isLight ? "text-white" : "text-zinc-800"
+              }`}
           >
             {session.user.name}
           </p>
           <p
-            className={`max-w-[120px] truncate text-[10px] ${
-              isLight ? "text-emerald-100" : "text-zinc-500"
-            }`}
+            className={`max-w-[120px] truncate text-[10px] ${isLight ? "text-emerald-100" : "text-zinc-500"
+              }`}
           >
             {session.user.email}
           </p>
@@ -53,11 +51,10 @@ export default function AuthButton({ variant = "dark" }: Props) {
         <button
           type="button"
           onClick={() => signOut()}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-            isLight
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${isLight
               ? "bg-white/15 text-white hover:bg-white/25"
               : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
-          }`}
+            }`}
         >
           ออกจากระบบ
         </button>
@@ -68,11 +65,10 @@ export default function AuthButton({ variant = "dark" }: Props) {
   return (
     <Link
       href="/login"
-      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-        isLight
+      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${isLight
           ? "bg-white text-emerald-700 hover:bg-emerald-50"
           : "bg-emerald-600 text-white hover:bg-emerald-700"
-      }`}
+        }`}
     >
       เข้าสู่ระบบ
     </Link>

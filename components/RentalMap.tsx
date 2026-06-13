@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
 import type { RentalLocation } from "@/lib/types";
 import { hasGoogleMapsApiKey } from "@/lib/google-maps";
@@ -40,6 +41,7 @@ type Props = {
   selectedId: string | null;
   onSelect: (id: string) => void;
   highlightProductId?: string | null;
+  onProductClick?: (productId: string, locationId: string) => void;
 };
 
 function MissingApiKeyMessage() {
@@ -132,6 +134,7 @@ function GoogleRentalMap({
   selectedId,
   onSelect,
   highlightProductId,
+  onProductClick,
 }: Props) {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [infoLocationId, setInfoLocationId] = useState<string | null>(null);
@@ -202,9 +205,46 @@ function GoogleRentalMap({
                 const qty = getStockTotal(stock.inventory);
                 const highlighted = highlightProductId === stock.productId;
                 return (
-                  <div
+                  onProductClick ? (
+                    <button
+                      key={stock.productId}
+                      type="button"
+                      onClick={() =>
+                        onProductClick(stock.productId, infoLocation.id)
+                      }
+                      className={`flex w-full items-center gap-2 rounded-lg border p-1.5 text-left transition-colors hover:border-emerald-300 hover:bg-emerald-50/50 ${
+                        highlighted
+                          ? "border-emerald-300 bg-emerald-50"
+                          : "border-zinc-100"
+                      }`}
+                    >
+                      <div className="relative h-10 w-10 shrink-0">
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-contain"
+                          sizes="40px"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-xs font-medium text-zinc-800">
+                          {product.name}
+                        </p>
+                        <p
+                          className={`text-[10px] font-bold ${
+                            qty === 0 ? "text-red-500" : "text-emerald-600"
+                          }`}
+                        >
+                          {qty === 0 ? "หมด" : `เหลือ ${qty} ${product.sizeUnit}`}
+                        </p>
+                      </div>
+                    </button>
+                  ) : (
+                  <Link
                     key={stock.productId}
-                    className={`flex items-center gap-2 rounded-lg border p-1.5 ${
+                    href={`/products/${product.id}`}
+                    className={`flex items-center gap-2 rounded-lg border p-1.5 transition-colors hover:border-emerald-300 hover:bg-emerald-50/50 ${
                       highlighted
                         ? "border-emerald-300 bg-emerald-50"
                         : "border-zinc-100"
@@ -231,7 +271,8 @@ function GoogleRentalMap({
                         {qty === 0 ? "หมด" : `เหลือ ${qty} ${product.sizeUnit}`}
                       </p>
                     </div>
-                  </div>
+                  </Link>
+                  )
                 );
               })}
             </div>

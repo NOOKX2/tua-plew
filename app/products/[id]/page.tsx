@@ -5,6 +5,7 @@ import { getProductById, products } from "@/lib/products";
 
 type Props = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 };
 
 export async function generateStaticParams() {
@@ -25,13 +26,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPage({ params, searchParams }: Props) {
   const { id } = await params;
+  const { from } = await searchParams;
   const product = getProductById(id);
 
   if (!product) {
     notFound();
   }
 
-  return <ProductDetail product={product} />;
+  return <ProductDetail product={product} compact={from === "map"} />;
 }

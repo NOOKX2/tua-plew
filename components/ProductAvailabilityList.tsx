@@ -61,7 +61,7 @@ export default function ProductAvailabilityList({
       })}
 
       <Link
-        href={`/?product=${productId}#locations`}
+        href={`/map?product=${productId}`}
         className="mt-1 inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
       >
         ดูบนแผนที่

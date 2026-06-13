@@ -61,3 +61,36 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   set: "ชุด",
   shoe: "รองเท้า",
 };
+
+export type CommunityActivityType =
+  | "run-club"
+  | "hyrox"
+  | "yoga"
+  | "crossfit"
+  | "cycling"
+  | "swim"
+  | "pilates"
+  | "hiking";
+
+export type CommunityDifficulty = "beginner" | "intermediate" | "advanced";
+
+export type CommunityEvent = {
+  id: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  activityType: CommunityActivityType;
+  date: string;
+  startTime: string;
+  endTime?: string;
+  venue: string;
+  address: string;
+  locationId: string;
+  organizer: string;
+  participantCount: number;
+  maxParticipants?: number;
+  difficulty: CommunityDifficulty;
+  tags: string[];
+  recommendedProductIds: string[];
+  featured?: boolean;
+};
