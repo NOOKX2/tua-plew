@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 type Props = {
@@ -10,7 +11,33 @@ type Props = {
 
 export default function AuthButton({ variant = "dark" }: Props) {
   const { data: session, status } = useSession();
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const isLight = variant === "light";
+
+  useEffect(() => {
+    if (!open) return;
+
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
 
   if (status === "loading") {
     return (
@@ -24,40 +51,112 @@ export default function AuthButton({ variant = "dark" }: Props) {
 
   if (session?.user) {
     return (
-      <div className="flex items-center gap-2">
-        {session.user.image && (
-          <Image
-            src={session.user.image}
-            alt={session.user.name ?? "ผู้ใช้"}
-            width={32}
-            height={32}
-            className="rounded-full ring-2 ring-white/30"
-          />
-        )}
-        <div className="hidden text-right sm:block">
-          <p
-            className={`max-w-[120px] truncate text-xs font-medium ${isLight ? "text-white" : "text-zinc-800"
-              }`}
-          >
-            {session.user.name}
-          </p>
-          <p
-            className={`max-w-[120px] truncate text-[10px] ${isLight ? "text-emerald-100" : "text-zinc-500"
-              }`}
-          >
-            {session.user.email}
-          </p>
-        </div>
+      <div ref={menuRef} className="relative">
         <button
           type="button"
-          onClick={() => signOut()}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${isLight
-              ? "bg-white/15 text-white hover:bg-white/25"
-              : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
-            }`}
+          onClick={() => setOpen((prev) => !prev)}
+          aria-expanded={open}
+          aria-haspopup="menu"
+          className={`flex items-center gap-2 rounded-lg px-1.5 py-1 transition-colors sm:px-2 ${
+            isLight
+              ? "hover:bg-white/15"
+              : "hover:bg-zinc-100"
+          }`}
         >
-          ออกจากระบบ
+          {session.user.image ? (
+            <Image
+              src={session.user.image}
+              alt={session.user.name ?? "ผู้ใช้"}
+              width={32}
+              height={32}
+              className={`rounded-full ${isLight ? "ring-2 ring-white/30" : "ring-2 ring-zinc-200"}`}
+            />
+          ) : (
+            <span
+              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
+                isLight
+                  ? "bg-white/20 text-white"
+                  : "bg-emerald-100 text-emerald-700"
+              }`}
+            >
+              {(session.user.name ?? "U").charAt(0).toUpperCase()}
+            </span>
+          )}
+          <div className="hidden text-left sm:block">
+            <p
+              className={`max-w-[120px] truncate text-xs font-medium ${
+                isLight ? "text-white" : "text-zinc-800"
+              }`}
+            >
+              {session.user.name}
+            </p>
+            <p
+              className={`max-w-[120px] truncate text-[10px] ${
+                isLight ? "text-emerald-100" : "text-zinc-500"
+              }`}
+            >
+              {session.user.email}
+            </p>
+          </div>
+          <svg
+            className={`hidden h-3.5 w-3.5 sm:block ${
+              isLight ? "text-emerald-100" : "text-zinc-400"
+            } ${open ? "rotate-180" : ""} transition-transform`}
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+              clipRule="evenodd"
+            />
+          </svg>
         </button>
+
+        {open && (
+          <div
+            role="menu"
+            className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-zinc-200 bg-white py-1 shadow-lg"
+          >
+            <div className="border-b border-zinc-100 px-4 py-3 sm:hidden">
+              <p className="truncate text-sm font-medium text-zinc-900">
+                {session.user.name}
+              </p>
+              <p className="truncate text-xs text-zinc-500">
+                {session.user.email}
+              </p>
+            </div>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setOpen(false);
+                signOut();
+              }}
+              className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+            >
+              <svg
+                className="h-4 w-4 text-zinc-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z"
+                  clipRule="evenodd"
+                />
+                <path
+                  fillRule="evenodd"
+                  d="M19 10a.75.75 0 00-.75-.75H8.704l1.048-.943a.75.75 0 10-1.004-1.114l-2.5 2.25a.75.75 0 000 1.114l2.5 2.25a.75.75 0 101.004-1.114l-1.048-.943h9.546A.75.75 0 0019 10z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              ออกจากระบบ
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -65,10 +164,11 @@ export default function AuthButton({ variant = "dark" }: Props) {
   return (
     <Link
       href="/login"
-      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${isLight
+      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+        isLight
           ? "bg-white text-emerald-700 hover:bg-emerald-50"
           : "bg-emerald-600 text-white hover:bg-emerald-700"
-        }`}
+      }`}
     >
       เข้าสู่ระบบ
     </Link>

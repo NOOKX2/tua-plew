@@ -103,12 +103,12 @@ export default function LocationCard({
 
           const thumbContent = (
             <>
-              <div className="relative h-12 w-12">
+              <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-50">
                 <Image
                   src={product.image}
                   alt={product.name}
                   fill
-                  className="object-contain"
+                  className="object-contain p-1"
                   sizes="48px"
                 />
               </div>

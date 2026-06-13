@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import AuthButton from "./AuthButton";
 
 const NAV_ITEMS = [
-  { href: "/", label: "หน้าหลัก", match: (path: string) => path === "/" },
   {
     href: "/map",
     label: "แผนที่",

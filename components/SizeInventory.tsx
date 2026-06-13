@@ -27,9 +27,9 @@ export default function SizeInventory({
 }: Props) {
   const gridClass =
     sizes.length > 5
-      ? "grid grid-cols-3 gap-1.5 sm:grid-cols-6"
+      ? "grid grid-cols-3 gap-1 sm:grid-cols-6"
       : compact
-        ? "grid grid-cols-5 gap-1.5"
+        ? "grid grid-cols-5 gap-1"
         : "grid grid-cols-5 gap-2 sm:grid-cols-5";
 
   return (
@@ -40,10 +40,12 @@ export default function SizeInventory({
         return (
           <div
             key={size}
-            className={`flex flex-col items-center rounded-lg border px-1 py-2 ${levelStyles[level]}`}
+            className={`flex flex-col items-center rounded-md border px-0.5 ${compact ? "py-1" : "py-2"} ${levelStyles[level]}`}
           >
-            <span className="text-xs font-semibold">{size}</span>
-            <span className={`font-bold ${compact ? "text-sm" : "text-lg"}`}>
+            <span className={compact ? "text-[9px] font-semibold" : "text-xs font-semibold"}>
+              {size}
+            </span>
+            <span className={`font-bold ${compact ? "text-xs" : "text-lg"}`}>
               {qty}
             </span>
             {!compact && (

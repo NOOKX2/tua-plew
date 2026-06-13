@@ -12,7 +12,7 @@ export const products: Product[] = [
     longDescription:
       "เสื้อกีฬา Dri-Fit ผ้าระบายความชื้น น้ำหนักเบา แห้งเร็ว เหมาะสำหรับวิ่ง ออกกำลังกายกลางแจ้ง หรือคลาสกรุ๊ปฟิตเนส ดีไซน์คลี่คลายไม่รัดแน่น สวมใส่สบายตลอดการเคลื่อนไหว",
     category: "top",
-    image: "/products/dri-fit-tee.svg",
+    image: "/products/dri-fit-tee.jpg",
     pricePerRental: 49,
     material: "โพลีเอสเตอร์ รีไซเคิล 100%",
     color: "เขียวมิ้นท์",
@@ -42,7 +42,7 @@ export const products: Product[] = [
     longDescription:
       "กางเกงวิ่งสั้นสายรัดเอวยืดหยุ่น ผ้าเบาไม่ติดตัว มีกระเป๋าซ่อนด้านหลังสำหรับกุญแจหรือการ์ด เหมาะวิ่งในอากาศร้อน หรือออกกำลังกายที่ต้องการความคล่องตัวสูง",
     category: "bottom",
-    image: "/products/running-shorts.svg",
+    image: "/products/running-shorts.jpg",
     pricePerRental: 39,
     material: "โพลีเอสเตอร์ 88% + สแปนเด็กซ์ 12%",
     color: "น้ำเงิน",
@@ -72,7 +72,7 @@ export const products: Product[] = [
     longDescription:
       "กางเกงยาวรัดรูประดับกลาง เอวสูงช่วยพยุง ผ้ายืดสี่ทิศทางไม่บีบรัดจนเกินไป เหมาะโยคะ พิลาทิส วิ่ง หรือออกกำลังกายในร่ม",
     category: "bottom",
-    image: "/products/leggings.svg",
+    image: "/products/leggings.jpg",
     pricePerRental: 59,
     material: "ไนลอน 75% + สแปนเด็กซ์ 25%",
     color: "ม่วง",
@@ -102,7 +102,7 @@ export const products: Product[] = [
     longDescription:
       "ชุดโยคะครบเซ็ตประกอบด้วยเสื้อคลี่คลายและกางเกงยาวรัดรูป ผ้าคอตตอนออร์แกนิกนุ่มสบาย เหมาะสำหรับโยคะ พิลาทิส สตรีทชิง หรือออกกำลังกายเบาๆ ชุดเดียวจบ ไม่ต้องเลือกแยก",
     category: "set",
-    image: "/products/yoga-set.svg",
+    image: "/products/yoga-set.jpg",
     pricePerRental: 89,
     material: "ผ้าคอตตอนออร์แกนิก 95% + สแปนเด็กซ์ 5%",
     color: "ส้มคอรัล",
@@ -132,7 +132,7 @@ export const products: Product[] = [
     longDescription:
       "รองเท้าวิ่งออกแบบสำหรับวิ่งบนทางเรียบและในอาคาร โฟมรองรับแรงกระแทกกลาง พื้นยางกันลื่น ตาข่ายระบายอากาศ สวมใส่ง่ายด้วยระบบลิ้นไม่ต้องผูกเชือก เหมาะวิ่ง 5–10 กม. หรือคลาสคาร์ดิโอ",
     category: "shoe",
-    image: "/products/running-shoes.svg",
+    image: "/products/running-shoes.jpg",
     pricePerRental: 69,
     material: "ตาข่ายผ้า + โฟม EVA + พื้นยาง",
     color: "เทา-ส้ม",
@@ -163,7 +163,7 @@ export const products: Product[] = [
     longDescription:
       "รองเท้าออกกำลังกายหน้ากว้าง พื้นแบนราบช่วยเกาะพื้น โฟมรองรับส้นเท้า เหมาะเวทเทรนนิ่ง ฟังก์ชันนัล เต้นแอโรบิก หรือคลาสกรุ๊ปในร่ม สวมใส่สบาย ไม่บีบเท้า",
     category: "shoe",
-    image: "/products/training-shoes.svg",
+    image: "/products/training-shoes.jpg",
     pricePerRental: 65,
     material: "หนังสังเคราะห์ + โฟม + พื้นยาง",
     color: "ดำ-เขียว",

@@ -20,6 +20,7 @@ export const communityEvents: CommunityEvent[] = [
     difficulty: "beginner",
     tags: ["วิ่งเช้า", "ฟรี", "ทุกระดับ"],
     recommendedProductIds: ["dri-fit-tee", "running-shorts", "running-shoes"],
+    image: "/community/lumpini-run-club.jpg",
     featured: true,
   },
   {
@@ -41,6 +42,7 @@ export const communityEvents: CommunityEvent[] = [
     difficulty: "advanced",
     tags: ["Hyrox", "Functional", "แข่งขัน"],
     recommendedProductIds: ["dri-fit-tee", "training-shoes", "leggings"],
+    image: "/community/hyrox-bkk-training.jpg",
     featured: true,
   },
   {
@@ -62,6 +64,7 @@ export const communityEvents: CommunityEvent[] = [
     difficulty: "beginner",
     tags: ["โยคะ", "เช้า", "กลางแจ้ง"],
     recommendedProductIds: ["yoga-set", "leggings"],
+    image: "/community/sunrise-yoga-lumpini.jpg",
     featured: true,
   },
   {
@@ -83,6 +86,7 @@ export const communityEvents: CommunityEvent[] = [
     difficulty: "intermediate",
     tags: ["ปั่นจักรยาน", "เช้า", "กลุ่ม"],
     recommendedProductIds: ["dri-fit-tee", "running-shorts"],
+    image: "/community/chatuchak-cycling.jpg",
   },
   {
     id: "asoke-crossfit-wod",
@@ -103,6 +107,7 @@ export const communityEvents: CommunityEvent[] = [
     difficulty: "intermediate",
     tags: ["CrossFit", "WOD", "เย็น"],
     recommendedProductIds: ["dri-fit-tee", "training-shoes", "running-shorts"],
+    image: "/community/asoke-crossfit-wod.jpg",
   },
   {
     id: "samyan-swim-squad",
@@ -123,6 +128,7 @@ export const communityEvents: CommunityEvent[] = [
     difficulty: "intermediate",
     tags: ["ว่ายน้ำ", "เทคนิค", "เช้า"],
     recommendedProductIds: ["dri-fit-tee"],
+    image: "/community/samyan-swim-squad.jpg",
   },
   {
     id: "siam-pilates",
@@ -143,6 +149,7 @@ export const communityEvents: CommunityEvent[] = [
     difficulty: "beginner",
     tags: ["พิลาทิส", "core", "กลุ่มเล็ก"],
     recommendedProductIds: ["leggings", "yoga-set"],
+    image: "/community/siam-pilates.jpg",
   },
   {
     id: "khao-khaew-hike",
@@ -163,6 +170,7 @@ export const communityEvents: CommunityEvent[] = [
     difficulty: "intermediate",
     tags: ["เดินป่า", "ธรรมชาติ", "ทริป"],
     recommendedProductIds: ["dri-fit-tee", "running-shorts", "running-shoes"],
+    image: "/community/khao-khaew-hike.jpg",
   },
 ];
 

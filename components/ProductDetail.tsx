@@ -67,12 +67,12 @@ export default function ProductDetail({ product, compact = false }: Props) {
       )}
 
       <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
-        <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm lg:max-w-none">
+        <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl border border-zinc-200 bg-neutral-50 shadow-sm lg:max-w-none">
           <Image
             src={product.image}
             alt={product.name}
             fill
-            className="object-contain p-8"
+            className="object-contain p-6 sm:p-8"
             sizes="(max-width: 1024px) 384px, 50vw"
             priority
           />
@@ -228,7 +228,7 @@ export default function ProductDetail({ product, compact = false }: Props) {
                   href={`/products/${item.id}`}
                   className="group rounded-xl border border-zinc-100 bg-zinc-50 p-3 transition-shadow hover:shadow-md"
                 >
-                  <div className="relative mb-2 aspect-square overflow-hidden rounded-lg bg-white">
+                  <div className="relative mb-2 aspect-square overflow-hidden rounded-lg bg-neutral-50">
                     <Image
                       src={item.image}
                       alt={item.name}

@@ -9,17 +9,17 @@ type Props = {
 
 export default function ProductCatalog({ products, locations }: Props) {
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-zinc-900 sm:text-2xl">
+    <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
+      <div className="mb-5">
+        <h2 className="text-lg font-bold text-zinc-900 sm:text-xl">
           สินค้าให้เช่า
         </h2>
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="mt-0.5 text-xs text-zinc-500 sm:text-sm">
           ดูจำนวนเสื้อที่เหลือแต่ละไซส์แบบเรียลไทม์ — คลิกสินค้าเพื่อดูรายละเอียดเพิ่มเติม
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
         {products.map((product) => (
           <ProductCard
             key={product.id}

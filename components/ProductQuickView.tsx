@@ -46,12 +46,12 @@ export default function ProductQuickView({
 
       <div className={embedded ? "" : "p-4"}>
         <div className="flex gap-3">
-          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-zinc-50">
+          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-neutral-50">
             <Image
               src={product.image}
               alt={product.name}
               fill
-              className="object-contain p-2"
+              className="object-contain p-1.5"
               sizes="64px"
             />
           </div>

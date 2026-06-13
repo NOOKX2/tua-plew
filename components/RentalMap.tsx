@@ -218,12 +218,12 @@ function GoogleRentalMap({
                           : "border-zinc-100"
                       }`}
                     >
-                      <div className="relative h-10 w-10 shrink-0">
+                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-neutral-50">
                         <Image
                           src={product.image}
                           alt={product.name}
                           fill
-                          className="object-contain"
+                          className="object-contain p-0.5"
                           sizes="40px"
                         />
                       </div>
@@ -250,12 +250,12 @@ function GoogleRentalMap({
                         : "border-zinc-100"
                     }`}
                   >
-                    <div className="relative h-10 w-10 shrink-0">
+                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-neutral-50">
                       <Image
                         src={product.image}
                         alt={product.name}
                         fill
-                        className="object-contain"
+                        className="object-contain p-0.5"
                         sizes="40px"
                       />
                     </div>

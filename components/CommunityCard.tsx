@@ -1,8 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { CommunityEvent } from "@/lib/types";
 import {
   ACTIVITY_EMOJI,
-  ACTIVITY_GRADIENT,
   ACTIVITY_LABELS,
   DIFFICULTY_LABELS,
   formatEventDate,
@@ -24,24 +24,34 @@ export default function CommunityCard({ event, compact = false }: Props) {
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-all hover:border-emerald-300 hover:shadow-md"
     >
       <div
-        className={`relative bg-gradient-to-br ${ACTIVITY_GRADIENT[event.activityType]} px-4 py-5 text-white ${compact ? "py-4" : ""}`}
+        className={`relative aspect-[16/10] w-full overflow-hidden ${compact ? "aspect-[2/1]" : ""}`}
       >
-        <div className="flex items-start justify-between gap-2">
-          <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium backdrop-blur-sm">
-            {ACTIVITY_LABELS[event.activityType]}
-          </span>
-          <span className="text-2xl" aria-hidden>
-            {ACTIVITY_EMOJI[event.activityType]}
-          </span>
+        <Image
+          src={event.image}
+          alt={event.title}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/10" />
+        <div className="absolute inset-0 flex flex-col justify-end p-4 text-white">
+          <div className="mb-2 flex items-start justify-between gap-2">
+            <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium backdrop-blur-sm">
+              {ACTIVITY_LABELS[event.activityType]}
+            </span>
+            <span className="text-2xl drop-shadow-sm" aria-hidden>
+              {ACTIVITY_EMOJI[event.activityType]}
+            </span>
+          </div>
+          <h3 className="text-lg font-bold leading-snug drop-shadow-sm group-hover:underline">
+            {event.title}
+          </h3>
+          {!compact && (
+            <p className="mt-1 line-clamp-2 text-sm text-white/90">
+              {event.shortDescription}
+            </p>
+          )}
         </div>
-        <h3 className="mt-3 text-lg font-bold leading-snug group-hover:underline">
-          {event.title}
-        </h3>
-        {!compact && (
-          <p className="mt-1 line-clamp-2 text-sm text-white/85">
-            {event.shortDescription}
-          </p>
-        )}
       </div>
 
       <div className="flex flex-1 flex-col p-4">

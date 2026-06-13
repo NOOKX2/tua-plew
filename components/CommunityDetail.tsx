@@ -3,7 +3,6 @@ import Link from "next/link";
 import type { CommunityEvent, RentalLocation } from "@/lib/types";
 import {
   ACTIVITY_EMOJI,
-  ACTIVITY_GRADIENT,
   ACTIVITY_LABELS,
   DIFFICULTY_LABELS,
   formatEventDate,
@@ -29,20 +28,33 @@ export default function CommunityDetail({ event, location, locations }: Props) {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 bg-zinc-50 px-4 py-6 sm:px-6 sm:py-8">
-      <div
-        className={`mb-6 overflow-hidden rounded-2xl bg-gradient-to-br ${ACTIVITY_GRADIENT[event.activityType]} p-6 text-white sm:p-8`}
-      >
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-medium backdrop-blur-sm">
-            {ACTIVITY_EMOJI[event.activityType]}{" "}
-            {ACTIVITY_LABELS[event.activityType]}
-          </span>
-          <span className="rounded-full bg-white/20 px-3 py-1 text-sm backdrop-blur-sm">
-            {DIFFICULTY_LABELS[event.difficulty]}
-          </span>
+      <div className="relative mb-6 overflow-hidden rounded-2xl">
+        <div className="relative aspect-[21/9] w-full sm:aspect-[2.5/1]">
+          <Image
+            src={event.image}
+            alt={event.title}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
         </div>
-        <h1 className="mb-2 text-2xl font-bold sm:text-3xl">{event.title}</h1>
-        <p className="text-white/90">{event.shortDescription}</p>
+        <div className="absolute inset-0 flex flex-col justify-end p-6 text-white sm:p-8">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-medium backdrop-blur-sm">
+              {ACTIVITY_EMOJI[event.activityType]}{" "}
+              {ACTIVITY_LABELS[event.activityType]}
+            </span>
+            <span className="rounded-full bg-white/20 px-3 py-1 text-sm backdrop-blur-sm">
+              {DIFFICULTY_LABELS[event.difficulty]}
+            </span>
+          </div>
+          <h1 className="mb-2 text-2xl font-bold drop-shadow-sm sm:text-3xl">
+            {event.title}
+          </h1>
+          <p className="text-white/90">{event.shortDescription}</p>
+        </div>
       </div>
 
       <div className="mb-6 grid gap-3 sm:grid-cols-2">
@@ -131,12 +143,12 @@ export default function CommunityDetail({ event, location, locations }: Props) {
                   href={`/products/${product.id}`}
                   className="flex gap-3 rounded-xl border border-zinc-200 bg-white p-3 transition-shadow hover:shadow-md"
                 >
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-zinc-50">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-neutral-50">
                     <Image
                       src={product.image}
                       alt={product.name}
                       fill
-                      className="object-contain p-2"
+                      className="object-contain p-1.5"
                       sizes="64px"
                     />
                   </div>

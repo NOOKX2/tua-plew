@@ -92,5 +92,6 @@ export type CommunityEvent = {
   difficulty: CommunityDifficulty;
   tags: string[];
   recommendedProductIds: string[];
+  image: string;
   featured?: boolean;
 };
