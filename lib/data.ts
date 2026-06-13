@@ -43,6 +43,8 @@ type ProductRow = {
   activities: string[];
   sizeGuide: unknown;
   careNote: string;
+  brand?: string | null;
+  isPartnerBrand?: boolean | null;
 };
 
 type LocationRow = {
@@ -111,6 +113,8 @@ function mapProduct(row: ProductRow): Product {
     activities: row.activities,
     sizeGuide: row.sizeGuide as SizeGuideRow[],
     careNote: row.careNote,
+    brand: row.brand ?? undefined,
+    isPartnerBrand: row.isPartnerBrand ?? undefined,
   };
 }
 

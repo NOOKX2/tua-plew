@@ -48,6 +48,8 @@ export const rentalLocations: RentalLocation[] = [
       { productId: "yoga-set", inventory: { XS: 1, S: 2, M: 2, L: 1, XL: 1 } },
       { productId: "running-shoes", inventory: { "38": 2, "39": 2, "40": 4, "41": 3, "42": 2, "43": 1 } },
       { productId: "training-shoes", inventory: { "38": 1, "39": 2, "40": 3, "41": 2, "42": 2, "43": 0 } },
+      { productId: "nike-pegasus", inventory: { "38": 1, "39": 1, "40": 2, "41": 2, "42": 1, "43": 0 } },
+      { productId: "nb-1080", inventory: { "38": 0, "39": 1, "40": 1, "41": 1, "42": 1, "43": 0 } },
     ],
   },
   {
@@ -64,6 +66,8 @@ export const rentalLocations: RentalLocation[] = [
       { productId: "leggings", inventory: { XS: 0, S: 1, M: 2, L: 2, XL: 0 } },
       { productId: "yoga-set", inventory: { XS: 0, S: 1, M: 2, L: 1, XL: 0 } },
       { productId: "training-shoes", inventory: { "38": 0, "39": 1, "40": 2, "41": 1, "42": 1, "43": 0 } },
+      { productId: "nike-pegasus", inventory: { "38": 0, "39": 1, "40": 1, "41": 1, "42": 0, "43": 0 } },
+      { productId: "adidas-ultraboost", inventory: { "38": 0, "39": 1, "40": 2, "41": 1, "42": 1, "43": 0 } },
     ],
   },
   {
@@ -80,6 +84,7 @@ export const rentalLocations: RentalLocation[] = [
       { productId: "leggings", inventory: { XS: 1, S: 2, M: 3, L: 3, XL: 2 } },
       { productId: "yoga-set", inventory: { XS: 1, S: 1, M: 2, L: 2, XL: 1 } },
       { productId: "running-shoes", inventory: { "38": 1, "39": 2, "40": 3, "41": 3, "42": 2, "43": 1 } },
+      { productId: "adidas-ultraboost", inventory: { "38": 1, "39": 1, "40": 2, "41": 2, "42": 1, "43": 0 } },
     ],
   },
   {
@@ -97,6 +102,8 @@ export const rentalLocations: RentalLocation[] = [
       { productId: "yoga-set", inventory: { XS: 0, S: 1, M: 1, L: 0, XL: 0 } },
       { productId: "running-shoes", inventory: { "38": 0, "39": 1, "40": 1, "41": 1, "42": 0, "43": 0 } },
       { productId: "training-shoes", inventory: { "38": 0, "39": 0, "40": 1, "41": 1, "42": 1, "43": 0 } },
+      { productId: "nb-1080", inventory: { "38": 0, "39": 1, "40": 1, "41": 1, "42": 0, "43": 0 } },
+      { productId: "on-cloudrunner", inventory: { "38": 0, "39": 0, "40": 1, "41": 1, "42": 1, "43": 0 } },
     ],
   },
   {

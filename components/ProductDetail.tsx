@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { Product, RentalLocation } from "@/lib/types";
+import type { Product, ProductRatingSummary, ProductReview, RentalLocation } from "@/lib/types";
 import {
   getAggregatedProductInventory,
   getLocationsWithProduct,
@@ -13,14 +13,19 @@ import { getRelatedProducts } from "@/lib/products";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getCategoryLabel } from "@/lib/i18n/labels";
 import ProductAvailabilityList from "./ProductAvailabilityList";
+import ProductReviewSection from "./ProductReviewSection";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
+import StarRating from "./StarRating";
 
 type Props = {
   product: Product;
   products: Product[];
   locations: RentalLocation[];
   compact?: boolean;
+  reviews?: ProductReview[];
+  ratingSummary?: ProductRatingSummary;
+  hasReviewed?: boolean;
 };
 
 function CollapsibleSection({
@@ -58,6 +63,9 @@ export default function ProductDetail({
   products,
   locations,
   compact = false,
+  reviews = [],
+  ratingSummary = { averageRating: 0, count: 0 },
+  hasReviewed = false,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -95,8 +103,15 @@ export default function ProductDetail({
             priority
           />
           <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-zinc-700 shadow-sm">
-            {getCategoryLabel(product.category, locale, messages)}
+            {product.isPartnerBrand && product.brand
+              ? product.brand
+              : getCategoryLabel(product.category, locale, messages)}
           </span>
+          {product.isPartnerBrand && (
+            <span className="absolute left-4 top-12 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-semibold text-amber-800 shadow-sm">
+              {t("product.partnerBrand")}
+            </span>
+          )}
           <div className="absolute bottom-4 right-4">
             <StockBadge total={totalStock} unit={product.sizeUnit} size="lg" />
           </div>
@@ -106,6 +121,17 @@ export default function ProductDetail({
           <h1 className="mb-2 text-2xl font-bold text-zinc-900 sm:text-3xl">
             {product.name}
           </h1>
+          {ratingSummary.count > 0 && (
+            <div className="mb-2 flex items-center gap-2">
+              <StarRating rating={ratingSummary.averageRating} />
+              <span className="text-sm text-zinc-500">
+                {t("review.summary", {
+                  rating: ratingSummary.averageRating,
+                  count: ratingSummary.count,
+                })}
+              </span>
+            </div>
+          )}
           <p className="mb-4 text-sm leading-relaxed text-zinc-600">
             {compact ? product.description : product.longDescription}
           </p>
@@ -299,6 +325,15 @@ export default function ProductDetail({
               ))}
             </div>
           </CollapsibleSection>
+        )}
+
+        {!compact && product.isPartnerBrand && (
+          <ProductReviewSection
+            productId={product.id}
+            reviews={reviews}
+            ratingSummary={ratingSummary}
+            hasReviewed={hasReviewed}
+          />
         )}
       </div>
     </main>

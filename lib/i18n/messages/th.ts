@@ -155,6 +155,9 @@ export const th = {
     catalogTitle: "สินค้าให้เช่า",
     catalogSubtitle:
       "ดูจำนวนเสื้อที่เหลือแต่ละไซส์แบบเรียลไทม์ — คลิกสินค้าเพื่อดูรายละเอียดเพิ่มเติม",
+    partnerShoesTitle: "เช่ารองเท้าแบรนด์พาร์ทเนอร์",
+    partnerShoesSubtitle:
+      "รองเท้าจากแบรนด์ชั้นนำ เช่าได้ที่จุดพาร์ทเนอร์ — อ่านรีวิวจากผู้ใช้จริง",
   },
   product: {
     findNearby: "หาจุดเช่าใกล้ฉัน",
@@ -170,6 +173,7 @@ export const th = {
     chest: "รอบอก",
     waist: "รอบเอว",
     rentHere: "เช่าที่จุดนี้",
+    partnerBrand: "แบรนด์พาร์ทเนอร์",
   },
   map: {
     loading: "กำลังโหลดแผนที่...",
@@ -244,6 +248,29 @@ export const th = {
       notStarted: "แคมเปญยังไม่เริ่ม",
       ended: "แคมเปญสิ้นสุดแล้ว",
       joinFailed: "ไม่สามารถเข้าร่วมแคมเปญได้",
+    },
+  },
+  review: {
+    title: "รีวิวจากผู้ใช้",
+    summary: "{rating} จาก {count} รีวิว",
+    ratingLabel: "ให้คะแนน",
+    commentLabel: "ความคิดเห็น",
+    commentPlaceholder: "บอกประสบการณ์การเช่ารองเท้าคู่นี้...",
+    commentHint: "อย่างน้อย 10 ตัวอักษร",
+    submit: "ส่งรีวิว",
+    submitting: "กำลังส่ง...",
+    submitted: "ขอบคุณสำหรับรีวิวของคุณ",
+    empty: "ยังไม่มีรีวิว — เป็นคนแรกที่รีวิวได้เลย",
+    loginPrompt: "เข้าสู่ระบบเพื่อรีวิวรองเท้าคู่นี้",
+    loginToReview: "เข้าสู่ระบบเพื่อรีวิว",
+    errors: {
+      loginRequired: "กรุณาเข้าสู่ระบบก่อนรีวิว",
+      productNotFound: "ไม่พบสินค้า",
+      invalidData: "ข้อมูลไม่ถูกต้อง",
+      invalidRating: "กรุณาให้คะแนน 1–5 ดาว",
+      commentTooShort: "ความคิดเห็นต้องมีอย่างน้อย 10 ตัวอักษร",
+      commentTooLong: "ความคิดเห็นยาวเกิน 500 ตัวอักษร",
+      submitFailed: "ส่งรีวิวไม่สำเร็จ",
     },
   },
 };

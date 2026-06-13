@@ -160,6 +160,9 @@ export const en: Messages = {
     catalogTitle: "Rental products",
     catalogSubtitle:
       "See real-time size availability — click a product for more details",
+    partnerShoesTitle: "Partner brand shoe rentals",
+    partnerShoesSubtitle:
+      "Top-brand running shoes at partner locations — read reviews from real renters",
   },
   product: {
     findNearby: "Find rental near me",
@@ -175,6 +178,7 @@ export const en: Messages = {
     chest: "Chest",
     waist: "Waist",
     rentHere: "Rent here",
+    partnerBrand: "Partner brand",
   },
   map: {
     loading: "Loading map...",
@@ -249,6 +253,29 @@ export const en: Messages = {
       notStarted: "This campaign has not started yet",
       ended: "This campaign has ended",
       joinFailed: "Could not join campaign",
+    },
+  },
+  review: {
+    title: "Customer reviews",
+    summary: "{rating} from {count} reviews",
+    ratingLabel: "Your rating",
+    commentLabel: "Your review",
+    commentPlaceholder: "Share your experience renting these shoes...",
+    commentHint: "At least 10 characters",
+    submit: "Submit review",
+    submitting: "Submitting...",
+    submitted: "Thanks for your review",
+    empty: "No reviews yet — be the first to review",
+    loginPrompt: "Log in to review these shoes",
+    loginToReview: "Log in to review",
+    errors: {
+      loginRequired: "Please log in to submit a review",
+      productNotFound: "Product not found",
+      invalidData: "Invalid data",
+      invalidRating: "Please choose a rating from 1 to 5 stars",
+      commentTooShort: "Review must be at least 10 characters",
+      commentTooLong: "Review must be 500 characters or less",
+      submitFailed: "Could not submit review",
     },
   },
 };

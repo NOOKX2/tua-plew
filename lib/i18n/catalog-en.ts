@@ -201,6 +201,106 @@ export const catalogEn = {
       careNote:
         "Soles and seams are inspected after every return. Cleaned and sanitized before the next customer.",
     },
+    "nike-pegasus": {
+      name: "Nike Air Zoom Pegasus",
+      description: "Nike running shoes with React foam cushioning",
+      longDescription:
+        "Nike Air Zoom Pegasus from our partner brand program. Great for mid-distance runs with React foam cushioning, breathable mesh, and lightweight feel. Every pair is cleaned to Tua Plew standards before handover.",
+      material: "Flymesh upper + React foam + rubber sole",
+      color: "White-black",
+      features: [
+        "React foam impact cushioning",
+        "Lightweight for mid-distance runs",
+        "Breathable mesh upper",
+        "Partner brand quality",
+      ],
+      activities: ["Running", "Power walking", "Cardio", "Treadmill"],
+      sizeGuide: cmGuide([
+        { size: "38", footLength: "24.0 cm" },
+        { size: "39", footLength: "24.5 cm" },
+        { size: "40", footLength: "25.0 cm" },
+        { size: "41", footLength: "25.5 cm" },
+        { size: "42", footLength: "26.0 cm" },
+        { size: "43", footLength: "26.5 cm" },
+      ]),
+      careNote:
+        "Every partner-brand pair is cleaned, UV- and ozone-sanitized, and packed in a separate zip bag.",
+    },
+    "adidas-ultraboost": {
+      name: "Adidas Ultraboost",
+      description: "Adidas running shoes with responsive Boost foam",
+      longDescription:
+        "Adidas Ultraboost from our partner brand program. Responsive Boost foam and Primeknit upper for a snug fit. Great for running and long walks. Cleaned to Tua Plew standards before every rental.",
+      material: "Primeknit + Boost foam + Continental rubber sole",
+      color: "Black-white",
+      features: [
+        "Responsive Boost foam",
+        "Snug Primeknit upper",
+        "Continental rubber grip",
+        "Partner brand quality",
+      ],
+      activities: ["Running", "Power walking", "Cardio", "Treadmill"],
+      sizeGuide: cmGuide([
+        { size: "38", footLength: "24.0 cm" },
+        { size: "39", footLength: "24.5 cm" },
+        { size: "40", footLength: "25.0 cm" },
+        { size: "41", footLength: "25.5 cm" },
+        { size: "42", footLength: "26.0 cm" },
+        { size: "43", footLength: "26.5 cm" },
+      ]),
+      careNote:
+        "Every partner-brand pair is cleaned, UV- and ozone-sanitized, and packed in a separate zip bag.",
+    },
+    "nb-1080": {
+      name: "New Balance Fresh Foam 1080",
+      description: "New Balance running shoes with soft Fresh Foam X",
+      longDescription:
+        "New Balance Fresh Foam 1080 from our partner brand program. Plush Fresh Foam X cushioning for long runs and recovery days. Cleaned to Tua Plew standards before every rental.",
+      material: "Engineered mesh + Fresh Foam X",
+      color: "Grey-blue",
+      features: [
+        "Plush Fresh Foam X cushioning",
+        "Great for long runs",
+        "Breathable mesh upper",
+        "Partner brand quality",
+      ],
+      activities: ["Running", "Power walking", "Cardio", "Treadmill"],
+      sizeGuide: cmGuide([
+        { size: "38", footLength: "24.0 cm" },
+        { size: "39", footLength: "24.5 cm" },
+        { size: "40", footLength: "25.0 cm" },
+        { size: "41", footLength: "25.5 cm" },
+        { size: "42", footLength: "26.0 cm" },
+        { size: "43", footLength: "26.5 cm" },
+      ]),
+      careNote:
+        "Every partner-brand pair is cleaned, UV- and ozone-sanitized, and packed in a separate zip bag.",
+    },
+    "on-cloudrunner": {
+      name: "On Cloudrunner",
+      description: "Lightweight On running shoes with CloudTec cushioning",
+      longDescription:
+        "On Cloudrunner from our partner brand program. CloudTec impact cushioning in an ultra-light package. Great for city runs and walks. Cleaned to Tua Plew standards before every rental.",
+      material: "Engineered mesh + CloudTec + Helion foam",
+      color: "White-blue",
+      features: [
+        "CloudTec impact cushioning",
+        "Ultra-lightweight",
+        "Great for city runs and walks",
+        "Partner brand quality",
+      ],
+      activities: ["Running", "Power walking", "Cardio", "Treadmill"],
+      sizeGuide: cmGuide([
+        { size: "38", footLength: "24.0 cm" },
+        { size: "39", footLength: "24.5 cm" },
+        { size: "40", footLength: "25.0 cm" },
+        { size: "41", footLength: "25.5 cm" },
+        { size: "42", footLength: "26.0 cm" },
+        { size: "43", footLength: "26.5 cm" },
+      ]),
+      careNote:
+        "Every partner-brand pair is cleaned, UV- and ozone-sanitized, and packed in a separate zip bag.",
+    },
   } satisfies Record<string, ProductOverride>,
 
   locations: {

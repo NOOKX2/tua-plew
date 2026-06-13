@@ -1,0 +1,134 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "@/lib/i18n/client";
+import StarRating from "./StarRating";
+
+type Props = {
+  productId: string;
+  hasReviewed?: boolean;
+  callbackUrl?: string;
+};
+
+export default function ProductReviewForm({
+  productId,
+  hasReviewed = false,
+  callbackUrl,
+}: Props) {
+  const t = useTranslations();
+  const router = useRouter();
+  const { status } = useSession();
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(hasReviewed);
+
+  const loginHref = `/login?callbackUrl=${encodeURIComponent(
+    callbackUrl ?? `/products/${productId}`,
+  )}`;
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const response = await fetch(`/api/products/${productId}/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rating, comment }),
+    });
+    const data = (await response.json()) as { error?: string };
+
+    setLoading(false);
+
+    if (!response.ok) {
+      setError(data.error ?? t("review.errors.submitFailed"));
+      return;
+    }
+
+    setSubmitted(true);
+    setComment("");
+    router.refresh();
+  }
+
+  if (status === "loading") {
+    return <p className="text-sm text-zinc-400">{t("common.loading")}</p>;
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+        <p className="mb-3 text-sm text-zinc-600">{t("review.loginPrompt")}</p>
+        <Link
+          href={loginHref}
+          className="inline-flex rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+        >
+          {t("review.loginToReview")}
+        </Link>
+      </div>
+    );
+  }
+
+  if (submitted) {
+    return (
+      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+        <p className="text-sm font-medium text-emerald-700">
+          <span aria-hidden>✓ </span>
+          {t("review.submitted")}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="mb-2 block text-sm font-medium text-zinc-700">
+          {t("review.ratingLabel")}
+        </label>
+        <StarRating
+          rating={rating}
+          size="lg"
+          interactive
+          onChange={setRating}
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="review-comment"
+          className="mb-2 block text-sm font-medium text-zinc-700"
+        >
+          {t("review.commentLabel")}
+        </label>
+        <textarea
+          id="review-comment"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          rows={4}
+          maxLength={500}
+          placeholder={t("review.commentPlaceholder")}
+          className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          required
+        />
+        <p className="mt-1 text-xs text-zinc-400">
+          {t("review.commentHint")}
+        </p>
+      </div>
+
+      {error && <p className="text-sm text-red-600">{error}</p>}
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="inline-flex rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {loading ? t("review.submitting") : t("review.submit")}
+      </button>
+    </form>
+  );
+}

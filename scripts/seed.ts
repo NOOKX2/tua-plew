@@ -3,12 +3,14 @@ import { campaigns } from "../seed/seed-campaigns";
 import { communityEvents } from "../seed/seed-community";
 import { rentalLocations } from "../seed/seed-locations";
 import { products } from "../seed/seed-products";
+import { seedReviews } from "../seed/seed-reviews";
 import {
   Campaign,
   CommunityEvent,
   LocationStock,
   Product,
   RentalLocation,
+  Review,
 } from "../lib/models";
 
 const url = process.env.DATABASE_URL;
@@ -45,6 +47,8 @@ async function main() {
         activities: product.activities,
         sizeGuide: product.sizeGuide,
         careNote: product.careNote,
+        brand: product.brand,
+        isPartnerBrand: product.isPartnerBrand ?? false,
       },
       { upsert: true, new: true },
     );
@@ -129,8 +133,22 @@ async function main() {
     );
   }
 
+  for (const review of seedReviews) {
+    await Review.findOneAndUpdate(
+      { userId: review.userId, productId: review.productId },
+      {
+        userId: review.userId,
+        productId: review.productId,
+        userName: review.userName,
+        rating: review.rating,
+        comment: review.comment,
+      },
+      { upsert: true, new: true },
+    );
+  }
+
   console.log(
-    `Seeded ${products.length} products, ${rentalLocations.length} locations, ${communityEvents.length} events, ${campaigns.length} campaigns`,
+    `Seeded ${products.length} products, ${rentalLocations.length} locations, ${communityEvents.length} events, ${campaigns.length} campaigns, ${seedReviews.length} reviews`,
   );
 }
 

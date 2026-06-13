@@ -17,9 +17,25 @@ const productSchema = new Schema(
     activities: { type: [String], required: true },
     sizeGuide: { type: Schema.Types.Mixed, required: true },
     careNote: { type: String, required: true },
+    brand: { type: String },
+    isPartnerBrand: { type: Boolean, default: false },
   },
   { timestamps: true, _id: false },
 );
+
+const reviewSchema = new Schema(
+  {
+    userId: { type: String, required: true },
+    productId: { type: String, required: true },
+    userName: { type: String, required: true },
+    userImage: { type: String },
+    rating: { type: Number, required: true, min: 1, max: 5 },
+    comment: { type: String, required: true },
+  },
+  { timestamps: true },
+);
+reviewSchema.index({ userId: 1, productId: 1 }, { unique: true });
+reviewSchema.index({ productId: 1, createdAt: -1 });
 
 const rentalLocationSchema = new Schema(
   {
@@ -171,5 +187,6 @@ export const CommunityEnrollment = getModel(
   communityEnrollmentSchema,
   "CommunityEnrollment",
 );
+export const Review = getModel("Review", reviewSchema, "Review");
 export const User = getModel("User", userSchema, "User");
 export const Account = getModel("Account", accountSchema, "Account");

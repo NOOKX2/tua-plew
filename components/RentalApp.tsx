@@ -1,8 +1,10 @@
 import Link from "next/link";
 import type { Product, RentalLocation } from "@/lib/types";
 import { getAggregatedProductInventory, getStockTotal } from "@/lib/locations";
+import { getProductRatingSummaries } from "@/lib/reviews";
 import { getTranslator } from "@/lib/i18n/server";
 import ProductCatalog from "./ProductCatalog";
+import PartnerShoeCatalog from "./PartnerShoeCatalog";
 
 type Props = {
   locations: RentalLocation[];
@@ -11,6 +13,10 @@ type Props = {
 
 export default async function RentalApp({ locations, products }: Props) {
   const t = await getTranslator();
+  const partnerShoeIds = products
+    .filter((p) => p.isPartnerBrand)
+    .map((p) => p.id);
+  const ratingSummaries = await getProductRatingSummaries(partnerShoeIds);
   const totalStock = products.reduce(
     (sum, p) =>
       sum + getStockTotal(getAggregatedProductInventory(p.id, locations, products)),
@@ -46,6 +52,12 @@ export default async function RentalApp({ locations, products }: Props) {
           </div>
         </div>
       </section>
+
+      <PartnerShoeCatalog
+        products={products}
+        locations={locations}
+        ratingSummaries={ratingSummaries}
+      />
 
       <ProductCatalog products={products} locations={locations} />
 

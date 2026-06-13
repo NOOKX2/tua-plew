@@ -29,6 +29,24 @@ export type Product = {
   activities: string[];
   sizeGuide: SizeGuideRow[];
   careNote: string;
+  brand?: string;
+  isPartnerBrand?: boolean;
+};
+
+export type ProductReview = {
+  id: string;
+  userId: string;
+  productId: string;
+  userName: string;
+  userImage?: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+};
+
+export type ProductRatingSummary = {
+  averageRating: number;
+  count: number;
 };
 
 export type LocationProductStock = {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import type {
   LocationProductStock,
   Product,
+  ProductRatingSummary,
   SizeInventory as SizeInventoryType,
 } from "@/lib/types";
 import { getStockTotal } from "@/lib/locations";
@@ -12,6 +13,7 @@ import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getCategoryLabel } from "@/lib/i18n/labels";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
+import StarRating from "./StarRating";
 
 type Props = {
   product: Product;
@@ -22,6 +24,7 @@ type Props = {
   categoryLabel?: string;
   colorLabel?: string;
   perRentalLabel?: string;
+  ratingSummary?: ProductRatingSummary;
 };
 
 export default function ProductCard({
@@ -33,6 +36,7 @@ export default function ProductCard({
   categoryLabel: categoryLabelProp,
   colorLabel: colorLabelProp,
   perRentalLabel: perRentalLabelProp,
+  ratingSummary,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -70,7 +74,9 @@ export default function ProductCard({
           sizes={isCatalog ? "(max-width: 640px) 50vw, 20vw" : "128px"}
         />
         <span className="absolute left-1.5 top-1.5 rounded bg-white/90 px-1.5 py-0.5 text-[9px] font-semibold text-zinc-600 shadow-sm">
-          {categoryLabel}
+          {product.isPartnerBrand && product.brand
+            ? product.brand
+            : categoryLabel}
         </span>
       </div>
 
@@ -113,6 +119,15 @@ export default function ProductCard({
           <p className="mb-2 line-clamp-2 text-xs text-zinc-500">
             {product.description}
           </p>
+        )}
+
+        {isCatalog && ratingSummary && ratingSummary.count > 0 && (
+          <div className="mb-1 flex items-center gap-1">
+            <StarRating rating={ratingSummary.averageRating} size="sm" />
+            <span className="text-[10px] text-zinc-400">
+              ({ratingSummary.count})
+            </span>
+          </div>
         )}
 
         {isCatalog ? (
