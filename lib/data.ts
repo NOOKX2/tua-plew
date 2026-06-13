@@ -10,10 +10,17 @@ import type {
   SizeInventory,
   SizeUnit,
 } from "./types";
-import { prisma } from "./prisma";
+import { connectDB } from "./mongoose";
+import {
+  Campaign as CampaignModel,
+  CommunityEvent as CommunityEventModel,
+  LocationStock,
+  Product as ProductModel,
+  RentalLocation as RentalLocationModel,
+} from "./models";
 
-type DbProduct = {
-  id: string;
+type ProductRow = {
+  _id: string;
   name: string;
   description: string;
   longDescription: string;
@@ -30,24 +37,58 @@ type DbProduct = {
   careNote: string;
 };
 
-type DbLocationWithStocks = {
-  id: string;
+type LocationRow = {
+  _id: string;
   name: string;
   address: string;
   lat: number;
   lng: number;
   type: string;
-  partnerName: string | null;
+  partnerName?: string | null;
   openHours: string;
-  stocks: {
-    productId: string;
-    inventory: unknown;
-  }[];
 };
 
-function mapProduct(row: DbProduct): Product {
+type CommunityEventRow = {
+  _id: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  activityType: string;
+  date: string;
+  startTime: string;
+  endTime?: string | null;
+  venue: string;
+  address: string;
+  locationId: string;
+  organizer: string;
+  participantCount: number;
+  maxParticipants?: number | null;
+  difficulty: string;
+  tags: string[];
+  recommendedProductIds: string[];
+  image: string;
+  featured: boolean;
+};
+
+type CampaignRow = {
+  _id: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  campaignType: string;
+  image: string;
+  discountPercent: number;
+  requiredRentals?: number | null;
+  partnerLocationIds: string[];
+  startDate: string;
+  endDate: string;
+  terms: string[];
+  featured: boolean;
+};
+
+function mapProduct(row: ProductRow): Product {
   return {
-    id: row.id,
+    id: row._id,
     name: row.name,
     description: row.description,
     longDescription: row.longDescription,
@@ -65,9 +106,10 @@ function mapProduct(row: DbProduct): Product {
   };
 }
 
-function mapLocation(row: DbLocationWithStocks): RentalLocation {
+async function mapLocation(row: LocationRow): Promise<RentalLocation> {
+  const stocks = await LocationStock.find({ locationId: row._id }).lean();
   return {
-    id: row.id,
+    id: row._id,
     name: row.name,
     address: row.address,
     lat: row.lat,
@@ -75,36 +117,16 @@ function mapLocation(row: DbLocationWithStocks): RentalLocation {
     type: row.type as RentalLocation["type"],
     partnerName: row.partnerName ?? undefined,
     openHours: row.openHours,
-    products: row.stocks.map((stock) => ({
-      productId: stock.productId,
+    products: stocks.map((stock) => ({
+      productId: stock.productId as string,
       inventory: stock.inventory as SizeInventory,
     })),
   };
 }
 
-function mapCommunityEvent(row: {
-  id: string;
-  title: string;
-  shortDescription: string;
-  description: string;
-  activityType: string;
-  date: string;
-  startTime: string;
-  endTime: string | null;
-  venue: string;
-  address: string;
-  locationId: string;
-  organizer: string;
-  participantCount: number;
-  maxParticipants: number | null;
-  difficulty: string;
-  tags: string[];
-  recommendedProductIds: string[];
-  image: string;
-  featured: boolean;
-}): CommunityEvent {
+function mapCommunityEvent(row: CommunityEventRow): CommunityEvent {
   return {
-    id: row.id,
+    id: row._id,
     title: row.title,
     shortDescription: row.shortDescription,
     description: row.description,
@@ -126,23 +148,9 @@ function mapCommunityEvent(row: {
   };
 }
 
-function mapCampaign(row: {
-  id: string;
-  title: string;
-  shortDescription: string;
-  description: string;
-  campaignType: string;
-  image: string;
-  discountPercent: number;
-  requiredRentals: number | null;
-  partnerLocationIds: string[];
-  startDate: string;
-  endDate: string;
-  terms: string[];
-  featured: boolean;
-}): Campaign {
+function mapCampaign(row: CampaignRow): Campaign {
   return {
-    id: row.id,
+    id: row._id,
     title: row.title,
     shortDescription: row.shortDescription,
     description: row.description,
@@ -159,77 +167,79 @@ function mapCampaign(row: {
 }
 
 export async function fetchProducts(): Promise<Product[]> {
-  const rows = await prisma.product.findMany({ orderBy: { id: "asc" } });
+  await connectDB();
+  const rows = await ProductModel.find().sort({ _id: 1 }).lean<ProductRow[]>();
   return rows.map(mapProduct);
 }
 
 export async function fetchProductById(id: string): Promise<Product | undefined> {
-  const row = await prisma.product.findUnique({ where: { id } });
+  await connectDB();
+  const row = await ProductModel.findById(id).lean<ProductRow | null>();
   return row ? mapProduct(row) : undefined;
 }
 
 export async function fetchProductIds(): Promise<string[]> {
-  const rows = await prisma.product.findMany({
-    select: { id: true },
-    orderBy: { id: "asc" },
-  });
-  return rows.map((row) => row.id);
+  await connectDB();
+  const rows = await ProductModel.find().select("_id").sort({ _id: 1 }).lean();
+  return rows.map((row) => row._id as string);
 }
 
 export async function fetchLocations(): Promise<RentalLocation[]> {
-  const rows = await prisma.rentalLocation.findMany({
-    include: { stocks: true },
-    orderBy: { id: "asc" },
-  });
-  return rows.map(mapLocation);
+  await connectDB();
+  const rows = await RentalLocationModel.find()
+    .sort({ _id: 1 })
+    .lean<LocationRow[]>();
+  return Promise.all(rows.map(mapLocation));
 }
 
 export async function fetchLocationById(
   id: string,
 ): Promise<RentalLocation | undefined> {
-  const row = await prisma.rentalLocation.findUnique({
-    where: { id },
-    include: { stocks: true },
-  });
+  await connectDB();
+  const row = await RentalLocationModel.findById(id).lean<LocationRow | null>();
   return row ? mapLocation(row) : undefined;
 }
 
 export async function fetchCommunityEvents(): Promise<CommunityEvent[]> {
-  const rows = await prisma.communityEvent.findMany({ orderBy: { date: "asc" } });
+  await connectDB();
+  const rows = await CommunityEventModel.find()
+    .sort({ date: 1 })
+    .lean<CommunityEventRow[]>();
   return rows.map(mapCommunityEvent);
 }
 
 export async function fetchCommunityEventById(
   id: string,
 ): Promise<CommunityEvent | undefined> {
-  const row = await prisma.communityEvent.findUnique({ where: { id } });
+  await connectDB();
+  const row = await CommunityEventModel.findById(id).lean<CommunityEventRow | null>();
   return row ? mapCommunityEvent(row) : undefined;
 }
 
 export async function fetchCommunityEventIds(): Promise<string[]> {
-  const rows = await prisma.communityEvent.findMany({
-    select: { id: true },
-    orderBy: { id: "asc" },
-  });
-  return rows.map((row) => row.id);
+  await connectDB();
+  const rows = await CommunityEventModel.find().select("_id").sort({ _id: 1 }).lean();
+  return rows.map((row) => row._id as string);
 }
 
 export async function fetchCampaigns(): Promise<Campaign[]> {
-  const rows = await prisma.campaign.findMany({ orderBy: { startDate: "asc" } });
+  await connectDB();
+  const rows = await CampaignModel.find()
+    .sort({ startDate: 1 })
+    .lean<CampaignRow[]>();
   return rows.map(mapCampaign);
 }
 
 export async function fetchCampaignById(
   id: string,
 ): Promise<Campaign | undefined> {
-  const row = await prisma.campaign.findUnique({ where: { id } });
+  await connectDB();
+  const row = await CampaignModel.findById(id).lean<CampaignRow | null>();
   return row ? mapCampaign(row) : undefined;
 }
 
 export async function fetchCampaignIds(): Promise<string[]> {
-  const rows = await prisma.campaign.findMany({
-    select: { id: true },
-    orderBy: { id: "asc" },
-  });
-  return rows.map((row) => row.id);
+  await connectDB();
+  const rows = await CampaignModel.find().select("_id").sort({ _id: 1 }).lean();
+  return rows.map((row) => row._id as string);
 }

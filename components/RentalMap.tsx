@@ -76,8 +76,9 @@ function GoogleMapsSetupHelp({
         <p className="max-w-sm text-xs leading-relaxed text-zinc-500">
           ใส่ Key ใน{" "}
           <code className="rounded bg-white px-1 py-0.5">.env.local</code>{" "}
-          แล้วหยุดและรัน{" "}
-          <code className="rounded bg-white px-1 py-0.5">bun run dev</code> ใหม่
+          แล้วรัน{" "}
+          <code className="rounded bg-white px-1 py-0.5">bun run dev:restart</code>{" "}
+          ใหม่
         </p>
       ) : (
         <div className="max-w-sm space-y-2 text-left text-xs text-red-900/80">

@@ -1,20 +1,18 @@
 #!/bin/sh
 set -e
 
-# Docker sets DATABASE_URL=...@db:5432 — do not let .env.local (localhost) override it.
-export DATABASE_URL="${DATABASE_URL:-postgresql://fittogo:fittogo@db:5432/fittogo}"
+if [ -z "$DATABASE_URL" ]; then
+  echo "ERROR: DATABASE_URL is not set. Add MongoDB Atlas URL to .env.local"
+  exit 1
+fi
 
 echo "→ bun install"
 bun install
 
-echo "→ prisma db push (DATABASE_URL=${DATABASE_URL})"
-bunx prisma db push
+if [ "$SEED_ON_START" = "1" ]; then
+  echo "→ db seed"
+  bun --env-file=.env.local scripts/seed.ts
+fi
 
-echo "→ prisma db seed"
-bunx prisma db seed
-
-echo "→ prisma generate"
-bunx prisma generate
-
-echo "→ next dev (webpack — stable with auth/prisma in Docker)"
+echo "→ next dev (webpack)"
 exec bunx next dev --webpack -H 0.0.0.0 -p 3000

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { connectDB } from "@/lib/mongoose";
+import { User } from "@/lib/models";
 import { hashPassword, isPasswordStrongEnough } from "@/lib/password";
-import { prisma } from "@/lib/prisma";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -47,9 +48,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const existing = await prisma.user.findUnique({
-    where: { email: normalizedEmail },
-  });
+  await connectDB();
+
+  const existing = await User.findOne({ email: normalizedEmail });
 
   if (existing) {
     return NextResponse.json(
@@ -60,12 +61,10 @@ export async function POST(request: Request) {
 
   const passwordHash = await hashPassword(rawPassword);
 
-  await prisma.user.create({
-    data: {
-      name: trimmedName,
-      email: normalizedEmail,
-      passwordHash,
-    },
+  await User.create({
+    name: trimmedName,
+    email: normalizedEmail,
+    passwordHash,
   });
 
   return NextResponse.json({ success: true }, { status: 201 });

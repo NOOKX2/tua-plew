@@ -3,23 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "bun --env-file=.env.local prisma generate && next dev",
-    "build": "prisma generate && next build",
-    "postinstall": "prisma generate",
+    "dev": "docker compose up -d --build",
+    "dev:logs": "docker compose logs -f app",
+    "dev:stop": "docker compose down",
+    "dev:restart": "docker compose restart app",
+    "dev:seed": "docker compose exec app bun --env-file=.env.local scripts/seed.ts",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:generate": "bun --env-file=.env.local prisma generate",
-    "db:push": "bun --env-file=.env.local prisma db push",
-    "db:seed": "bun --env-file=.env.local prisma db seed",
-    "db:studio": "bun --env-file=.env.local prisma studio",
-    "db:studio:docker": "docker compose up studio -d",
-    "db:studio:docker:stop": "docker compose stop studio"
+    "db:seed": "bun --env-file=.env.local scripts/seed.ts"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.11.2",
-    "@prisma/client": "6",
     "@react-google-maps/api": "^2.20.8",
     "argon2": "^0.44.0",
+    "mongoose": "^9.7.0",
     "next": "16.2.9",
     "next-auth": "^5.0.0-beta.31",
     "react": "19.2.4",
@@ -32,7 +29,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
-    "prisma": "6",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
@@ -43,11 +39,6 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver",
-    "prisma",
-    "@prisma/client",
     "argon2"
-  ],
-  "prisma": {
-    "seed": "bun prisma/seed.ts"
-  }
+  ]
 }
