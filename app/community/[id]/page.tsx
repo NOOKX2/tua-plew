@@ -3,19 +3,15 @@ import { notFound } from "next/navigation";
 import CommunityDetail from "@/components/CommunityDetail";
 import {
   getCommunityEventByIdAsync,
-  getCommunityEventIds,
 } from "@/lib/community.server";
 import { getRentalLocations } from "@/lib/locations.server";
 import { getProducts } from "@/lib/products.server";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ id: string }>;
 };
-
-export async function generateStaticParams() {
-  const ids = await getCommunityEventIds();
-  return ids.map((id) => ({ id }));
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;

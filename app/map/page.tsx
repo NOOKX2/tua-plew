@@ -3,6 +3,8 @@ import RentalMapView from "@/components/RentalMapView";
 import { getRentalLocations } from "@/lib/locations.server";
 import { getProducts } from "@/lib/products.server";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "แผนที่จุดเช่า | Fit-to-Go",
   description: "ค้นหาจุดเช่าชุดกีฬา Fit-to-Go ใกล้คุณบนแผนที่",

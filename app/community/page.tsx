@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import CommunityList from "@/components/CommunityList";
 import { getCommunityEvents } from "@/lib/community.server";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "ชุมชนกิจกรรม | Fit-to-Go",
   description:

@@ -3,18 +3,14 @@ import { notFound } from "next/navigation";
 import CampaignDetail from "@/components/CampaignDetail";
 import {
   getCampaignByIdAsync,
-  getCampaignIds,
 } from "@/lib/campaigns.server";
 import { getRentalLocations } from "@/lib/locations.server";
+
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
-
-export async function generateStaticParams() {
-  const ids = await getCampaignIds();
-  return ids.map((id) => ({ id }));
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;

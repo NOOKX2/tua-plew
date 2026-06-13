@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "bun --env-file=.env.local prisma generate && next dev",
-    "build": "bun --env-file=.env.local prisma generate && next build",
+    "build": "prisma generate && next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "bun --env-file=.env.local prisma generate",

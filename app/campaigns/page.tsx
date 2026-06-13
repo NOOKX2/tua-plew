@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import CampaignList from "@/components/CampaignList";
 import { getCampaigns } from "@/lib/campaigns.server";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "แคมเปญ | Fit-to-Go",
   description:
