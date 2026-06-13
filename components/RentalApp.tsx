@@ -11,7 +11,7 @@ type Props = {
 export default function RentalApp({ locations, products }: Props) {
   const totalStock = products.reduce(
     (sum, p) =>
-      sum + getStockTotal(getAggregatedProductInventory(p.id, locations)),
+      sum + getStockTotal(getAggregatedProductInventory(p.id, locations, products)),
     0,
   );
 

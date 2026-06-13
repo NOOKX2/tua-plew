@@ -1,20 +1,16 @@
 import Link from "next/link";
+import type { Product } from "@/lib/types";
 import type { ProductAvailability } from "@/lib/locations";
 import { getStockTotal } from "@/lib/locations";
-import { getProductById } from "@/lib/products";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
 
 type Props = {
   items: ProductAvailability[];
-  productId: string;
+  product: Product;
 };
 
-export default function ProductAvailabilityList({
-  items,
-  productId,
-}: Props) {
-  const product = getProductById(productId);
+export default function ProductAvailabilityList({ items, product }: Props) {
 
   if (items.length === 0) {
     return (
@@ -61,7 +57,7 @@ export default function ProductAvailabilityList({
       })}
 
       <Link
-        href={`/map?product=${productId}`}
+        href={`/map?product=${product.id}`}
         className="mt-1 inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
       >
         ดูบนแผนที่

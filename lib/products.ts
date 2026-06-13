@@ -1,198 +1,35 @@
+import {
+  fetchProductById,
+  fetchProductIds,
+  fetchProducts,
+} from "./data";
 import type { Product } from "./types";
-import { APPAREL_SIZES, SHOE_SIZES } from "./types";
 
-const apparelSizes = [...APPAREL_SIZES];
-const shoeSizes = [...SHOE_SIZES];
-
-export const products: Product[] = [
-  {
-    id: "dri-fit-tee",
-    name: "เสื้อกีฬา Dri-Fit",
-    description: "เสื้อคลี่คลาย ระบายอากาศดี เหมาะวิ่งและออกกำลังกายกลางแจ้ง",
-    longDescription:
-      "เสื้อกีฬา Dri-Fit ผ้าระบายความชื้น น้ำหนักเบา แห้งเร็ว เหมาะสำหรับวิ่ง ออกกำลังกายกลางแจ้ง หรือคลาสกรุ๊ปฟิตเนส ดีไซน์คลี่คลายไม่รัดแน่น สวมใส่สบายตลอดการเคลื่อนไหว",
-    category: "top",
-    image: "/products/dri-fit-tee.jpg",
-    pricePerRental: 49,
-    material: "โพลีเอสเตอร์ รีไซเคิล 100%",
-    color: "เขียวมิ้นท์",
-    sizes: apparelSizes,
-    sizeUnit: "ตัว",
-    features: [
-      "ระบายอากาศดี แห้งเร็ว",
-      "ผ้ารีไซเคิล เป็นมิตรกับสิ่งแวดล้อม",
-      "ตะเข็บแบน ลดการเสียดสี",
-      "ซักฆ่า Ozone ทุกครั้งหลังคืน",
-    ],
-    activities: ["วิ่ง", "คาร์ดิโอ", "เวทเทรนนิ่ง", "ปั่นจักรยาน"],
-    sizeGuide: [
-      { size: "XS", chest: "76–81 ซม." },
-      { size: "S", chest: "81–86 ซม." },
-      { size: "M", chest: "86–91 ซม." },
-      { size: "L", chest: "91–97 ซม." },
-      { size: "XL", chest: "97–102 ซม." },
-    ],
-    careNote:
-      "ทุกชิ้นผ่านกระบวนการซัก ฆ่าเชื้อด้วย Ozone และบรรจุในซิปล็อกย่อยสลายได้ก่อนส่งมอบ",
-  },
-  {
-    id: "running-shorts",
-    name: "กางเกงวิ่ง สั้น",
-    description: "กางเกงสั้นเบา สะดวกสบาย มีกระเป๋าซ่อนด้านหลัง",
-    longDescription:
-      "กางเกงวิ่งสั้นสายรัดเอวยืดหยุ่น ผ้าเบาไม่ติดตัว มีกระเป๋าซ่อนด้านหลังสำหรับกุญแจหรือการ์ด เหมาะวิ่งในอากาศร้อน หรือออกกำลังกายที่ต้องการความคล่องตัวสูง",
-    category: "bottom",
-    image: "/products/running-shorts.jpg",
-    pricePerRental: 39,
-    material: "โพลีเอสเตอร์ 88% + สแปนเด็กซ์ 12%",
-    color: "น้ำเงิน",
-    sizes: apparelSizes,
-    sizeUnit: "ตัว",
-    features: [
-      "น้ำหนักเบา ระบายอากาศ",
-      "สายรัดเอวยืดหยุ่น",
-      "กระเป๋าซ่อนด้านหลัง",
-      "แห้งเร็วหลังซัก",
-    ],
-    activities: ["วิ่ง", "สปรินต์", "HIIT", "เดินเร็ว"],
-    sizeGuide: [
-      { size: "XS", waist: "58–61 ซม." },
-      { size: "S", waist: "61–66 ซม." },
-      { size: "M", waist: "66–71 ซม." },
-      { size: "L", waist: "71–76 ซม." },
-      { size: "XL", waist: "76–81 ซม." },
-    ],
-    careNote:
-      "ตรวจสอบกระเป๋าและซิปทุกครั้งก่อนส่งมอบ ซักแยกตามมาตรฐานสุขอนามัยของ Fit-to-Go",
-  },
-  {
-    id: "leggings",
-    name: "กางเกงยาว วิ่ง",
-    description: "กางเกงยาวรัดรูป ยืดหยุ่นสูง เหมาะโยคะและวิ่ง",
-    longDescription:
-      "กางเกงยาวรัดรูประดับกลาง เอวสูงช่วยพยุง ผ้ายืดสี่ทิศทางไม่บีบรัดจนเกินไป เหมาะโยคะ พิลาทิส วิ่ง หรือออกกำลังกายในร่ม",
-    category: "bottom",
-    image: "/products/leggings.jpg",
-    pricePerRental: 59,
-    material: "ไนลอน 75% + สแปนเด็กซ์ 25%",
-    color: "ม่วง",
-    sizes: apparelSizes,
-    sizeUnit: "ตัว",
-    features: [
-      "ยืดสี่ทิศทาง คล่องตัว",
-      "เอวสูงพยุงสบาย",
-      "ไร้ตะเข็บด้านข้าง ลดการเสียดสี",
-      "ไม่โปร่งแสง",
-    ],
-    activities: ["โยคะ", "พิลาทิส", "วิ่ง", "เต้นแอโรบิก"],
-    sizeGuide: [
-      { size: "XS", waist: "56–59 ซม." },
-      { size: "S", waist: "59–64 ซม." },
-      { size: "M", waist: "64–69 ซม." },
-      { size: "L", waist: "69–74 ซม." },
-      { size: "XL", waist: "74–79 ซม." },
-    ],
-    careNote:
-      "ตรวจสอบความยืดหยุ่นของผ้าหลังซักทุกครั้ง เพื่อความพอดีและความสบายในการสวมใส่",
-  },
-  {
-    id: "yoga-set",
-    name: "ชุดโยคะ ครบเซ็ต",
-    description: "เสื้อ + กางเกงยาว ชุดเดียวจบ พร้อมออกกำลังกายทันที",
-    longDescription:
-      "ชุดโยคะครบเซ็ตประกอบด้วยเสื้อคลี่คลายและกางเกงยาวรัดรูป ผ้าคอตตอนออร์แกนิกนุ่มสบาย เหมาะสำหรับโยคะ พิลาทิส สตรีทชิง หรือออกกำลังกายเบาๆ ชุดเดียวจบ ไม่ต้องเลือกแยก",
-    category: "set",
-    image: "/products/yoga-set.jpg",
-    pricePerRental: 89,
-    material: "ผ้าคอตตอนออร์แกนิก 95% + สแปนเด็กซ์ 5%",
-    color: "ส้มคอรัล",
-    sizes: apparelSizes,
-    sizeUnit: "ตัว",
-    features: [
-      "ครบเซ็ต เสื้อ + กางเกง",
-      "ผ้าออร์แกนิก สัมผัสนุ่ม",
-      "ดีไซน์เรียบ เหมาะทุกคลาส",
-      "ประหยัดกว่าเช่าแยกชิ้น",
-    ],
-    activities: ["โยคะ", "พิลาทิส", "สตรีทชิง", "เต้นแอโรบิก"],
-    sizeGuide: [
-      { size: "XS", chest: "76–81 ซม.", waist: "56–59 ซม." },
-      { size: "S", chest: "81–86 ซม.", waist: "59–64 ซม." },
-      { size: "M", chest: "86–91 ซม.", waist: "64–69 ซม." },
-      { size: "L", chest: "91–97 ซม.", waist: "69–74 ซม." },
-      { size: "XL", chest: "97–102 ซม.", waist: "74–79 ซม." },
-    ],
-    careNote:
-      "ชุดเซ็ตบรรจุแยกชิ้นในถุงซิปล็อกคู่ เพื่อความสะอาดและง่ายต่อการตรวจสอบก่อนส่งมอบ",
-  },
-  {
-    id: "running-shoes",
-    name: "รองเท้าวิ่ง",
-    description: "รองเท้าวิ่งเบา รองรับแรงกระแทก ระบายอากาศดี",
-    longDescription:
-      "รองเท้าวิ่งออกแบบสำหรับวิ่งบนทางเรียบและในอาคาร โฟมรองรับแรงกระแทกกลาง พื้นยางกันลื่น ตาข่ายระบายอากาศ สวมใส่ง่ายด้วยระบบลิ้นไม่ต้องผูกเชือก เหมาะวิ่ง 5–10 กม. หรือคลาสคาร์ดิโอ",
-    category: "shoe",
-    image: "/products/running-shoes.jpg",
-    pricePerRental: 69,
-    material: "ตาข่ายผ้า + โฟม EVA + พื้นยาง",
-    color: "เทา-ส้ม",
-    sizes: shoeSizes,
-    sizeUnit: "คู่",
-    features: [
-      "น้ำหนักเบา รองรับแรงกระแทก",
-      "พื้นยางกันลื่น",
-      "ระบายอากาศดี",
-      "ทำความสะอาดและฆ่าเชื้อทุกครั้ง",
-    ],
-    activities: ["วิ่ง", "เดินเร็ว", "คาร์ดิโอ", "เทรดมิล"],
-    sizeGuide: [
-      { size: "38", footLength: "24.0 ซม." },
-      { size: "39", footLength: "24.5 ซม." },
-      { size: "40", footLength: "25.0 ซม." },
-      { size: "41", footLength: "25.5 ซม." },
-      { size: "42", footLength: "26.0 ซม." },
-      { size: "43", footLength: "26.5 ซม." },
-    ],
-    careNote:
-      "รองเท้าทุกคู่ผ่านการทำความสะอาด ฆ่าเชื้อด้วย UV และ Ozone บรรจุถุงซิปล็อกแยกคู่ก่อนส่งมอบ",
-  },
-  {
-    id: "training-shoes",
-    name: "รองเท้าออกกำลังกาย",
-    description: "รองเท้าสำหรับเวทและฟังก์ชันนัล เกาะพื้นดี มั่นคง",
-    longDescription:
-      "รองเท้าออกกำลังกายหน้ากว้าง พื้นแบนราบช่วยเกาะพื้น โฟมรองรับส้นเท้า เหมาะเวทเทรนนิ่ง ฟังก์ชันนัล เต้นแอโรบิก หรือคลาสกรุ๊ปในร่ม สวมใส่สบาย ไม่บีบเท้า",
-    category: "shoe",
-    image: "/products/training-shoes.jpg",
-    pricePerRental: 65,
-    material: "หนังสังเคราะห์ + โฟม + พื้นยาง",
-    color: "ดำ-เขียว",
-    sizes: shoeSizes,
-    sizeUnit: "คู่",
-    features: [
-      "หน้ากว้าง สวมใส่สบาย",
-      "พื้นแบนราบ เกาะพื้นดี",
-      "เหมาะเวทและฟังก์ชันนัล",
-      "ทำความสะอาดและฆ่าเชื้อทุกครั้ง",
-    ],
-    activities: ["เวทเทรนนิ่ง", "ฟังก์ชันนัล", "HIIT", "เต้นแอโรบิก"],
-    sizeGuide: [
-      { size: "38", footLength: "24.0 ซม." },
-      { size: "39", footLength: "24.5 ซม." },
-      { size: "40", footLength: "25.0 ซม." },
-      { size: "41", footLength: "25.5 ซม." },
-      { size: "42", footLength: "26.0 ซม." },
-      { size: "43", footLength: "26.5 ซม." },
-    ],
-    careNote:
-      "ตรวจสอบพื้นรองเท้าและตะเข็บทุกครั้งหลังคืน ทำความสะอาดและฆ่าเชื้อก่อนส่งมอบลูกค้าคนถัดไป",
-  },
-];
-
-export function getProductById(id: string): Product | undefined {
-  return products.find((p) => p.id === id);
+export async function getProducts(): Promise<Product[]> {
+  return fetchProducts();
 }
 
-export function getRelatedProducts(id: string, limit = 3): Product[] {
-  return products.filter((p) => p.id !== id).slice(0, limit);
+export async function getProductByIdAsync(
+  id: string,
+): Promise<Product | undefined> {
+  return fetchProductById(id);
+}
+
+export async function getProductIds(): Promise<string[]> {
+  return fetchProductIds();
+}
+
+export function getProductById(
+  id: string,
+  products: Product[],
+): Product | undefined {
+  return products.find((product) => product.id === id);
+}
+
+export function getRelatedProducts(
+  id: string,
+  products: Product[],
+  limit = 3,
+): Product[] {
+  return products.filter((product) => product.id !== id).slice(0, limit);
 }

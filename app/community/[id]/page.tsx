@@ -2,22 +2,24 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CommunityDetail from "@/components/CommunityDetail";
 import {
-  communityEvents,
-  getCommunityEventById,
+  getCommunityEventByIdAsync,
+  getCommunityEventIds,
 } from "@/lib/community";
-import { rentalLocations } from "@/lib/locations";
+import { getRentalLocations } from "@/lib/locations";
+import { getProducts } from "@/lib/products";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
 export async function generateStaticParams() {
-  return communityEvents.map((event) => ({ id: event.id }));
+  const ids = await getCommunityEventIds();
+  return ids.map((id) => ({ id }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const event = getCommunityEventById(id);
+  const event = await getCommunityEventByIdAsync(id);
 
   if (!event) {
     return { title: "ไม่พบกิจกรรม | Fit-to-Go" };
@@ -31,19 +33,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CommunityEventPage({ params }: Props) {
   const { id } = await params;
-  const event = getCommunityEventById(id);
+  const [event, locations, products] = await Promise.all([
+    getCommunityEventByIdAsync(id),
+    getRentalLocations(),
+    getProducts(),
+  ]);
 
   if (!event) {
     notFound();
   }
 
-  const location = rentalLocations.find((loc) => loc.id === event.locationId);
+  const location = locations.find((loc) => loc.id === event.locationId);
 
   return (
     <CommunityDetail
       event={event}
       location={location}
-      locations={rentalLocations}
+      locations={locations}
+      products={products}
     />
   );
 }

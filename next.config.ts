@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    images: {
+  // Only Prisma must stay external (native engine). Do not externalize
+  // @auth/prisma-adapter — Turbopack rewrites it to a hashed id that fails in Docker.
+  serverExternalPackages: ["@prisma/client", "prisma"],
+  images: {
     remotePatterns: [
       {
         protocol: "https",

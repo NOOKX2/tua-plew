@@ -25,7 +25,11 @@ export default function ProductCatalog({ products, locations }: Props) {
             key={product.id}
             product={product}
             variant="catalog"
-            globalInventory={getAggregatedProductInventory(product.id, locations)}
+            globalInventory={getAggregatedProductInventory(
+              product.id,
+              locations,
+              products,
+            )}
           />
         ))}
       </div>

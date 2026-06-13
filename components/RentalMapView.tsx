@@ -28,6 +28,7 @@ export default function RentalMapView({
   initialProductId = null,
   initialLocationId = null,
   locations,
+  products,
 }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(
     initialLocationId ?? locations[0]?.id ?? null,
@@ -67,7 +68,7 @@ export default function RentalMapView({
   }, [expandedProductId, expandedLocationId]);
 
   const selectedProduct = selectedProductId
-    ? getProductById(selectedProductId)
+    ? getProductById(selectedProductId, products)
     : null;
 
   const filteredLocations = selectedProductId
@@ -105,7 +106,11 @@ export default function RentalMapView({
             <span className="font-semibold">{selectedProduct.name}</span>
             <StockBadge
               total={getStockTotal(
-                getAggregatedProductInventory(selectedProduct.id, locations),
+                getAggregatedProductInventory(
+                  selectedProduct.id,
+                  locations,
+                  products,
+                ),
               )}
               unit={selectedProduct.sizeUnit}
               size="sm"
@@ -126,6 +131,7 @@ export default function RentalMapView({
           <div className="h-full w-full">
             <RentalMap
               locations={filteredLocations}
+              products={products}
               selectedId={selectedId}
               onSelect={handleLocationSelect}
               highlightProductId={selectedProductId}
@@ -140,6 +146,7 @@ export default function RentalMapView({
               <LocationCard
                 key={loc.id}
                 location={loc}
+                products={products}
                 selected={loc.id === selectedId}
                 onSelect={handleLocationSelect}
                 highlightProductId={selectedProductId}

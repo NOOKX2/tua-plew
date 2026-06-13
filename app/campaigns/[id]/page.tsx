@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CampaignDetail from "@/components/CampaignDetail";
-import { campaigns, getCampaignById } from "@/lib/campaigns";
-import { rentalLocations } from "@/lib/locations";
+import {
+  getCampaignByIdAsync,
+  getCampaignIds,
+} from "@/lib/campaigns";
+import { getRentalLocations } from "@/lib/locations";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
 export async function generateStaticParams() {
-  return campaigns.map((campaign) => ({ id: campaign.id }));
+  const ids = await getCampaignIds();
+  return ids.map((id) => ({ id }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const campaign = getCampaignById(id);
+  const campaign = await getCampaignByIdAsync(id);
 
   if (!campaign) {
     return { title: "ไม่พบแคมเปญ | Fit-to-Go" };
@@ -28,7 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CampaignPage({ params }: Props) {
   const { id } = await params;
-  const campaign = getCampaignById(id);
+  const [campaign, rentalLocations] = await Promise.all([
+    getCampaignByIdAsync(id),
+    getRentalLocations(),
+  ]);
 
   if (!campaign) {
     notFound();

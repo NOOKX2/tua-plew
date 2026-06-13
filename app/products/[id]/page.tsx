@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductDetail from "@/components/ProductDetail";
-import { getProductById, products } from "@/lib/products";
+import { getRentalLocations } from "@/lib/locations";
+import {
+  getProductByIdAsync,
+  getProductIds,
+  getProducts,
+} from "@/lib/products";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -9,12 +14,13 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return products.map((product) => ({ id: product.id }));
+  const ids = await getProductIds();
+  return ids.map((id) => ({ id }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const product = getProductById(id);
+  const product = await getProductByIdAsync(id);
 
   if (!product) {
     return { title: "ไม่พบสินค้า | Fit-to-Go" };
@@ -29,11 +35,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params, searchParams }: Props) {
   const { id } = await params;
   const { from } = await searchParams;
-  const product = getProductById(id);
+  const [product, products, locations] = await Promise.all([
+    getProductByIdAsync(id),
+    getProducts(),
+    getRentalLocations(),
+  ]);
 
   if (!product) {
     notFound();
   }
 
-  return <ProductDetail product={product} compact={from === "map"} />;
+  return (
+    <ProductDetail
+      product={product}
+      products={products}
+      locations={locations}
+      compact={from === "map"}
+    />
+  );
 }

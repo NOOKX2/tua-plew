@@ -24,7 +24,10 @@ const NAV_ITEMS = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const hideAuth = pathname === "/login";
+
+  if (pathname === "/login" || pathname === "/register") {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
@@ -55,12 +58,9 @@ export default function Navbar() {
           })}
         </nav>
 
-        {!hideAuth && (
-          <div className="shrink-0">
-            <AuthButton />
-          </div>
-        )}
-        {hideAuth && <div className="w-16 shrink-0 sm:w-20" aria-hidden />}
+        <div className="shrink-0">
+          <AuthButton />
+        </div>
       </div>
     </header>
   );

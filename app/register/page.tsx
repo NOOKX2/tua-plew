@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { GoogleSignInButton } from "@/components/AuthButton";
-import { AuthDivider, CredentialsSignInForm } from "@/components/AuthForms";
+import { AuthDivider, RegisterForm } from "@/components/AuthForms";
 import AuthLayout from "@/components/AuthLayout";
 
-export default async function LoginPage() {
+export default async function RegisterPage() {
   const session = await auth();
 
   if (session?.user) {
@@ -12,8 +12,8 @@ export default async function LoginPage() {
   }
 
   return (
-    <AuthLayout variant="login">
-      <CredentialsSignInForm />
+    <AuthLayout variant="register">
+      <RegisterForm />
       <AuthDivider />
       <GoogleSignInButton />
     </AuthLayout>

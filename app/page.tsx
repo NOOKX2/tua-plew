@@ -1,7 +1,12 @@
 import RentalApp from "@/components/RentalApp";
-import { rentalLocations } from "@/lib/locations";
-import { products } from "@/lib/products";
+import { getRentalLocations } from "@/lib/locations";
+import { getProducts } from "@/lib/products";
 
-export default function Home() {
-  return <RentalApp locations={rentalLocations} products={products} />;
+export default async function Home() {
+  const [locations, products] = await Promise.all([
+    getRentalLocations(),
+    getProducts(),
+  ]);
+
+  return <RentalApp locations={locations} products={products} />;
 }

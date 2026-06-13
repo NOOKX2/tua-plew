@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
-import type { RentalLocation } from "@/lib/types";
+import type { Product, RentalLocation } from "@/lib/types";
 import { hasGoogleMapsApiKey } from "@/lib/google-maps";
 import { getProductById } from "@/lib/products";
 import { getStockTotal, getTotalStock } from "@/lib/locations";
@@ -38,6 +38,7 @@ function markerIcon(selected: boolean): google.maps.Symbol {
 
 type Props = {
   locations: RentalLocation[];
+  products: Product[];
   selectedId: string | null;
   onSelect: (id: string) => void;
   highlightProductId?: string | null;
@@ -131,6 +132,7 @@ function useGoogleMapRenderError() {
 
 function GoogleRentalMap({
   locations,
+  products,
   selectedId,
   onSelect,
   highlightProductId,
@@ -200,7 +202,7 @@ function GoogleRentalMap({
             </p>
             <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
               {infoLocation.products.map((stock) => {
-                const product = getProductById(stock.productId);
+                const product = getProductById(stock.productId, products);
                 if (!product) return null;
                 const qty = getStockTotal(stock.inventory);
                 const highlighted = highlightProductId === stock.productId;

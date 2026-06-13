@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import CommunityList from "@/components/CommunityList";
-import { communityEvents } from "@/lib/community";
+import { getCommunityEvents } from "@/lib/community";
 
 export const metadata: Metadata = {
   title: "ชุมชนกิจกรรม | Fit-to-Go",
@@ -8,7 +8,9 @@ export const metadata: Metadata = {
     "รันนิ่งคลับ Hyrox โยคะ CrossFit และกิจกรรมออกกำลังกายใกล้จุดเช่าชุดกีฬา Fit-to-Go",
 };
 
-export default function CommunityPage() {
+export default async function CommunityPage() {
+  const events = await getCommunityEvents();
+
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
       <div className="mb-8">
@@ -24,7 +26,7 @@ export default function CommunityPage() {
         </p>
       </div>
 
-      <CommunityList events={communityEvents} />
+      <CommunityList events={events} />
     </main>
   );
 }

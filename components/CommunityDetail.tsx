@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CommunityEvent, RentalLocation } from "@/lib/types";
+import type { CommunityEvent, Product, RentalLocation } from "@/lib/types";
 import {
   ACTIVITY_EMOJI,
   ACTIVITY_LABELS,
@@ -17,11 +17,17 @@ type Props = {
   event: CommunityEvent;
   location: RentalLocation | undefined;
   locations: RentalLocation[];
+  products: Product[];
 };
 
-export default function CommunityDetail({ event, location, locations }: Props) {
+export default function CommunityDetail({
+  event,
+  location,
+  locations,
+  products,
+}: Props) {
   const recommended = event.recommendedProductIds
-    .map((id) => getProductById(id))
+    .map((id) => getProductById(id, products))
     .filter((product) => product !== undefined);
 
   const remaining = spotsLeft(event);
@@ -135,7 +141,7 @@ export default function CommunityDetail({ event, location, locations }: Props) {
           <div className="grid gap-3 sm:grid-cols-2">
             {recommended.map((product) => {
               const total = getStockTotal(
-                getAggregatedProductInventory(product.id, locations),
+                getAggregatedProductInventory(product.id, locations, products),
               );
               return (
                 <Link

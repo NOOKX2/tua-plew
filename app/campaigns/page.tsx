@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import CampaignList from "@/components/CampaignList";
-import { campaigns } from "@/lib/campaigns";
+import { getCampaigns } from "@/lib/campaigns";
 
 export const metadata: Metadata = {
   title: "แคมเปญ | Fit-to-Go",
@@ -8,7 +8,9 @@ export const metadata: Metadata = {
     "โปรโมชันและสิทธิพิเศษจาก Fit-to-Go และร้านพาร์ทเนอร์ร่วมรายการ เช่น เช่า 10 ครั้งรับส่วนลด 5%",
 };
 
-export default function CampaignsPage() {
+export default async function CampaignsPage() {
+  const campaigns = await getCampaigns();
+
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
       <div className="mb-8">

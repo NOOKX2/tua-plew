@@ -1,25 +1,68 @@
 name: fit-to-go
 
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: fit-to-go-db
+    environment:
+      POSTGRES_USER: fittogo
+      POSTGRES_PASSWORD: fittogo
+      POSTGRES_DB: fittogo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fittogo -d fittogo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   app:
     build: .
     container_name: fit-to-go-app
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "3000:3000"
     env_file:
       - path: .env.local
         required: false
     environment:
+      # Must use service name "db" inside Docker network (not localhost)
+      DATABASE_URL: postgresql://fittogo:fittogo@db:5432/fittogo
       WATCHPACK_POLLING: "true"
       CHOKIDAR_USEPOLLING: "true"
       HOSTNAME: "0.0.0.0"
     volumes:
       - .:/app
       - app_node_modules:/app/node_modules
-      - app_next:/app/.next
-    command: ["bun", "run", "dev", "--", "-H", "0.0.0.0", "-p", "3000"]
+    command: ["sh", "/app/docker-entrypoint.sh"]
+    restart: unless-stopped
+
+  studio:
+    build: .
+    container_name: fit-to-go-studio
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5555:5555"
+    environment:
+      DATABASE_URL: postgresql://fittogo:fittogo@db:5432/fittogo
+    volumes:
+      - .:/app
+      - app_node_modules:/app/node_modules
+    command:
+      [
+        "sh",
+        "-c",
+        "bun install && bun run db:generate && bunx prisma studio --hostname 0.0.0.0 --port 5555",
+      ]
     restart: unless-stopped
 
 volumes:
   app_node_modules:
-  app_next:
+  postgres_data:

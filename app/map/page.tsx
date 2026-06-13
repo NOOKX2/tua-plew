@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import RentalMapView from "@/components/RentalMapView";
-import { rentalLocations } from "@/lib/locations";
-import { products } from "@/lib/products";
+import { getRentalLocations } from "@/lib/locations";
+import { getProducts } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "แผนที่จุดเช่า | Fit-to-Go",
@@ -14,12 +14,16 @@ type Props = {
 
 export default async function MapPage({ searchParams }: Props) {
   const { product, location } = await searchParams;
+  const [locations, products] = await Promise.all([
+    getRentalLocations(),
+    getProducts(),
+  ]);
 
   return (
     <RentalMapView
       initialProductId={product ?? null}
       initialLocationId={location ?? null}
-      locations={rentalLocations}
+      locations={locations}
       products={products}
     />
   );

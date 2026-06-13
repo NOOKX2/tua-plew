@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { Product } from "@/lib/types";
+import type { Product, RentalLocation } from "@/lib/types";
 import { CATEGORY_LABELS } from "@/lib/types";
 import {
   getAggregatedProductInventory,
@@ -17,6 +17,8 @@ import StockBadge from "./StockBadge";
 
 type Props = {
   product: Product;
+  products: Product[];
+  locations: RentalLocation[];
   compact?: boolean;
 };
 
@@ -46,11 +48,20 @@ function CollapsibleSection({
   );
 }
 
-export default function ProductDetail({ product, compact = false }: Props) {
-  const availability = getLocationsWithProduct(product.id);
-  const aggregatedInventory = getAggregatedProductInventory(product.id);
-  const totalStock = getTotalProductStock(product.id);
-  const related = getRelatedProducts(product.id);
+export default function ProductDetail({
+  product,
+  products,
+  locations,
+  compact = false,
+}: Props) {
+  const availability = getLocationsWithProduct(product.id, locations);
+  const aggregatedInventory = getAggregatedProductInventory(
+    product.id,
+    locations,
+    products,
+  );
+  const totalStock = getTotalProductStock(product.id, locations, products);
+  const related = getRelatedProducts(product.id, products);
   const isShoe = product.category === "shoe";
   const hasWaist = product.sizeGuide.some((row) => row.waist);
   const hasChest = product.sizeGuide.some((row) => row.chest);
@@ -215,7 +226,10 @@ export default function ProductDetail({ product, compact = false }: Props) {
 
         {!compact && (
           <CollapsibleSection title={`จุดเช่าที่มีสินค้านี้ (${availability.length})`}>
-            <ProductAvailabilityList items={availability} productId={product.id} />
+            <ProductAvailabilityList
+              items={availability}
+              product={product}
+            />
           </CollapsibleSection>
         )}
 

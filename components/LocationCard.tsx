@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { RentalLocation } from "@/lib/types";
+import type { Product, RentalLocation } from "@/lib/types";
 import { getProductById } from "@/lib/products";
 import { getStockTotal, getTotalStock } from "@/lib/locations";
 import ProductQuickView from "./ProductQuickView";
@@ -15,6 +15,7 @@ const typeLabels = {
 
 type Props = {
   location: RentalLocation;
+  products: Product[];
   selected: boolean;
   onSelect: (id: string) => void;
   highlightProductId?: string | null;
@@ -25,6 +26,7 @@ type Props = {
 
 export default function LocationCard({
   location,
+  products,
   selected,
   onSelect,
   highlightProductId,
@@ -37,7 +39,7 @@ export default function LocationCard({
     (p) => p.productId === expandedProductId,
   );
   const expandedProduct = expandedProductId
-    ? getProductById(expandedProductId)
+    ? getProductById(expandedProductId, products)
     : null;
 
   return (
@@ -85,7 +87,7 @@ export default function LocationCard({
 
       <div className="flex gap-2 overflow-x-auto px-4 pb-3">
         {location.products.map((stock) => {
-          const product = getProductById(stock.productId);
+          const product = getProductById(stock.productId, products);
           if (!product) return null;
           const qty = getStockTotal(stock.inventory);
           const isActive =
