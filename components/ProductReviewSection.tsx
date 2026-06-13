@@ -30,8 +30,8 @@ export default function ProductReviewSection({
   const { locale } = useLocale();
 
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white">
-      <div className="border-b border-zinc-100 px-4 py-3">
+    <section className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm">
+      <div className="border-b border-zinc-100 bg-zinc-50/80 px-5 py-4">
         <h2 className="text-sm font-semibold text-zinc-900">
           {t("review.title")}
         </h2>
@@ -48,7 +48,7 @@ export default function ProductReviewSection({
         )}
       </div>
 
-      <div className="space-y-4 px-4 py-4">
+      <div className="space-y-4 px-5 py-5">
         <ProductReviewForm
           productId={productId}
           hasReviewed={hasReviewed}

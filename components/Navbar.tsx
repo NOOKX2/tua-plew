@@ -29,13 +29,13 @@ export default function Navbar() {
   ] as const;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+    <header className="sticky top-0 z-50 border-b border-zinc-200/70 bg-[#faf9f6]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#faf9f6]/75">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
         <Link
           href="/"
-          className="shrink-0 text-lg font-bold text-emerald-600"
+          className="shrink-0 text-lg font-bold tracking-tight text-zinc-900"
         >
-          Tua Plew
+          Tua <span className="text-emerald-600">Plew</span>
         </Link>
 
         <nav className="flex flex-1 items-center justify-center gap-1 sm:gap-2">
@@ -45,10 +45,10 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors sm:px-3 ${
+                className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors sm:px-4 ${
                   active
-                    ? "bg-emerald-50 text-emerald-700"
-                    : "text-zinc-600 hover:bg-zinc-50 hover:text-emerald-600"
+                    ? "bg-zinc-900 text-white"
+                    : "text-zinc-600 hover:bg-white hover:text-zinc-900"
                 }`}
               >
                 {item.label}

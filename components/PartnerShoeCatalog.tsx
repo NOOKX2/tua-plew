@@ -20,30 +20,67 @@ export default async function PartnerShoeCatalog({
   if (!partnerShoes.length) return null;
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
-      <div className="mb-5">
-        <h2 className="text-lg font-bold text-zinc-900 sm:text-xl">
-          {t("home.partnerShoesTitle")}
-        </h2>
-        <p className="mt-0.5 text-xs text-zinc-500 sm:text-sm">
-          {t("home.partnerShoesSubtitle")}
-        </p>
-      </div>
+    <section
+      id="partner-shoes"
+      className="scroll-mt-24 border-y border-zinc-200/80 bg-[#f3f1ec] py-10 sm:py-14"
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
+              {t("home.partnerShoesEyebrow")}
+            </p>
+            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
+              {t("home.partnerShoesTitle")}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+              {t("home.partnerShoesSubtitle")}
+            </p>
+          </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-        {partnerShoes.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            variant="catalog"
-            globalInventory={getAggregatedProductInventory(
-              product.id,
-              locations,
-              products,
-            )}
-            ratingSummary={ratingSummaries[product.id]}
-          />
-        ))}
+          <div className="flex flex-wrap gap-2">
+            {partnerShoes.map((shoe) => (
+              <span
+                key={shoe.id}
+                className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700 ring-1 ring-zinc-200"
+              >
+                {shoe.brand}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <p className="mb-3 flex items-center gap-1.5 text-xs text-zinc-500 sm:hidden">
+          <span className="inline-block animate-pulse">→</span>
+          {t("home.scrollForMore")}
+        </p>
+
+        <div className="relative">
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-[#f3f1ec] via-[#f3f1ec]/80 to-transparent sm:hidden" />
+
+          <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4 lg:gap-5">
+            {partnerShoes.map((product, index) => (
+              <div
+                key={product.id}
+                className={`min-w-[82%] shrink-0 snap-start sm:min-w-0 ${
+                  index === 0 ? "sm:col-span-2 lg:col-span-1" : ""
+                }`}
+              >
+                <ProductCard
+                  product={product}
+                  variant="catalog"
+                  layout={index === 0 ? "featured" : "catalog"}
+                  globalInventory={getAggregatedProductInventory(
+                    product.id,
+                    locations,
+                    products,
+                  )}
+                  ratingSummary={ratingSummaries[product.id]}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
