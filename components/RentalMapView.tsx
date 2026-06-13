@@ -98,29 +98,9 @@ export default function RentalMapView({
 
   return (
     <div className="flex h-[calc(100dvh-3.25rem)] flex-col overflow-hidden">
-      <div className="shrink-0 border-b border-zinc-200 bg-white px-4 py-3 sm:px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-600">
-              จุดเช่า
-            </p>
-            <h1 className="text-lg font-bold text-zinc-900 sm:text-xl">
-              แผนที่จุดเช่าชุดกีฬา
-            </h1>
-            <p className="mt-0.5 text-xs text-zinc-500">
-              แตะสินค้าในการ์ดเพื่อดูไซส์และเช่า
-            </p>
-          </div>
-          <p className="text-xs text-zinc-500">
-            {filteredLocations.length} จุด
-            {selectedProductId && selectedProduct
-              ? ` · กรองตาม ${selectedProduct.name}`
-              : ""}
-          </p>
-        </div>
-
-        {selectedProductId && selectedProduct && (
-          <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+      {selectedProductId && selectedProduct && (
+        <div className="shrink-0 border-b border-zinc-200 bg-emerald-50 px-4 py-2 sm:px-6">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-emerald-800">
             <span className="text-xs font-medium">กรองตาม:</span>
             <span className="font-semibold">{selectedProduct.name}</span>
             <StockBadge
@@ -138,8 +118,8 @@ export default function RentalMapView({
               ล้างตัวกรอง
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="flex min-h-0 flex-1 overflow-hidden lg:flex-row">
         <div className="h-[38vh] min-h-[200px] shrink-0 lg:h-full lg:min-h-0 lg:flex-[1.6]">
