@@ -9,12 +9,16 @@ import CampaignCard from "./CampaignCard";
 
 type Props = {
   campaigns: Campaign[];
+  enrolledCampaignIds?: string[];
 };
 
 const ALL = "all" as const;
 type Filter = typeof ALL | CampaignType;
 
-export default function CampaignList({ campaigns }: Props) {
+export default function CampaignList({
+  campaigns,
+  enrolledCampaignIds = [],
+}: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
   const [filter, setFilter] = useState<Filter>(ALL);
@@ -56,7 +60,11 @@ export default function CampaignList({ campaigns }: Props) {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
+            <CampaignCard
+              key={campaign.id}
+              campaign={campaign}
+              joined={enrolledCampaignIds.includes(campaign.id)}
+            />
           ))}
         </div>
       )}

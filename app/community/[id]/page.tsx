@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CommunityDetail from "@/components/CommunityDetail";
+import { auth } from "@/auth";
+import { isUserEnrolledInEvent } from "@/lib/community-enrollments";
 import {
   getCommunityEventByIdAsync,
 } from "@/lib/community.server";
@@ -33,10 +35,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CommunityEventPage({ params }: Props) {
   const { id } = await params;
-  const [event, locations, products] = await Promise.all([
+  const session = await auth();
+  const [event, locations, products, joined] = await Promise.all([
     getCommunityEventByIdAsync(id),
     getRentalLocations(),
     getProducts(),
+    session?.user?.id
+      ? isUserEnrolledInEvent(session.user.id, id)
+      : Promise.resolve(false),
   ]);
 
   if (!event) {
@@ -51,6 +57,7 @@ export default async function CommunityEventPage({ params }: Props) {
       location={location}
       locations={locations}
       products={products}
+      joined={joined}
     />
   );
 }

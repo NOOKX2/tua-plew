@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import CommunityList from "@/components/CommunityList";
+import { auth } from "@/auth";
+import { getUserEnrolledEventIds } from "@/lib/community-enrollments";
 import { getCommunityEvents } from "@/lib/community.server";
 import { getTranslator } from "@/lib/i18n/server";
 
@@ -14,9 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CommunityPage() {
-  const [events, t] = await Promise.all([
+  const session = await auth();
+  const [events, t, enrolledEventIds] = await Promise.all([
     getCommunityEvents(),
     getTranslator(),
+    session?.user?.id
+      ? getUserEnrolledEventIds(session.user.id)
+      : Promise.resolve([] as string[]),
   ]);
 
   return (
@@ -33,7 +39,7 @@ export default async function CommunityPage() {
         </p>
       </div>
 
-      <CommunityList events={events} />
+      <CommunityList events={events} enrolledEventIds={enrolledEventIds} />
     </main>
   );
 }

@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CampaignDetail from "@/components/CampaignDetail";
+import { auth } from "@/auth";
+import {
+  getCampaignEnrollmentCount,
+  isUserEnrolledInCampaign,
+} from "@/lib/campaign-enrollments";
 import {
   getCampaignByIdAsync,
 } from "@/lib/campaigns.server";
@@ -32,9 +37,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CampaignPage({ params }: Props) {
   const { id } = await params;
-  const [campaign, rentalLocations] = await Promise.all([
+  const session = await auth();
+  const [campaign, rentalLocations, joined, enrollmentCount] = await Promise.all([
     getCampaignByIdAsync(id),
     getRentalLocations(),
+    session?.user?.id
+      ? isUserEnrolledInCampaign(session.user.id, id)
+      : Promise.resolve(false),
+    getCampaignEnrollmentCount(id),
   ]);
 
   if (!campaign) {
@@ -49,6 +59,8 @@ export default async function CampaignPage({ params }: Props) {
     <CampaignDetail
       campaign={campaign}
       partnerLocations={partnerLocations}
+      joined={joined}
+      enrollmentCount={enrollmentCount}
     />
   );
 }

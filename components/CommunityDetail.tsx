@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { CommunityEvent, Product, RentalLocation } from "@/lib/types";
-import { ACTIVITY_EMOJI, spotsLeft } from "@/lib/community";
+import { ACTIVITY_EMOJI } from "@/lib/community";
 import { getAggregatedProductInventory, getStockTotal } from "@/lib/locations";
 import { getProductById } from "@/lib/products";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
@@ -15,6 +16,7 @@ import {
   getActivityLabel,
   getDifficultyLabel,
 } from "@/lib/i18n/labels";
+import CommunityJoinButton from "./CommunityJoinButton";
 import StockBadge from "./StockBadge";
 
 type Props = {
@@ -22,6 +24,7 @@ type Props = {
   location: RentalLocation | undefined;
   locations: RentalLocation[];
   products: Product[];
+  joined?: boolean;
 };
 
 export default function CommunityDetail({
@@ -29,14 +32,18 @@ export default function CommunityDetail({
   location,
   locations,
   products,
+  joined = false,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const [participantCount, setParticipantCount] = useState(event.participantCount);
   const recommended = event.recommendedProductIds
     .map((id) => getProductById(id, products))
     .filter((product) => product !== undefined);
 
-  const remaining = spotsLeft(event);
+  const remaining = event.maxParticipants
+    ? Math.max(0, event.maxParticipants - participantCount)
+    : null;
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 bg-zinc-50 px-4 py-6 sm:px-6 sm:py-8">
@@ -91,7 +98,7 @@ export default function CommunityDetail({
             {t("community.participants")}
           </p>
           <p className="mt-1 font-semibold text-zinc-900">
-            {event.participantCount}
+            {participantCount}
             {event.maxParticipants ? ` / ${event.maxParticipants}` : ""}{" "}
             {t("common.people")}
           </p>
@@ -101,6 +108,24 @@ export default function CommunityDetail({
             </p>
           )}
         </div>
+      </div>
+
+      <div className="mb-6 flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50/60 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold text-emerald-900">
+            {t("community.join")}
+          </p>
+          {remaining !== null && (
+            <p className="mt-1 text-xs text-emerald-800/80">
+              {t("common.spotsLeft", { count: remaining })}
+            </p>
+          )}
+        </div>
+        <CommunityJoinButton
+          event={{ ...event, participantCount }}
+          initialJoined={joined}
+          onJoined={setParticipantCount}
+        />
       </div>
 
       <section className="mb-6 rounded-xl border border-zinc-200 bg-white p-5">

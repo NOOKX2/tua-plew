@@ -10,13 +10,21 @@ import {
   formatDiscount,
   getCampaignTypeLabel,
 } from "@/lib/i18n/labels";
+import CampaignJoinButton from "./CampaignJoinButton";
 
 type Props = {
   campaign: Campaign;
   partnerLocations: RentalLocation[];
+  joined?: boolean;
+  enrollmentCount?: number;
 };
 
-export default function CampaignDetail({ campaign, partnerLocations }: Props) {
+export default function CampaignDetail({
+  campaign,
+  partnerLocations,
+  joined = false,
+  enrollmentCount = 0,
+}: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
 
@@ -73,6 +81,20 @@ export default function CampaignDetail({ campaign, partnerLocations }: Props) {
               : ""}
           </p>
         </div>
+      </div>
+
+      <div className="mb-6 flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50/60 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold text-amber-900">
+            {t("campaign.join")}
+          </p>
+          {enrollmentCount > 0 && (
+            <p className="mt-1 text-xs text-amber-800/80">
+              {t("campaign.participantsJoined", { count: enrollmentCount })}
+            </p>
+          )}
+        </div>
+        <CampaignJoinButton campaign={campaign} initialJoined={joined} />
       </div>
 
       <section className="mb-6 rounded-xl border border-zinc-200 bg-white p-5">

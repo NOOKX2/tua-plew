@@ -89,6 +89,28 @@ const campaignSchema = new Schema(
   { timestamps: true, _id: false },
 );
 
+const campaignEnrollmentSchema = new Schema(
+  {
+    userId: { type: String, required: true },
+    campaignId: { type: String, required: true },
+    joinedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true },
+);
+campaignEnrollmentSchema.index({ userId: 1, campaignId: 1 }, { unique: true });
+campaignEnrollmentSchema.index({ campaignId: 1 });
+
+const communityEnrollmentSchema = new Schema(
+  {
+    userId: { type: String, required: true },
+    eventId: { type: String, required: true },
+    joinedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true },
+);
+communityEnrollmentSchema.index({ userId: 1, eventId: 1 }, { unique: true });
+communityEnrollmentSchema.index({ eventId: 1 });
+
 const userSchema = new Schema(
   {
     name: { type: String },
@@ -139,5 +161,15 @@ export const CommunityEvent = getModel(
   "CommunityEvent",
 );
 export const Campaign = getModel("Campaign", campaignSchema, "Campaign");
+export const CampaignEnrollment = getModel(
+  "CampaignEnrollment",
+  campaignEnrollmentSchema,
+  "CampaignEnrollment",
+);
+export const CommunityEnrollment = getModel(
+  "CommunityEnrollment",
+  communityEnrollmentSchema,
+  "CommunityEnrollment",
+);
 export const User = getModel("User", userSchema, "User");
 export const Account = getModel("Account", accountSchema, "Account");

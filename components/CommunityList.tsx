@@ -9,12 +9,16 @@ import CommunityCard from "./CommunityCard";
 
 type Props = {
   events: CommunityEvent[];
+  enrolledEventIds?: string[];
 };
 
 const ALL = "all" as const;
 type Filter = typeof ALL | CommunityActivityType;
 
-export default function CommunityList({ events }: Props) {
+export default function CommunityList({
+  events,
+  enrolledEventIds = [],
+}: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
   const [filter, setFilter] = useState<Filter>(ALL);
@@ -55,7 +59,11 @@ export default function CommunityList({ events }: Props) {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((event) => (
-            <CommunityCard key={event.id} event={event} />
+            <CommunityCard
+              key={event.id}
+              event={event}
+              joined={enrolledEventIds.includes(event.id)}
+            />
           ))}
         </div>
       )}

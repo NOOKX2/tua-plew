@@ -85,3 +85,19 @@ export function spotsLeft(event: CommunityEvent): number | null {
   if (!event.maxParticipants) return null;
   return Math.max(0, event.maxParticipants - event.participantCount);
 }
+
+export function isEventJoinable(event: CommunityEvent, asOf = new Date()): boolean {
+  const eventEnd = new Date(event.date);
+  if (event.endTime) {
+    const [hours, minutes] = event.endTime.split(":").map(Number);
+    eventEnd.setHours(hours, minutes ?? 0, 0, 0);
+  } else {
+    eventEnd.setHours(23, 59, 59, 999);
+  }
+  return asOf <= eventEnd;
+}
+
+export function isEventFull(event: CommunityEvent): boolean {
+  if (!event.maxParticipants) return false;
+  return event.participantCount >= event.maxParticipants;
+}

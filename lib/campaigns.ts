@@ -37,6 +37,20 @@ export function getFeaturedCampaigns(campaigns: Campaign[]): Campaign[] {
   return getActiveCampaigns(campaigns).filter((campaign) => campaign.featured);
 }
 
+export function isCampaignActive(
+  campaign: Campaign,
+  asOf = new Date(),
+): boolean {
+  const start = new Date(campaign.startDate);
+  const end = new Date(campaign.endDate);
+  end.setHours(23, 59, 59, 999);
+  return asOf >= start && asOf <= end;
+}
+
+export function isCampaignUpcoming(campaign: Campaign, asOf = new Date()): boolean {
+  return new Date(campaign.startDate) > asOf;
+}
+
 export function formatCampaignPeriod(start: string, end: string): string {
   const opts: Intl.DateTimeFormatOptions = {
     day: "numeric",
