@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import CommunityList from "@/components/CommunityList";
-import { getCommunityEvents } from "@/lib/community";
+import { getCommunityEvents } from "@/lib/community.server";
 
 export const metadata: Metadata = {
   title: "ชุมชนกิจกรรม | Fit-to-Go",

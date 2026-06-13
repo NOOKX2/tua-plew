@@ -4,9 +4,9 @@ import CommunityDetail from "@/components/CommunityDetail";
 import {
   getCommunityEventByIdAsync,
   getCommunityEventIds,
-} from "@/lib/community";
-import { getRentalLocations } from "@/lib/locations";
-import { getProducts } from "@/lib/products";
+} from "@/lib/community.server";
+import { getRentalLocations } from "@/lib/locations.server";
+import { getProducts } from "@/lib/products.server";
 
 type Props = {
   params: Promise<{ id: string }>;

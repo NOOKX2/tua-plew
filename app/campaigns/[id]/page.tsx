@@ -4,8 +4,8 @@ import CampaignDetail from "@/components/CampaignDetail";
 import {
   getCampaignByIdAsync,
   getCampaignIds,
-} from "@/lib/campaigns";
-import { getRentalLocations } from "@/lib/locations";
+} from "@/lib/campaigns.server";
+import { getRentalLocations } from "@/lib/locations.server";
 
 type Props = {
   params: Promise<{ id: string }>;

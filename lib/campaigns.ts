@@ -1,8 +1,3 @@
-import {
-  fetchCampaignById,
-  fetchCampaignIds,
-  fetchCampaigns,
-} from "./data";
 import type { Campaign, CampaignType } from "./types";
 
 export const CAMPAIGN_TYPE_LABELS: Record<CampaignType, string> = {
@@ -18,20 +13,6 @@ export const CAMPAIGN_TYPE_EMOJI: Record<CampaignType, string> = {
   bundle: "📦",
   seasonal: "☀️",
 };
-
-export async function getCampaigns(): Promise<Campaign[]> {
-  return fetchCampaigns();
-}
-
-export async function getCampaignByIdAsync(
-  id: string,
-): Promise<Campaign | undefined> {
-  return fetchCampaignById(id);
-}
-
-export async function getCampaignIds(): Promise<string[]> {
-  return fetchCampaignIds();
-}
 
 export function getCampaignById(
   id: string,

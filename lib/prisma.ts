@@ -1,3 +1,5 @@
+import "server-only";
+
 import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
@@ -21,7 +23,7 @@ function getPrismaClient() {
   const cached = globalForPrisma.prisma;
 
   if (cached && !("rentalLocation" in cached)) {
-    void cached.$disconnect();
+    void (cached as PrismaClient).$disconnect();
     const client = createPrismaClient();
     globalForPrisma.prisma = client;
     return client;

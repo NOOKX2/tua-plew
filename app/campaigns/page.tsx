@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import CampaignList from "@/components/CampaignList";
-import { getCampaigns } from "@/lib/campaigns";
+import { getCampaigns } from "@/lib/campaigns.server";
 
 export const metadata: Metadata = {
   title: "แคมเปญ | Fit-to-Go",

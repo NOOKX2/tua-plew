@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductDetail from "@/components/ProductDetail";
-import { getRentalLocations } from "@/lib/locations";
+import { getRentalLocations } from "@/lib/locations.server";
 import {
   getProductByIdAsync,
   getProductIds,
   getProducts,
-} from "@/lib/products";
+} from "@/lib/products.server";
 
 type Props = {
   params: Promise<{ id: string }>;

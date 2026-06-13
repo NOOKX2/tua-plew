@@ -1,8 +1,3 @@
-import {
-  fetchCommunityEventById,
-  fetchCommunityEventIds,
-  fetchCommunityEvents,
-} from "./data";
 import type { CommunityActivityType, CommunityEvent } from "./types";
 
 export const ACTIVITY_LABELS: Record<CommunityActivityType, string> = {
@@ -46,20 +41,6 @@ export const DIFFICULTY_LABELS: Record<
   intermediate: "ปานกลาง",
   advanced: "ขั้นสูง",
 };
-
-export async function getCommunityEvents(): Promise<CommunityEvent[]> {
-  return fetchCommunityEvents();
-}
-
-export async function getCommunityEventByIdAsync(
-  id: string,
-): Promise<CommunityEvent | undefined> {
-  return fetchCommunityEventById(id);
-}
-
-export async function getCommunityEventIds(): Promise<string[]> {
-  return fetchCommunityEventIds();
-}
 
 export function getCommunityEventById(
   id: string,

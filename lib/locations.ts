@@ -1,20 +1,9 @@
-import { fetchLocationById, fetchLocations } from "./data";
 import type {
   LocationProductStock,
   Product,
   RentalLocation,
   SizeInventory,
 } from "./types";
-
-export async function getRentalLocations(): Promise<RentalLocation[]> {
-  return fetchLocations();
-}
-
-export async function getLocationByIdAsync(
-  id: string,
-): Promise<RentalLocation | undefined> {
-  return fetchLocationById(id);
-}
 
 export function getStockTotal(inventory: SizeInventory): number {
   return Object.values(inventory).reduce((sum, qty) => sum + qty, 0);

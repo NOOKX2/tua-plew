@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import RentalMapView from "@/components/RentalMapView";
-import { getRentalLocations } from "@/lib/locations";
-import { getProducts } from "@/lib/products";
+import { getRentalLocations } from "@/lib/locations.server";
+import { getProducts } from "@/lib/products.server";
 
 export const metadata: Metadata = {
   title: "แผนที่จุดเช่า | Fit-to-Go",
