@@ -4,6 +4,8 @@ import { GoogleSignInButton } from "@/components/AuthButton";
 import { AuthDivider, CredentialsSignInForm } from "@/components/AuthForms";
 import AuthLayout from "@/components/AuthLayout";
 
+export const dynamic = "force-dynamic";
+
 export default async function LoginPage() {
   const session = await auth();
 

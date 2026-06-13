@@ -38,4 +38,11 @@ function getPrismaClient() {
   return client;
 }
 
-export const prisma = getPrismaClient();
+/** Defer connection until first query so `next build` does not require DATABASE_URL. */
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    const client = getPrismaClient();
+    const value = Reflect.get(client, prop, client);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});
