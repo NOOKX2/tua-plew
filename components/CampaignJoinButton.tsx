@@ -12,6 +12,7 @@ type Props = {
   campaign: Campaign;
   initialJoined?: boolean;
   compact?: boolean;
+  variant?: "default" | "premium";
   callbackUrl?: string;
 };
 
@@ -19,6 +20,7 @@ export default function CampaignJoinButton({
   campaign,
   initialJoined = false,
   compact = false,
+  variant = "default",
   callbackUrl,
 }: Props) {
   const t = useTranslations();
@@ -33,6 +35,26 @@ export default function CampaignJoinButton({
   const loginHref = `/login?callbackUrl=${encodeURIComponent(
     callbackUrl ?? `/campaigns/${campaign.id}`,
   )}`;
+
+  const premium = variant === "premium" && !compact;
+
+  const loginClass = premium
+    ? "inline-flex w-full items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-zinc-100"
+    : compact
+      ? "inline-flex rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-amber-600"
+      : "inline-flex w-full items-center justify-center rounded-xl bg-amber-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600 sm:w-auto";
+
+  const joinedClass = premium
+    ? "inline-flex w-full items-center justify-center gap-2 rounded-full bg-amber-400/20 px-8 py-4 text-sm font-bold text-amber-200 ring-1 ring-amber-400/30"
+    : compact
+      ? "inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200"
+      : "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-50 px-6 py-3.5 text-sm font-semibold text-emerald-700 ring-1 ring-emerald-200 sm:w-auto";
+
+  const buttonClass = premium
+    ? "inline-flex w-full items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-zinc-950 transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:bg-zinc-600 disabled:text-zinc-300"
+    : compact
+      ? "inline-flex rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+      : "inline-flex w-full items-center justify-center rounded-xl bg-amber-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
 
   async function handleJoin() {
     setError(null);
@@ -67,11 +89,7 @@ export default function CampaignJoinButton({
       <Link
         href={loginHref}
         onClick={compact ? (e) => e.stopPropagation() : undefined}
-        className={
-          compact
-            ? "inline-flex rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-amber-600"
-            : "inline-flex w-full items-center justify-center rounded-xl bg-amber-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600 sm:w-auto"
-        }
+        className={loginClass}
       >
         {t("campaign.loginToJoin")}
       </Link>
@@ -81,13 +99,7 @@ export default function CampaignJoinButton({
   if (joined) {
     return (
       <div className={compact ? "" : "space-y-2"}>
-        <span
-          className={
-            compact
-              ? "inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200"
-              : "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-50 px-6 py-3.5 text-sm font-semibold text-emerald-700 ring-1 ring-emerald-200 sm:w-auto"
-          }
-        >
+        <span className={joinedClass}>
           <span aria-hidden>✓</span>
           {t("campaign.joined")}
         </span>
@@ -113,11 +125,7 @@ export default function CampaignJoinButton({
           if (compact) e.stopPropagation();
           handleJoin();
         }}
-        className={
-          compact
-            ? "inline-flex rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
-            : "inline-flex w-full items-center justify-center rounded-xl bg-amber-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-        }
+        className={buttonClass}
       >
         {label}
       </button>

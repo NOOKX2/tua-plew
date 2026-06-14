@@ -42,6 +42,7 @@ type Props = {
   locations: RentalLocation[];
   products: Product[];
   selectedId: string | null;
+  focusId?: string | null;
   onSelect: (id: string) => void;
   highlightProductId?: string | null;
   onProductClick?: (productId: string, locationId: string) => void;
@@ -134,6 +135,7 @@ function GoogleRentalMap({
   locations,
   products,
   selectedId,
+  focusId = null,
   onSelect,
   highlightProductId,
   onProductClick,
@@ -144,9 +146,9 @@ function GoogleRentalMap({
   const [infoLocationId, setInfoLocationId] = useState<string | null>(null);
   const mapRenderError = useGoogleMapRenderError();
 
-  const selected = useMemo(
-    () => locations.find((l) => l.id === selectedId) ?? null,
-    [locations, selectedId],
+  const focusLocation = useMemo(
+    () => locations.find((l) => l.id === focusId) ?? null,
+    [locations, focusId],
   );
 
   const infoLocation = useMemo(
@@ -159,12 +161,37 @@ function GoogleRentalMap({
   }, []);
 
   useEffect(() => {
-    if (selected && map) {
-      map.panTo({ lat: selected.lat, lng: selected.lng });
-      map.setZoom(15);
-      setInfoLocationId(selected.id);
+    if (!focusId) {
+      setInfoLocationId(null);
     }
-  }, [selected, map]);
+  }, [focusId]);
+
+  useEffect(() => {
+    if (!map || locations.length === 0 || focusId) return;
+
+    const bounds = new google.maps.LatLngBounds();
+    for (const loc of locations) {
+      bounds.extend({ lat: loc.lat, lng: loc.lng });
+    }
+    map.fitBounds(bounds, 48);
+  }, [map, locations, focusId]);
+
+  useEffect(() => {
+    if (!map || !focusLocation) return;
+
+    map.panTo({ lat: focusLocation.lat, lng: focusLocation.lng });
+    map.setZoom(15);
+    setInfoLocationId(focusLocation.id);
+  }, [map, focusLocation]);
+
+  useEffect(() => {
+    if (!map || !selectedId || focusId) return;
+
+    const location = locations.find((loc) => loc.id === selectedId);
+    if (!location) return;
+
+    map.panTo({ lat: location.lat, lng: location.lng });
+  }, [map, selectedId, focusId, locations]);
 
   if (mapRenderError) {
     return <GoogleMapsSetupHelp variant="error" />;

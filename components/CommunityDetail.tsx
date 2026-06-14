@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { CommunityEvent, Product, RentalLocation } from "@/lib/types";
-import { ACTIVITY_EMOJI } from "@/lib/community";
+import { ACTIVITY_EMOJI, ACTIVITY_GRADIENT } from "@/lib/community";
 import { getAggregatedProductInventory, getStockTotal } from "@/lib/locations";
 import { getProductById } from "@/lib/products";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
@@ -27,6 +27,29 @@ type Props = {
   joined?: boolean;
 };
 
+function DetailBlock({
+  title,
+  children,
+  className = "",
+}: {
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={`overflow-hidden rounded-[1.5rem] border border-zinc-200/80 bg-white shadow-sm ${className}`}
+    >
+      <div className="border-b border-zinc-100 px-6 py-4">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+          {title}
+        </h2>
+      </div>
+      <div className="px-6 py-5">{children}</div>
+    </section>
+  );
+}
+
 export default function CommunityDetail({
   event,
   location,
@@ -45,186 +68,297 @@ export default function CommunityDetail({
     ? Math.max(0, event.maxParticipants - participantCount)
     : null;
 
+  const fillPercent =
+    event.maxParticipants && event.maxParticipants > 0
+      ? Math.min(100, (participantCount / event.maxParticipants) * 100)
+      : null;
+
+  const activityGradient = ACTIVITY_GRADIENT[event.activityType];
+
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 bg-zinc-50 px-4 py-6 sm:px-6 sm:py-8">
-      <div className="relative mb-6 overflow-hidden rounded-2xl">
-        <div className="relative aspect-[21/9] w-full sm:aspect-[2.5/1]">
+    <main className="relative flex-1 bg-[#faf9f6] pb-28 lg:pb-14">
+      <div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-emerald-300/15 blur-3xl" />
+      <div className="pointer-events-none absolute -left-24 top-64 h-72 w-72 rounded-full bg-orange-200/20 blur-3xl" />
+
+      <div className="relative">
+        <div className="relative min-h-[52vh] overflow-hidden lg:min-h-[62vh]">
           <Image
             src={event.image}
             alt={event.title}
             fill
             priority
-            sizes="(max-width: 768px) 100vw, 768px"
-            className="object-cover"
+            sizes="100vw"
+            className="object-cover scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-        </div>
-        <div className="absolute inset-0 flex flex-col justify-end p-6 text-white sm:p-8">
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-medium backdrop-blur-sm">
-              {ACTIVITY_EMOJI[event.activityType]}{" "}
-              {getActivityLabel(event.activityType, locale, messages)}
-            </span>
-            <span className="rounded-full bg-white/20 px-3 py-1 text-sm backdrop-blur-sm">
-              {getDifficultyLabel(event.difficulty, locale, messages)}
-            </span>
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/55 to-zinc-900/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/40 to-transparent lg:max-w-[70%]" />
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${activityGradient} opacity-20 mix-blend-overlay`}
+          />
+
+          <div className="home-hero-grid absolute inset-0 opacity-[0.07]" />
+
+          <div className="absolute left-0 right-0 top-0 z-10 mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-8 lg:px-10">
+            <Link
+              href="/community"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
+            >
+              {t("community.backToList")}
+            </Link>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-md">
+                {ACTIVITY_EMOJI[event.activityType]}{" "}
+                {getActivityLabel(event.activityType, locale, messages)}
+              </span>
+              <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-medium text-white/90 backdrop-blur-md">
+                {getDifficultyLabel(event.difficulty, locale, messages)}
+              </span>
+            </div>
           </div>
-          <h1 className="mb-2 text-2xl font-bold drop-shadow-sm sm:text-3xl">
-            {event.title}
-          </h1>
-          <p className="text-white/90">{event.shortDescription}</p>
+
+          <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-7xl px-4 pb-8 pt-24 sm:px-8 sm:pb-12 lg:px-10 lg:pb-16">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-300/90">
+              Tua Plew Community
+            </p>
+            <h1 className="max-w-3xl text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+              {event.title}
+            </h1>
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">
+              {event.shortDescription}
+            </p>
+          </div>
+        </div>
+
+        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-8 lg:px-10">
+          <div className="-mt-10 grid gap-3 sm:grid-cols-3 lg:-mt-14">
+            <div className="rounded-2xl bg-white px-5 py-4 shadow-xl shadow-zinc-900/8 ring-1 ring-zinc-200/80">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                {t("community.dateTime")}
+              </p>
+              <p className="mt-1.5 text-lg font-bold tracking-tight text-zinc-900">
+                {formatEventDate(event.date, locale)}
+              </p>
+              <p className="mt-0.5 text-sm text-zinc-500">
+                {formatEventTime(
+                  event.startTime,
+                  event.endTime,
+                  locale,
+                  t("community.timeSuffix"),
+                )}
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-white px-5 py-4 shadow-xl shadow-zinc-900/8 ring-1 ring-zinc-200/80">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                {t("community.participants")}
+              </p>
+              <p className="mt-1.5 text-lg font-bold tracking-tight text-zinc-900">
+                {participantCount}
+                {event.maxParticipants ? (
+                  <span className="text-base font-medium text-zinc-400">
+                    {" "}
+                    / {event.maxParticipants}
+                  </span>
+                ) : null}{" "}
+                <span className="text-sm font-medium text-zinc-500">
+                  {t("common.people")}
+                </span>
+              </p>
+              {remaining !== null && (
+                <p className="mt-0.5 text-sm text-emerald-600">
+                  {t("common.spotsLeft", { count: remaining })}
+                </p>
+              )}
+            </div>
+
+            <div className="rounded-2xl bg-zinc-950 px-5 py-4 shadow-xl shadow-zinc-900/20">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                {t("community.venue")}
+              </p>
+              <p className="mt-1.5 line-clamp-1 text-sm font-semibold text-white">
+                {event.venue}
+              </p>
+              <p className="mt-0.5 line-clamp-1 text-xs text-zinc-400">
+                {event.address}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mb-6 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border border-zinc-200 bg-white p-4">
-          <p className="text-xs font-medium text-zinc-500">
-            {t("community.dateTime")}
-          </p>
-          <p className="mt-1 font-semibold text-zinc-900">
-            {formatEventDate(event.date, locale)}
-          </p>
-          <p className="text-sm text-zinc-600">
-            {formatEventTime(
-              event.startTime,
-              event.endTime,
-              locale,
-              t("community.timeSuffix"),
+      <div className="mx-auto mt-10 w-full max-w-7xl px-4 sm:px-8 lg:mt-14 lg:px-10">
+        <div className="grid gap-8 lg:grid-cols-[1fr_22rem] xl:grid-cols-[1fr_24rem]">
+          <div className="min-w-0 space-y-6">
+            <DetailBlock title={t("community.details")}>
+              <p className="text-base leading-relaxed text-zinc-600">
+                {event.description}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {event.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-zinc-950 px-3.5 py-1.5 text-xs font-semibold text-white"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </DetailBlock>
+
+            <DetailBlock title={t("community.venue")}>
+              <p className="text-lg font-bold tracking-tight text-zinc-900">
+                {event.venue}
+              </p>
+              <p className="mt-1 text-sm text-zinc-500">{event.address}</p>
+              <p className="mt-4 text-xs uppercase tracking-wider text-zinc-400">
+                {t("common.organizedBy")}
+              </p>
+              <p className="mt-1 font-semibold text-zinc-800">{event.organizer}</p>
+              {location && (
+                <Link
+                  href={`/map?location=${location.id}`}
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 transition-colors hover:text-emerald-700"
+                >
+                  {t("common.viewOnMapArrow")}
+                </Link>
+              )}
+            </DetailBlock>
+
+            {recommended.length > 0 && (
+              <section>
+                <div className="mb-5 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
+                      Gear up
+                    </p>
+                    <h2 className="mt-1 text-2xl font-bold tracking-tight text-zinc-900">
+                      {t("community.recommendedGear")}
+                    </h2>
+                    <p className="mt-1 text-sm text-zinc-500">
+                      {t("community.recommendedHint")}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none">
+                  {recommended.map((product) => {
+                    const total = getStockTotal(
+                      getAggregatedProductInventory(
+                        product.id,
+                        locations,
+                        products,
+                      ),
+                    );
+                    return (
+                      <Link
+                        key={product.id}
+                        href={`/products/${product.id}`}
+                        className="group w-[min(72vw,240px)] shrink-0 snap-start overflow-hidden rounded-[1.25rem] border border-zinc-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-xl hover:shadow-zinc-900/8"
+                      >
+                        <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-zinc-100 to-zinc-50">
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
+                            sizes="240px"
+                          />
+                        </div>
+                        <div className="border-t border-zinc-100 p-4">
+                          <p className="line-clamp-2 text-sm font-bold leading-snug text-zinc-900">
+                            {product.name}
+                          </p>
+                          <div className="mt-2 flex items-center justify-between gap-2">
+                            <p className="text-sm font-bold text-zinc-900">
+                              ฿{product.pricePerRental}
+                              <span className="text-xs font-normal text-zinc-400">
+                                {t("common.perRental")}
+                              </span>
+                            </p>
+                            <StockBadge
+                              total={total}
+                              unit={product.sizeUnit}
+                              size="sm"
+                            />
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
             )}
-          </p>
-        </div>
-        <div className="rounded-xl border border-zinc-200 bg-white p-4">
-          <p className="text-xs font-medium text-zinc-500">
-            {t("community.participants")}
-          </p>
-          <p className="mt-1 font-semibold text-zinc-900">
-            {participantCount}
-            {event.maxParticipants ? ` / ${event.maxParticipants}` : ""}{" "}
-            {t("common.people")}
-          </p>
-          {remaining !== null && (
-            <p className="text-sm text-zinc-600">
-              {t("common.spotsLeft", { count: remaining })}
-            </p>
-          )}
+          </div>
+
+          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <div className="overflow-hidden rounded-[1.5rem] bg-zinc-950 text-white shadow-2xl shadow-zinc-900/25">
+              <div className="border-b border-white/10 px-6 py-5">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
+                  {t("community.join")}
+                </p>
+                {fillPercent !== null && (
+                  <div className="mt-4">
+                    <div className="mb-2 flex items-center justify-between text-xs">
+                      <span className="text-zinc-400">{t("community.capacity")}</span>
+                      <span className="font-semibold text-white">
+                        {Math.round(fillPercent)}%
+                      </span>
+                    </div>
+                    <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-300 transition-all duration-500"
+                        style={{ width: `${fillPercent}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+                {remaining !== null && (
+                  <p className="mt-3 text-sm text-zinc-400">
+                    {t("common.spotsLeft", { count: remaining })}
+                  </p>
+                )}
+              </div>
+              <div className="px-6 py-5">
+                <CommunityJoinButton
+                  event={{ ...event, participantCount }}
+                  initialJoined={joined}
+                  onJoined={setParticipantCount}
+                  variant="premium"
+                />
+              </div>
+            </div>
+
+            {location && (
+              <div className="overflow-hidden rounded-[1.5rem] border border-emerald-200/60 bg-gradient-to-br from-emerald-50 to-white p-6 shadow-sm">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-700/80">
+                  {t("community.nearbyRental")}
+                </p>
+                <p className="mt-2 text-lg font-bold tracking-tight text-zinc-900">
+                  {location.name}
+                </p>
+                <p className="mt-1 text-sm text-zinc-500">{location.address}</p>
+                <p className="mt-3 text-xs leading-relaxed text-emerald-800/80">
+                  {t("community.nearbyRentalHint", { hours: location.openHours })}
+                </p>
+                <Link
+                  href={`/map?location=${location.id}${recommended[0] ? `&product=${recommended[0].id}` : ""}`}
+                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 py-3.5 text-sm font-bold text-white transition-all hover:bg-zinc-800"
+                >
+                  {t("community.findNearbyRental")}
+                </Link>
+              </div>
+            )}
+          </aside>
         </div>
       </div>
 
-      <div className="mb-6 flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50/60 p-5 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold text-emerald-900">
-            {t("community.join")}
-          </p>
-          {remaining !== null && (
-            <p className="mt-1 text-xs text-emerald-800/80">
-              {t("common.spotsLeft", { count: remaining })}
-            </p>
-          )}
-        </div>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-200/80 bg-white/95 p-4 backdrop-blur-md lg:hidden">
         <CommunityJoinButton
           event={{ ...event, participantCount }}
           initialJoined={joined}
           onJoined={setParticipantCount}
         />
       </div>
-
-      <section className="mb-6 rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="mb-2 text-sm font-semibold text-zinc-900">
-          {t("community.details")}
-        </h2>
-        <p className="text-sm leading-relaxed text-zinc-600">
-          {event.description}
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {event.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      <section className="mb-6 rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="mb-1 text-sm font-semibold text-zinc-900">
-          {t("community.venue")}
-        </h2>
-        <p className="font-medium text-zinc-900">{event.venue}</p>
-        <p className="text-sm text-zinc-500">{event.address}</p>
-        <p className="mt-2 text-xs text-zinc-400">
-          {t("common.organizedBy")} {event.organizer}
-        </p>
-      </section>
-
-      {location && (
-        <section className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50/50 p-5">
-          <h2 className="mb-1 text-sm font-semibold text-emerald-800">
-            {t("community.nearbyRental")}
-          </h2>
-          <p className="font-medium text-zinc-900">{location.name}</p>
-          <p className="mb-3 text-sm text-zinc-600">{location.address}</p>
-          <p className="mb-3 text-xs text-emerald-700">
-            {t("community.nearbyRentalHint", { hours: location.openHours })}
-          </p>
-          <Link
-            href={`/map?product=${recommended[0]?.id ?? ""}`}
-            className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
-          >
-            {t("community.findNearbyRental")}
-          </Link>
-        </section>
-      )}
-
-      {recommended.length > 0 && (
-        <section className="mb-6">
-          <h2 className="mb-1 text-lg font-bold text-zinc-900">
-            {t("community.recommendedGear")}
-          </h2>
-          <p className="mb-4 text-sm text-zinc-500">
-            {t("community.recommendedHint")}
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {recommended.map((product) => {
-              const total = getStockTotal(
-                getAggregatedProductInventory(product.id, locations, products),
-              );
-              return (
-                <Link
-                  key={product.id}
-                  href={`/products/${product.id}`}
-                  className="flex gap-3 rounded-xl border border-zinc-200 bg-white p-3 transition-shadow hover:shadow-md"
-                >
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-neutral-50">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-contain p-1.5"
-                      sizes="64px"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-zinc-900">
-                      {product.name}
-                    </p>
-                    <p className="text-xs font-bold text-emerald-600">
-                      ฿{product.pricePerRental}
-                      {t("common.perRental")}
-                    </p>
-                    <StockBadge
-                      total={total}
-                      unit={product.sizeUnit}
-                      size="sm"
-                    />
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
     </main>
   );
 }

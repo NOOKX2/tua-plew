@@ -14,6 +14,13 @@ export const CAMPAIGN_TYPE_EMOJI: Record<CampaignType, string> = {
   seasonal: "☀️",
 };
 
+export const CAMPAIGN_TYPE_GRADIENT: Record<CampaignType, string> = {
+  loyalty: "from-amber-500 to-orange-600",
+  "first-time": "from-amber-400 to-yellow-500",
+  bundle: "from-orange-500 to-rose-500",
+  seasonal: "from-sky-500 to-amber-400",
+};
+
 export function getCampaignById(
   id: string,
   campaigns: Campaign[],

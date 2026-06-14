@@ -30,7 +30,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200/70 bg-[#faf9f6]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#faf9f6]/75">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-3.5 sm:px-8 lg:px-10">
         <Link
           href="/"
           className="shrink-0 text-lg font-bold tracking-tight text-zinc-900"

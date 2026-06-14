@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product, ProductRatingSummary, ProductReview, RentalLocation } from "@/lib/types";
@@ -14,6 +13,7 @@ import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getCategoryLabel } from "@/lib/i18n/labels";
 import ProductAvailabilityList from "./ProductAvailabilityList";
 import ProductReviewSection from "./ProductReviewSection";
+import RentalBookingPanel from "./RentalBookingPanel";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
 import StarRating from "./StarRating";
@@ -28,48 +28,23 @@ type Props = {
   hasReviewed?: boolean;
 };
 
-function CollapsibleSection({
+function DetailSection({
   title,
-  defaultOpen = false,
   children,
-  showLabel,
-  hideLabel,
   className = "",
 }: {
   title: string;
-  defaultOpen?: boolean;
   children: React.ReactNode;
-  showLabel: string;
-  hideLabel: string;
   className?: string;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
-
   return (
     <section
-      className={`overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition-shadow hover:shadow-md ${className}`}
+      className={`overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm ${className}`}
     >
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
-      >
+      <div className="border-b border-zinc-100 px-5 py-4">
         <h2 className="text-sm font-semibold text-zinc-900">{title}</h2>
-        <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-400">
-          {open ? hideLabel : showLabel}
-          <span
-            className={`inline-block transition-transform duration-200 ${
-              open ? "rotate-180" : ""
-            }`}
-            aria-hidden
-          >
-            ▾
-          </span>
-        </span>
-      </button>
-      {open && (
-        <div className="border-t border-zinc-100 px-5 pb-5 pt-4">{children}</div>
-      )}
+      </div>
+      <div className="px-5 py-4">{children}</div>
     </section>
   );
 }
@@ -115,11 +90,10 @@ export default function ProductDetail({
 
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                isPartner
+              className={`rounded-full px-3 py-1 text-xs font-semibold ${isPartner
                   ? "bg-amber-400 text-zinc-900"
                   : "bg-white text-zinc-700 ring-1 ring-zinc-200"
-              }`}
+                }`}
             >
               {isPartner && product.brand ? product.brand : categoryLabel}
             </span>
@@ -134,20 +108,18 @@ export default function ProductDetail({
         <div className="overflow-hidden rounded-[2rem] border border-zinc-200/80 bg-white shadow-xl shadow-zinc-900/5">
           <div className="grid lg:grid-cols-[1fr_1.05fr]">
             <div
-              className={`relative p-6 sm:p-8 lg:sticky lg:top-24 lg:self-start ${
-                isPartner
+              className={`relative p-6 sm:p-8 lg:sticky lg:top-24 lg:self-start ${isPartner
                   ? "bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950"
                   : "bg-gradient-to-br from-zinc-100 via-white to-emerald-50/40"
-              }`}
+                }`}
             >
               <div className="home-hero-grid absolute inset-0 opacity-30" />
 
               <div
-                className={`relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-[1.5rem] ${
-                  isPartner
+                className={`relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-[1.5rem] ${isPartner
                     ? "bg-zinc-900/50 ring-1 ring-white/10"
                     : "bg-white shadow-lg ring-1 ring-zinc-200/60"
-                }`}
+                  }`}
               >
                 <Image
                   src={product.image}
@@ -251,6 +223,12 @@ export default function ProductDetail({
                 />
               </div>
 
+              <RentalBookingPanel
+                product={product}
+                availability={availability}
+                callbackUrl={`/products/${product.id}${compact ? "?from=map" : ""}`}
+              />
+
               <Link
                 href={`/map?product=${product.id}`}
                 className="mt-6 hidden items-center justify-center gap-2 rounded-full bg-emerald-500 px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-all hover:scale-[1.01] hover:bg-emerald-400 lg:inline-flex"
@@ -263,12 +241,7 @@ export default function ProductDetail({
         </div>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2">
-          <CollapsibleSection
-            title={t("product.moreDetails")}
-            defaultOpen={!compact}
-            showLabel={t("common.show")}
-            hideLabel={t("common.hide")}
-          >
+          <DetailSection title={t("product.moreDetails")}>
             {!compact && (
               <p className="mb-4 text-sm leading-relaxed text-zinc-600">
                 {product.longDescription}
@@ -295,13 +268,9 @@ export default function ProductDetail({
                 </li>
               ))}
             </ul>
-          </CollapsibleSection>
+          </DetailSection>
 
-          <CollapsibleSection
-            title={t("product.sizeGuide")}
-            showLabel={t("common.show")}
-            hideLabel={t("common.hide")}
-          >
+          <DetailSection title={t("product.sizeGuide")}>
             <div className="overflow-x-auto rounded-xl ring-1 ring-zinc-100">
               <table className="w-full min-w-[280px] text-sm">
                 <thead className="bg-zinc-50">
@@ -361,28 +330,22 @@ export default function ProductDetail({
                 </tbody>
               </table>
             </div>
-          </CollapsibleSection>
+          </DetailSection>
 
-          <CollapsibleSection
-            title={t("product.hygiene")}
-            showLabel={t("common.show")}
-            hideLabel={t("common.hide")}
-          >
+          <DetailSection title={t("product.hygiene")}>
             <div className="rounded-xl bg-emerald-50/50 p-4 ring-1 ring-emerald-100">
               <p className="text-sm leading-relaxed text-zinc-700">
                 {product.careNote}
               </p>
             </div>
-          </CollapsibleSection>
+          </DetailSection>
 
           {!compact && (
-            <CollapsibleSection
+            <DetailSection
               title={t("product.availability", { count: availability.length })}
-              showLabel={t("common.show")}
-              hideLabel={t("common.hide")}
             >
               <ProductAvailabilityList items={availability} product={product} />
-            </CollapsibleSection>
+            </DetailSection>
           )}
         </div>
 

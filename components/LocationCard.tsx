@@ -105,7 +105,7 @@ export default function LocationCard({
               : "border-zinc-100 bg-zinc-50"
           }`;
 
-          const thumbContent = (
+          const thumbInner = (
             <>
               <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-50">
                 <Image
@@ -117,7 +117,13 @@ export default function LocationCard({
                 />
               </div>
               <span
-                className={`mt-0.5 block text-center text-[10px] font-bold ${
+                className={`mt-0.5 block max-w-[52px] truncate text-center text-[9px] font-medium text-zinc-700`}
+                title={product.name}
+              >
+                {product.name}
+              </span>
+              <span
+                className={`block text-center text-[10px] font-bold ${
                   qty === 0 ? "text-red-400" : "text-zinc-600"
                 }`}
               >
@@ -143,7 +149,7 @@ export default function LocationCard({
                 className={thumbClass}
                 title={title}
               >
-                {thumbContent}
+                {thumbInner}
               </button>
             );
           }
@@ -151,11 +157,11 @@ export default function LocationCard({
           return (
             <Link
               key={stock.productId}
-              href={`/products/${product.id}`}
+              href={`/products/${product.id}?from=map`}
               className={thumbClass}
               title={title}
             >
-              {thumbContent}
+              {thumbInner}
             </Link>
           );
         })}
@@ -166,6 +172,7 @@ export default function LocationCard({
           embedded
           product={expandedProduct}
           stock={expandedStock}
+          location={location}
           onClose={onCloseProduct}
         />
       )}

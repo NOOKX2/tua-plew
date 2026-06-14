@@ -38,7 +38,7 @@ export default function RentalMapView({
 }: Props) {
   const t = useTranslations();
   const [selectedId, setSelectedId] = useState<string | null>(
-    initialLocationId ?? locations[0]?.id ?? null,
+    initialLocationId ?? null,
   );
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     initialProductId,
@@ -49,6 +49,7 @@ export default function RentalMapView({
   const [expandedLocationId, setExpandedLocationId] = useState<string | null>(
     null,
   );
+  const [mapFocusId, setMapFocusId] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialProductId) {
@@ -64,6 +65,30 @@ export default function RentalMapView({
       setSelectedId(initialLocationId);
     }
   }, [initialLocationId, locations]);
+
+  useEffect(() => {
+    if (!initialProductId) return;
+    const locationId =
+      initialLocationId ??
+      locations.find((loc) =>
+        loc.products.some((p) => p.productId === initialProductId),
+      )?.id;
+    if (!locationId) return;
+    const location = locations.find((loc) => loc.id === locationId);
+    if (!location?.products.some((p) => p.productId === initialProductId)) return;
+    setSelectedId(locationId);
+    setExpandedLocationId(locationId);
+    setExpandedProductId(initialProductId);
+  }, [initialProductId, initialLocationId, locations]);
+
+  useEffect(() => {
+    if (!selectedId) return;
+    requestAnimationFrame(() => {
+      document
+        .getElementById(`location-card-${selectedId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }, [selectedId]);
 
   useEffect(() => {
     if (!expandedProductId || !expandedLocationId) return;
@@ -84,7 +109,11 @@ export default function RentalMapView({
       )
     : locations;
 
-  function handleProductClick(productId: string, locationId: string) {
+  function handleProductClick(
+    productId: string,
+    locationId: string,
+    source: "map" | "sidebar" = "sidebar",
+  ) {
     setSelectedId(locationId);
     if (
       expandedProductId === productId &&
@@ -96,12 +125,23 @@ export default function RentalMapView({
     }
     setExpandedLocationId(locationId);
     setExpandedProductId(productId);
+    if (source === "map") {
+      setMapFocusId(locationId);
+    }
   }
 
-  function handleLocationSelect(locationId: string) {
+  function handleLocationSelect(
+    locationId: string,
+    source: "map" | "sidebar" = "sidebar",
+  ) {
     setSelectedId(locationId);
     setExpandedProductId(null);
     setExpandedLocationId(null);
+    if (source === "map") {
+      setMapFocusId(locationId);
+    } else {
+      setMapFocusId(null);
+    }
   }
 
   return (
@@ -140,9 +180,12 @@ export default function RentalMapView({
               locations={filteredLocations}
               products={products}
               selectedId={selectedId}
-              onSelect={handleLocationSelect}
+              focusId={mapFocusId}
+              onSelect={(id) => handleLocationSelect(id, "map")}
               highlightProductId={selectedProductId}
-              onProductClick={handleProductClick}
+              onProductClick={(productId, locationId) =>
+                handleProductClick(productId, locationId, "map")
+              }
             />
           </div>
         </div>
@@ -155,13 +198,13 @@ export default function RentalMapView({
                 location={loc}
                 products={products}
                 selected={loc.id === selectedId}
-                onSelect={handleLocationSelect}
+                onSelect={(id) => handleLocationSelect(id, "sidebar")}
                 highlightProductId={selectedProductId}
                 expandedProductId={
                   expandedLocationId === loc.id ? expandedProductId : null
                 }
                 onProductClick={(productId) =>
-                  handleProductClick(productId, loc.id)
+                  handleProductClick(productId, loc.id, "sidebar")
                 }
                 onCloseProduct={() => {
                   setExpandedProductId(null);

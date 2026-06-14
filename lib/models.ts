@@ -127,6 +127,33 @@ const communityEnrollmentSchema = new Schema(
 communityEnrollmentSchema.index({ userId: 1, eventId: 1 }, { unique: true });
 communityEnrollmentSchema.index({ eventId: 1 });
 
+const rentalReservationSchema = new Schema(
+  {
+    userId: { type: String, required: true },
+    productId: { type: String, required: true },
+    locationId: { type: String, required: true },
+    size: { type: String, required: true },
+    status: {
+      type: String,
+      required: true,
+      enum: ["pending_pickup", "picked_up", "returned", "cancelled", "expired"],
+    },
+    pickupCode: { type: String, required: true },
+    price: { type: Number, required: true },
+    productName: { type: String, required: true },
+    locationName: { type: String, required: true },
+    locationAddress: { type: String, required: true },
+    reservedAt: { type: Date, required: true },
+    expiresAt: { type: Date, required: true },
+    pickedUpAt: { type: Date },
+    cancelledAt: { type: Date },
+  },
+  { timestamps: true },
+);
+rentalReservationSchema.index({ pickupCode: 1 }, { unique: true });
+rentalReservationSchema.index({ userId: 1, status: 1 });
+rentalReservationSchema.index({ expiresAt: 1 });
+
 const userSchema = new Schema(
   {
     name: { type: String },
@@ -188,5 +215,10 @@ export const CommunityEnrollment = getModel(
   "CommunityEnrollment",
 );
 export const Review = getModel("Review", reviewSchema, "Review");
+export const RentalReservation = getModel(
+  "RentalReservation",
+  rentalReservationSchema,
+  "RentalReservation",
+);
 export const User = getModel("User", userSchema, "User");
 export const Account = getModel("Account", accountSchema, "Account");

@@ -14,6 +14,7 @@ export default function AuthButton({ variant = "dark" }: Props) {
   const { data: session, status } = useSession();
   const t = useTranslations();
   const [open, setOpen] = useState(false);
+  const [activeRentals, setActiveRentals] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
   const isLight = variant === "light";
 
@@ -40,6 +41,24 @@ export default function AuthButton({ variant = "dark" }: Props) {
       document.removeEventListener("keydown", handleEscape);
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open || status !== "authenticated") return;
+
+    let cancelled = false;
+    fetch("/api/rentals")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { activeCount?: number } | null) => {
+        if (!cancelled && data && typeof data.activeCount === "number") {
+          setActiveRentals(data.activeCount);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, status]);
 
   if (status === "loading") {
     return (
@@ -129,6 +148,40 @@ export default function AuthButton({ variant = "dark" }: Props) {
                 {session.user.email}
               </p>
             </div>
+            <Link
+              href="/rentals"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+            >
+              <span className="flex items-center gap-2">
+                <svg
+                  className="h-4 w-4 text-zinc-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A9.022 9.022 0 012.43 8.326 9.004 9.004 0 012 5V3.5z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>
+                  <span className="block font-medium">{t("rental.myRentals")}</span>
+                  {activeRentals > 0 && (
+                    <span className="text-xs text-emerald-600">
+                      {t("rental.activeCount", { count: activeRentals })}
+                    </span>
+                  )}
+                </span>
+              </span>
+              {activeRentals > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[10px] font-bold text-white">
+                  {activeRentals}
+                </span>
+              )}
+            </Link>
             <button
               type="button"
               role="menuitem"

@@ -49,6 +49,31 @@ export type ProductRatingSummary = {
   count: number;
 };
 
+export type RentalStatus =
+  | "pending_pickup"
+  | "picked_up"
+  | "returned"
+  | "cancelled"
+  | "expired";
+
+export type RentalReservation = {
+  id: string;
+  userId: string;
+  productId: string;
+  locationId: string;
+  size: string;
+  status: RentalStatus;
+  pickupCode: string;
+  price: number;
+  productName: string;
+  locationName: string;
+  locationAddress: string;
+  reservedAt: string;
+  expiresAt: string;
+  pickedUpAt?: string;
+  cancelledAt?: string;
+};
+
 export type LocationProductStock = {
   productId: string;
   inventory: SizeInventory;

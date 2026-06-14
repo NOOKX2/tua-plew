@@ -2,16 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { LocationProductStock, Product } from "@/lib/types";
+import type { LocationProductStock, Product, RentalLocation } from "@/lib/types";
 import { getStockTotal } from "@/lib/locations";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getCategoryLabel } from "@/lib/i18n/labels";
+import RentalBookingPanel from "./RentalBookingPanel";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
 
 type Props = {
   product: Product;
   stock: LocationProductStock;
+  location: RentalLocation;
   onClose: () => void;
   embedded?: boolean;
 };
@@ -19,6 +21,7 @@ type Props = {
 export default function ProductQuickView({
   product,
   stock,
+  location,
   onClose,
   embedded = false,
 }: Props) {
@@ -62,7 +65,14 @@ export default function ProductQuickView({
             <span className="text-[10px] font-medium text-zinc-400">
               {getCategoryLabel(product.category, locale, messages)}
             </span>
-            <h3 className="text-sm font-bold text-zinc-900">{product.name}</h3>
+            <h3 className="text-sm font-bold text-zinc-900">
+              <Link
+                href={`/products/${product.id}?from=map`}
+                className="hover:text-emerald-600 hover:underline"
+              >
+                {product.name}
+              </Link>
+            </h3>
             <div className="mt-1 flex flex-wrap items-center gap-2">
               <p className="text-sm font-bold text-emerald-600">
                 ฿{product.pricePerRental}
@@ -86,6 +96,10 @@ export default function ProductQuickView({
           )}
         </div>
 
+        <p className="mt-2 text-xs leading-relaxed text-zinc-500">
+          {product.description}
+        </p>
+
         <div className="mt-3 rounded-lg bg-zinc-50 p-3">
           <p className="mb-2 text-xs font-medium text-zinc-600">
             {t("stock.stockAtLocation")}
@@ -99,19 +113,21 @@ export default function ProductQuickView({
         </div>
 
         <div className="mt-3 flex flex-col gap-2">
-          <button
-            type="button"
-            className="w-full rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
-          >
-            {t("product.rentHere")}
-          </button>
           <Link
             href={`/products/${product.id}?from=map`}
-            className="flex w-full items-center justify-center rounded-xl border border-zinc-200 px-4 py-2 text-xs font-medium text-zinc-600 transition-colors hover:border-emerald-200 hover:text-emerald-700"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300 hover:text-emerald-700"
           >
             {t("common.fullDetails")}
           </Link>
         </div>
+
+        <RentalBookingPanel
+          product={product}
+          availability={[{ location, stock }]}
+          fixedLocationId={location.id}
+          compact
+          callbackUrl={`/map?product=${product.id}`}
+        />
       </div>
     </div>
   );
