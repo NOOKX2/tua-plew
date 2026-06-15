@@ -5,6 +5,15 @@ import { connectDB } from "@/lib/mongoose";
 import { Account, User } from "@/lib/models";
 import { verifyPassword } from "@/lib/password";
 
+// Vercel/production must not use a localhost AUTH_URL — it breaks OAuth redirect_uri
+// and can make sign-in appear to "bounce" away from /login.
+if (
+  process.env.NODE_ENV === "production" &&
+  /localhost|127\.0\.0\.1/.test(process.env.AUTH_URL ?? "")
+) {
+  delete process.env.AUTH_URL;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "jwt" },
   providers: [

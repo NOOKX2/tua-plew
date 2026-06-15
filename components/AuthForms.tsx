@@ -96,7 +96,11 @@ function PasswordInput({
   );
 }
 
-export function CredentialsSignInForm() {
+export function CredentialsSignInForm({
+  callbackUrl = "/",
+}: {
+  callbackUrl?: string;
+}) {
   const router = useRouter();
   const t = useTranslations();
   const [email, setEmail] = useState("");
@@ -122,7 +126,7 @@ export function CredentialsSignInForm() {
       return;
     }
 
-    router.push("/");
+    router.push(callbackUrl);
     router.refresh();
   }
 
@@ -175,7 +179,11 @@ export function CredentialsSignInForm() {
   );
 }
 
-export function RegisterForm() {
+export function RegisterForm({
+  callbackUrl = "/",
+}: {
+  callbackUrl?: string;
+}) {
   const router = useRouter();
   const t = useTranslations();
   const [name, setName] = useState("");
@@ -228,7 +236,7 @@ export function RegisterForm() {
       return;
     }
 
-    router.push("/");
+    router.push(callbackUrl);
     router.refresh();
   }
 

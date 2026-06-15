@@ -230,13 +230,17 @@ export default function AuthButton({ variant = "dark" }: Props) {
   );
 }
 
-export function GoogleSignInButton() {
+export function GoogleSignInButton({
+  callbackUrl = "/",
+}: {
+  callbackUrl?: string;
+}) {
   const t = useTranslations();
 
   return (
     <button
       type="button"
-      onClick={() => signIn("google", { callbackUrl: "/" })}
+      onClick={() => signIn("google", { callbackUrl })}
       className="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
     >
       <GoogleIcon />

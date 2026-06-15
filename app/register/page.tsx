@@ -3,21 +3,28 @@ import { auth } from "@/auth";
 import { GoogleSignInButton } from "@/components/AuthButton";
 import { AuthDivider, RegisterForm } from "@/components/AuthForms";
 import AuthLayout from "@/components/AuthLayout";
+import { safeCallbackPath } from "@/lib/auth-redirect";
 
 export const dynamic = "force-dynamic";
 
-export default async function RegisterPage() {
-  const session = await auth();
+type Props = {
+  searchParams: Promise<{ callbackUrl?: string }>;
+};
 
-  if (session?.user) {
-    redirect("/");
+export default async function RegisterPage({ searchParams }: Props) {
+  const { callbackUrl } = await searchParams;
+  const session = await auth();
+  const nextPath = safeCallbackPath(callbackUrl);
+
+  if (session?.user?.id) {
+    redirect(nextPath);
   }
 
   return (
     <AuthLayout variant="register">
-      <RegisterForm />
+      <RegisterForm callbackUrl={nextPath} />
       <AuthDivider />
-      <GoogleSignInButton />
+      <GoogleSignInButton callbackUrl={nextPath} />
     </AuthLayout>
   );
 }
