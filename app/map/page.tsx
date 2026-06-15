@@ -4,8 +4,6 @@ import { getRentalLocations } from "@/lib/locations.server";
 import { getProducts } from "@/lib/products.server";
 import { getTranslator } from "@/lib/i18n/server";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslator();
   return {

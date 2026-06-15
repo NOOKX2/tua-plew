@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { getRentalLocations } from "@/lib/locations.server";
 import {
   getProductByIdAsync,
+  getProductIds,
   getProducts,
 } from "@/lib/products.server";
 import {
@@ -14,12 +15,15 @@ import {
 } from "@/lib/reviews";
 import { getTranslator } from "@/lib/i18n/server";
 
-export const dynamic = "force-dynamic";
-
 type Props = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ from?: string }>;
 };
+
+export async function generateStaticParams() {
+  const ids = await getProductIds();
+  return ids.map((id) => ({ id }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;

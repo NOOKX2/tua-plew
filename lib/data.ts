@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import type {
   Campaign,
   CommunityEvent,
@@ -10,6 +11,7 @@ import type {
   SizeInventory,
   SizeUnit,
 } from "./types";
+import { CATALOG_REVALIDATE_SECONDS } from "./catalog-cache";
 import { connectDB } from "./mongoose";
 import {
   Campaign as CampaignModel,
@@ -58,6 +60,12 @@ type LocationRow = {
   openHours: string;
 };
 
+type StockRow = {
+  locationId: string;
+  productId: string;
+  inventory: SizeInventory;
+};
+
 type CommunityEventRow = {
   _id: string;
   title: string;
@@ -96,6 +104,10 @@ type CampaignRow = {
   featured: boolean;
 };
 
+const catalogCache = {
+  revalidate: CATALOG_REVALIDATE_SECONDS,
+};
+
 function mapProduct(row: ProductRow): Product {
   return {
     id: row._id,
@@ -118,8 +130,10 @@ function mapProduct(row: ProductRow): Product {
   };
 }
 
-async function mapLocation(row: LocationRow): Promise<RentalLocation> {
-  const stocks = await LocationStock.find({ locationId: row._id }).lean();
+function mapLocationRow(
+  row: LocationRow,
+  stocks: { productId: string; inventory: SizeInventory }[],
+): RentalLocation {
   return {
     id: row._id,
     name: row.name,
@@ -129,11 +143,23 @@ async function mapLocation(row: LocationRow): Promise<RentalLocation> {
     type: row.type as RentalLocation["type"],
     partnerName: row.partnerName ?? undefined,
     openHours: row.openHours,
-    products: stocks.map((stock) => ({
-      productId: stock.productId as string,
-      inventory: stock.inventory as SizeInventory,
-    })),
+    products: stocks,
   };
+}
+
+function groupStocksByLocation(
+  stocks: StockRow[],
+): Map<string, { productId: string; inventory: SizeInventory }[]> {
+  const map = new Map<string, { productId: string; inventory: SizeInventory }[]>();
+  for (const stock of stocks) {
+    const list = map.get(stock.locationId) ?? [];
+    list.push({
+      productId: stock.productId,
+      inventory: stock.inventory,
+    });
+    map.set(stock.locationId, list);
+  }
+  return map;
 }
 
 function mapCommunityEvent(row: CommunityEventRow): CommunityEvent {
@@ -178,11 +204,123 @@ function mapCampaign(row: CampaignRow): Campaign {
   };
 }
 
+const loadProducts = unstable_cache(
+  async (locale: Locale): Promise<Product[]> => {
+    await connectDB();
+    const rows = await ProductModel.find().sort({ _id: 1 }).lean<ProductRow[]>();
+    return rows.map((row) => localizeProduct(mapProduct(row), locale));
+  },
+  ["catalog-products"],
+  { ...catalogCache, tags: ["catalog-products"] },
+);
+
+const loadProductById = unstable_cache(
+  async (id: string, locale: Locale): Promise<Product | undefined> => {
+    await connectDB();
+    const row = await ProductModel.findById(id).lean<ProductRow | null>();
+    return row
+      ? localizeProduct(mapProduct(row), locale)
+      : undefined;
+  },
+  ["catalog-product"],
+  { ...catalogCache, tags: ["catalog-products"] },
+);
+
+const loadLocations = unstable_cache(
+  async (locale: Locale): Promise<RentalLocation[]> => {
+    await connectDB();
+    const [rows, stocks] = await Promise.all([
+      RentalLocationModel.find().sort({ _id: 1 }).lean<LocationRow[]>(),
+      LocationStock.find().lean<StockRow[]>(),
+    ]);
+    const stocksByLocation = groupStocksByLocation(stocks);
+    return rows.map((row) =>
+      localizeLocation(
+        mapLocationRow(row, stocksByLocation.get(row._id) ?? []),
+        locale,
+      ),
+    );
+  },
+  ["catalog-locations"],
+  { ...catalogCache, tags: ["catalog-locations"] },
+);
+
+const loadLocationById = unstable_cache(
+  async (id: string, locale: Locale): Promise<RentalLocation | undefined> => {
+    await connectDB();
+    const row = await RentalLocationModel.findById(id).lean<LocationRow | null>();
+    if (!row) return undefined;
+    const stocks = await LocationStock.find({ locationId: id }).lean<StockRow[]>();
+    return localizeLocation(
+      mapLocationRow(
+        row,
+        stocks.map((stock) => ({
+          productId: stock.productId,
+          inventory: stock.inventory,
+        })),
+      ),
+      locale,
+    );
+  },
+  ["catalog-location"],
+  { ...catalogCache, tags: ["catalog-locations"] },
+);
+
+const loadCommunityEvents = unstable_cache(
+  async (locale: Locale): Promise<CommunityEvent[]> => {
+    await connectDB();
+    const rows = await CommunityEventModel.find()
+      .sort({ date: 1 })
+      .lean<CommunityEventRow[]>();
+    return rows.map((row) =>
+      localizeCommunityEvent(mapCommunityEvent(row), locale),
+    );
+  },
+  ["catalog-community-events"],
+  { ...catalogCache, tags: ["catalog-community-events"] },
+);
+
+const loadCommunityEventById = unstable_cache(
+  async (id: string, locale: Locale): Promise<CommunityEvent | undefined> => {
+    await connectDB();
+    const row = await CommunityEventModel.findById(id).lean<CommunityEventRow | null>();
+    return row
+      ? localizeCommunityEvent(mapCommunityEvent(row), locale)
+      : undefined;
+  },
+  ["catalog-community-event"],
+  { ...catalogCache, tags: ["catalog-community-events"] },
+);
+
+const loadCampaigns = unstable_cache(
+  async (locale: Locale): Promise<Campaign[]> => {
+    await connectDB();
+    const rows = await CampaignModel.find()
+      .sort({ startDate: 1 })
+      .lean<CampaignRow[]>();
+    return rows.map((row) =>
+      localizeCampaign(mapCampaign(row), locale),
+    );
+  },
+  ["catalog-campaigns"],
+  { ...catalogCache, tags: ["catalog-campaigns"] },
+);
+
+const loadCampaignById = unstable_cache(
+  async (id: string, locale: Locale): Promise<Campaign | undefined> => {
+    await connectDB();
+    const row = await CampaignModel.findById(id).lean<CampaignRow | null>();
+    return row
+      ? localizeCampaign(mapCampaign(row), locale)
+      : undefined;
+  },
+  ["catalog-campaign"],
+  { ...catalogCache, tags: ["catalog-campaigns"] },
+);
+
 export async function fetchProducts(locale?: Locale): Promise<Product[]> {
   const resolvedLocale = locale ?? (await getLocale());
-  await connectDB();
-  const rows = await ProductModel.find().sort({ _id: 1 }).lean<ProductRow[]>();
-  return rows.map((row) => localizeProduct(mapProduct(row), resolvedLocale));
+  return loadProducts(resolvedLocale);
 }
 
 export async function fetchProductById(
@@ -190,11 +328,7 @@ export async function fetchProductById(
   locale?: Locale,
 ): Promise<Product | undefined> {
   const resolvedLocale = locale ?? (await getLocale());
-  await connectDB();
-  const row = await ProductModel.findById(id).lean<ProductRow | null>();
-  return row
-    ? localizeProduct(mapProduct(row), resolvedLocale)
-    : undefined;
+  return loadProductById(id, resolvedLocale);
 }
 
 export async function fetchProductIds(): Promise<string[]> {
@@ -205,14 +339,7 @@ export async function fetchProductIds(): Promise<string[]> {
 
 export async function fetchLocations(locale?: Locale): Promise<RentalLocation[]> {
   const resolvedLocale = locale ?? (await getLocale());
-  await connectDB();
-  const rows = await RentalLocationModel.find()
-    .sort({ _id: 1 })
-    .lean<LocationRow[]>();
-  const locations = await Promise.all(rows.map(mapLocation));
-  return locations.map((location) =>
-    localizeLocation(location, resolvedLocale),
-  );
+  return loadLocations(resolvedLocale);
 }
 
 export async function fetchLocationById(
@@ -220,24 +347,14 @@ export async function fetchLocationById(
   locale?: Locale,
 ): Promise<RentalLocation | undefined> {
   const resolvedLocale = locale ?? (await getLocale());
-  await connectDB();
-  const row = await RentalLocationModel.findById(id).lean<LocationRow | null>();
-  if (!row) return undefined;
-  const location = await mapLocation(row);
-  return localizeLocation(location, resolvedLocale);
+  return loadLocationById(id, resolvedLocale);
 }
 
 export async function fetchCommunityEvents(
   locale?: Locale,
 ): Promise<CommunityEvent[]> {
   const resolvedLocale = locale ?? (await getLocale());
-  await connectDB();
-  const rows = await CommunityEventModel.find()
-    .sort({ date: 1 })
-    .lean<CommunityEventRow[]>();
-  return rows.map((row) =>
-    localizeCommunityEvent(mapCommunityEvent(row), resolvedLocale),
-  );
+  return loadCommunityEvents(resolvedLocale);
 }
 
 export async function fetchCommunityEventById(
@@ -245,11 +362,7 @@ export async function fetchCommunityEventById(
   locale?: Locale,
 ): Promise<CommunityEvent | undefined> {
   const resolvedLocale = locale ?? (await getLocale());
-  await connectDB();
-  const row = await CommunityEventModel.findById(id).lean<CommunityEventRow | null>();
-  return row
-    ? localizeCommunityEvent(mapCommunityEvent(row), resolvedLocale)
-    : undefined;
+  return loadCommunityEventById(id, resolvedLocale);
 }
 
 export async function fetchCommunityEventIds(): Promise<string[]> {
@@ -260,13 +373,7 @@ export async function fetchCommunityEventIds(): Promise<string[]> {
 
 export async function fetchCampaigns(locale?: Locale): Promise<Campaign[]> {
   const resolvedLocale = locale ?? (await getLocale());
-  await connectDB();
-  const rows = await CampaignModel.find()
-    .sort({ startDate: 1 })
-    .lean<CampaignRow[]>();
-  return rows.map((row) =>
-    localizeCampaign(mapCampaign(row), resolvedLocale),
-  );
+  return loadCampaigns(resolvedLocale);
 }
 
 export async function fetchCampaignById(
@@ -274,11 +381,7 @@ export async function fetchCampaignById(
   locale?: Locale,
 ): Promise<Campaign | undefined> {
   const resolvedLocale = locale ?? (await getLocale());
-  await connectDB();
-  const row = await CampaignModel.findById(id).lean<CampaignRow | null>();
-  return row
-    ? localizeCampaign(mapCampaign(row), resolvedLocale)
-    : undefined;
+  return loadCampaignById(id, resolvedLocale);
 }
 
 export async function fetchCampaignIds(): Promise<string[]> {

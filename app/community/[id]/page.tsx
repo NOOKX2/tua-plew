@@ -9,12 +9,16 @@ import {
 import { getRentalLocations } from "@/lib/locations.server";
 import { getTranslator } from "@/lib/i18n/server";
 import { getProducts } from "@/lib/products.server";
-
-export const dynamic = "force-dynamic";
+import { getCommunityEventIds } from "@/lib/community.server";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateStaticParams() {
+  const ids = await getCommunityEventIds();
+  return ids.map((id) => ({ id }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;

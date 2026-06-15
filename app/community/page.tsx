@@ -5,8 +5,6 @@ import { getUserEnrolledEventIds } from "@/lib/community-enrollments";
 import { getCommunityEvents } from "@/lib/community.server";
 import { getTranslator } from "@/lib/i18n/server";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslator();
   return {

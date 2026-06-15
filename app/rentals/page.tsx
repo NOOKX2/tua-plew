@@ -7,8 +7,6 @@ import { getProducts } from "@/lib/products.server";
 import { getUserRentalReservations } from "@/lib/rentals";
 import { isReservationActive } from "@/lib/rental-status";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslator();
   return {

@@ -5,8 +5,6 @@ import { AuthDivider, RegisterForm } from "@/components/AuthForms";
 import AuthLayout from "@/components/AuthLayout";
 import { safeCallbackPath } from "@/lib/auth-redirect";
 
-export const dynamic = "force-dynamic";
-
 type Props = {
   searchParams: Promise<{ callbackUrl?: string }>;
 };
