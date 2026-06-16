@@ -52,20 +52,27 @@ export async function getDirectConversations(
   const users = await getUserProfilesByIds(otherIds.filter(Boolean));
   const usersById = new Map(users.map((user) => [user.id, user]));
 
-  return rows
-    .map((row) => {
-      const otherId = row.participantIds.find((id) => id !== userId);
-      if (!otherId) return null;
-      const otherUser = usersById.get(otherId);
-      if (!otherUser) return null;
-      return {
-        id: row._id.toString(),
-        otherUser,
-        lastMessage: row.lastMessagePreview || undefined,
-        lastMessageAt: row.lastMessageAt.toISOString(),
-      };
-    })
-    .filter((item): item is DirectConversationSummary => item !== null);
+  const conversations: DirectConversationSummary[] = [];
+
+  for (const row of rows) {
+    const otherId = row.participantIds.find((id) => id !== userId);
+    if (!otherId) continue;
+
+    const otherUser = usersById.get(otherId);
+    if (!otherUser) continue;
+
+    const item: DirectConversationSummary = {
+      id: row._id.toString(),
+      otherUser,
+      lastMessageAt: row.lastMessageAt.toISOString(),
+    };
+    if (row.lastMessagePreview) {
+      item.lastMessage = row.lastMessagePreview;
+    }
+    conversations.push(item);
+  }
+
+  return conversations;
 }
 
 export async function getOrCreateDirectConversation(
