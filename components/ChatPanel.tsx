@@ -95,7 +95,7 @@ export default function ChatPanel({
                 <div
                   className={`max-w-[78%] rounded-2xl px-3.5 py-2.5 text-sm ${
                     mine
-                      ? "rounded-tr-md bg-emerald-600 text-white"
+                      ? "rounded-tr-md bg-blue-600 text-white"
                       : "rounded-tl-md bg-zinc-100 text-zinc-800"
                   }`}
                 >
@@ -107,7 +107,7 @@ export default function ChatPanel({
                   <p className="whitespace-pre-wrap break-words">{message.body}</p>
                   <p
                     className={`mt-1 text-[10px] ${
-                      mine ? "text-emerald-100" : "text-zinc-400"
+                      mine ? "text-blue-100" : "text-zinc-400"
                     }`}
                   >
                     {new Date(message.createdAt).toLocaleTimeString([], {
@@ -138,12 +138,12 @@ export default function ChatPanel({
             placeholder={placeholder ?? t("community.social.chat.placeholder")}
             disabled={disabled || sending}
             maxLength={2000}
-            className="min-w-0 flex-1 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm outline-none transition-colors focus:border-emerald-400"
+            className="min-w-0 flex-1 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm outline-none transition-colors focus:border-blue-400"
           />
           <button
             type="submit"
             disabled={disabled || sending || !draft.trim()}
-            className="shrink-0 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="shrink-0 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {sending
               ? t("community.social.chat.sending")

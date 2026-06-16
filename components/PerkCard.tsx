@@ -10,8 +10,8 @@ const CATEGORY_STYLES: Record<
 > = {
   rental: {
     emoji: "👕",
-    ring: "ring-emerald-200",
-    badge: "bg-emerald-100 text-emerald-800",
+    ring: "ring-blue-200",
+    badge: "bg-blue-100 text-blue-800",
   },
   food: {
     emoji: "🍽️",
@@ -52,7 +52,7 @@ export default function PerkCard({ perk }: Props) {
   return (
     <article
       className={`min-w-0 overflow-hidden rounded-[1.25rem] border border-zinc-200/80 bg-white shadow-sm ring-1 ${style.ring} ${
-        perk.highlight ? "shadow-md shadow-emerald-900/5" : ""
+        perk.highlight ? "shadow-md shadow-blue-900/5" : ""
       }`}
     >
       <div className="border-b border-zinc-100 px-5 py-4">
@@ -64,7 +64,7 @@ export default function PerkCard({ perk }: Props) {
             {t(`community.joinWelcome.perkCategories.${perk.category}`)}
           </span>
           {perk.highlight && (
-            <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+            <span className="rounded-full bg-blue-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
               {t("community.joinWelcome.recommended")}
             </span>
           )}

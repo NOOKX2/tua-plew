@@ -55,7 +55,7 @@ export default async function EventChatPage({ params }: Props) {
       </div>
 
       <div className="mb-5">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-600">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-blue-600">
           {t("community.social.chat.groupTitle")}
         </p>
         <h1 className="mt-1 text-2xl font-bold text-zinc-900 sm:text-3xl">
@@ -64,7 +64,7 @@ export default async function EventChatPage({ params }: Props) {
         <p className="mt-2 text-sm text-zinc-500">
           {t("community.social.chat.groupSubtitle")}
         </p>
-        <p className="mt-2 text-xs font-medium text-emerald-700">
+        <p className="mt-2 text-xs font-medium text-blue-700">
           {t("community.social.chat.memberCount", {
             count: event.participantCount,
           })}

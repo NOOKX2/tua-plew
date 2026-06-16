@@ -57,7 +57,7 @@ export default function HomeCatalogSection({
           {(!embedded || secondary) && (
             <p
               className={`mb-2 text-xs font-semibold uppercase tracking-[0.18em] ${
-                secondary ? "text-zinc-500" : "text-emerald-600"
+                secondary ? "text-zinc-500" : "text-blue-600"
               }`}
             >
               {t("home.catalogEyebrow")}

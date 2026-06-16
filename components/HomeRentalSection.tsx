@@ -47,7 +47,7 @@ export default async function HomeRentalSection({
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/70 to-zinc-950/30" />
 
             <div className="relative flex h-full flex-col justify-center px-5 py-8 sm:px-8 sm:py-10">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-blue-300">
                 {t("home.rentalEyebrow")}
               </p>
               <h2 className="max-w-xl text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -59,7 +59,7 @@ export default async function HomeRentalSection({
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <Link
                   href="/map"
-                  className="inline-flex items-center rounded-full bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-300"
+                  className="inline-flex items-center rounded-full bg-blue-400 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-300"
                 >
                   {t("home.viewMap")}
                 </Link>
@@ -70,7 +70,7 @@ export default async function HomeRentalSection({
                   {t("home.exploreCatalog")}
                 </Link>
               </div>
-              <p className="mt-4 text-xs text-emerald-100/90 sm:text-sm">
+              <p className="mt-4 text-xs text-blue-100/90 sm:text-sm">
                 {t("home.productCount", { count: productCount })} ·{" "}
                 {t("home.locationCount", { count: locationCount })} ·{" "}
                 {t("home.readyCount", { count: readyCount })}

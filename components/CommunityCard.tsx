@@ -27,7 +27,7 @@ export default function CommunityCard({ event, compact = false, joined = false }
   const remaining = spotsLeft(event);
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-all hover:border-emerald-300 hover:shadow-md">
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-all hover:border-blue-300 hover:shadow-md">
       <Link
         href={`/community/${event.id}`}
         className="group flex flex-1 flex-col"
@@ -44,7 +44,7 @@ export default function CommunityCard({ event, compact = false, joined = false }
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/10" />
           {joined && (
-            <span className="absolute right-3 top-3 rounded-full bg-emerald-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+            <span className="absolute right-3 top-3 rounded-full bg-blue-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
               ✓ {t("community.joined")}
             </span>
           )}
@@ -100,7 +100,7 @@ export default function CommunityCard({ event, compact = false, joined = false }
                 </span>
               )}
             </p>
-            <span className="text-xs font-medium text-emerald-600">
+            <span className="text-xs font-medium text-blue-600">
               {t("common.viewDetails")}
             </span>
           </div>

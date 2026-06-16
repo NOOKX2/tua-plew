@@ -40,7 +40,7 @@ export default async function AuthLayout({ variant, children }: Props) {
           sizes="55vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/85 via-emerald-900/70 to-zinc-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/85 via-blue-900/70 to-zinc-950/80" />
 
         <div className="relative z-10 flex h-full w-full flex-col justify-between p-10 xl:p-14">
           <Link
@@ -51,13 +51,13 @@ export default async function AuthLayout({ variant, children }: Props) {
           </Link>
 
           <div className="max-w-lg">
-            <span className="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-emerald-100 backdrop-blur-sm">
+            <span className="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-blue-100 backdrop-blur-sm">
               {t("auth.heroBadge")}
             </span>
             <h2 className="mb-4 text-4xl font-bold leading-tight text-white xl:text-5xl">
               {t("auth.heroTitle")}
               <br />
-              <span className="text-emerald-300">{t("auth.heroTitleAccent")}</span>
+              <span className="text-blue-300">{t("auth.heroTitleAccent")}</span>
             </h2>
             <p className="text-sm leading-relaxed text-white/80 sm:text-base">
               {t("auth.heroDescription")}
@@ -70,7 +70,7 @@ export default async function AuthLayout({ variant, children }: Props) {
         <div className="mx-auto w-full max-w-md">
           <Link
             href="/"
-            className="mb-8 inline-block text-lg font-bold text-emerald-600 lg:hidden"
+            className="mb-8 inline-block text-lg font-bold text-blue-600 lg:hidden"
           >
             Tua Plew
           </Link>
@@ -92,14 +92,14 @@ export default async function AuthLayout({ variant, children }: Props) {
             {copy.altPrompt}{" "}
             <Link
               href={copy.altHref}
-              className="font-semibold text-emerald-600 hover:underline"
+              className="font-semibold text-blue-600 hover:underline"
             >
               {copy.altLink}
             </Link>
           </p>
 
           <p className="mt-4 text-center text-xs text-zinc-400">
-            <Link href="/" className="hover:text-emerald-600 hover:underline">
+            <Link href="/" className="hover:text-blue-600 hover:underline">
               {t("common.skipToCatalog")}
             </Link>
           </p>

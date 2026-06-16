@@ -33,7 +33,7 @@ export default function CommunitySocialNav() {
             href={tab.href}
             className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
               active
-                ? "bg-emerald-600 text-white"
+                ? "bg-blue-600 text-white"
                 : "bg-white text-zinc-600 ring-1 ring-zinc-200 hover:bg-zinc-50"
             }`}
           >
@@ -58,12 +58,12 @@ export function UserAvatar({
 
   return (
     <div
-      className={`relative shrink-0 overflow-hidden rounded-full bg-emerald-50 ring-2 ring-white ${sizeClass}`}
+      className={`relative shrink-0 overflow-hidden rounded-full bg-blue-50 ring-2 ring-white ${sizeClass}`}
     >
       {image ? (
         <Image src={image} alt="" fill className="object-cover" sizes="44px" />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-sm font-bold text-emerald-700">
+        <div className="flex h-full w-full items-center justify-center text-sm font-bold text-blue-700">
           {name.charAt(0).toUpperCase()}
         </div>
       )}

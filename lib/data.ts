@@ -342,6 +342,26 @@ export async function fetchLocations(locale?: Locale): Promise<RentalLocation[]>
   return loadLocations(resolvedLocale);
 }
 
+export async function fetchLocationsFresh(
+  locale?: Locale,
+): Promise<RentalLocation[]> {
+  const resolvedLocale = locale ?? (await getLocale());
+  await connectDB();
+
+  const [rows, stocks] = await Promise.all([
+    RentalLocationModel.find().sort({ _id: 1 }).lean<LocationRow[]>(),
+    LocationStock.find().lean<StockRow[]>(),
+  ]);
+
+  const stocksByLocation = groupStocksByLocation(stocks);
+  return rows.map((row) =>
+    localizeLocation(
+      mapLocationRow(row, stocksByLocation.get(row._id) ?? []),
+      resolvedLocale,
+    ),
+  );
+}
+
 export async function fetchLocationById(
   id: string,
   locale?: Locale,

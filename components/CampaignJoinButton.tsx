@@ -48,8 +48,8 @@ export default function CampaignJoinButton({
   const joinedClass = premium
     ? "inline-flex w-full items-center justify-center gap-2 rounded-full bg-amber-400/20 px-8 py-4 text-sm font-bold text-amber-200 ring-1 ring-amber-400/30"
     : compact
-      ? "inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200"
-      : "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-50 px-6 py-3.5 text-sm font-semibold text-emerald-700 ring-1 ring-emerald-200 sm:w-auto";
+      ? "inline-flex items-center gap-1 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 ring-1 ring-blue-200"
+      : "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-50 px-6 py-3.5 text-sm font-semibold text-blue-700 ring-1 ring-blue-200 sm:w-auto";
 
   const buttonClass = premium
     ? "inline-flex w-full items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-zinc-950 transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:bg-zinc-600 disabled:text-zinc-300"

@@ -82,7 +82,7 @@ export default function CommunityDetail({
 
   return (
     <main className="relative flex-1 overflow-x-hidden bg-[#faf9f6] pb-28 lg:pb-14">
-      <div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-emerald-300/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-blue-300/15 blur-3xl" />
       <div className="pointer-events-none absolute -left-24 top-64 h-72 w-72 rounded-full bg-orange-200/20 blur-3xl" />
 
       <div className="relative overflow-x-hidden">
@@ -122,7 +122,7 @@ export default function CommunityDetail({
           </div>
 
           <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-7xl px-4 pb-8 pt-24 sm:px-8 sm:pb-12 lg:px-10 lg:pb-16">
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-300/90">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-blue-300/90">
               Tua Plew Community
             </p>
             <h1 className="max-w-3xl break-words text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -155,7 +155,7 @@ export default function CommunityDetail({
 
             <Link
               href={`/community/${event.id}/participants`}
-              className="block rounded-2xl bg-white px-5 py-4 shadow-xl shadow-zinc-900/8 ring-1 ring-zinc-200/80 transition-all hover:-translate-y-0.5 hover:ring-emerald-300"
+              className="block rounded-2xl bg-white px-5 py-4 shadow-xl shadow-zinc-900/8 ring-1 ring-zinc-200/80 transition-all hover:-translate-y-0.5 hover:ring-blue-300"
             >
               <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
                 {t("community.participants.label")}
@@ -173,11 +173,11 @@ export default function CommunityDetail({
                 </span>
               </p>
               {remaining !== null && (
-                <p className="mt-0.5 text-sm text-emerald-600">
+                <p className="mt-0.5 text-sm text-blue-600">
                   {t("common.spotsLeft", { count: remaining })}
                 </p>
               )}
-              <p className="mt-2 text-xs font-semibold text-emerald-600">
+              <p className="mt-2 text-xs font-semibold text-blue-600">
                 {t("community.participants.viewAll")} →
               </p>
             </Link>
@@ -216,9 +216,9 @@ export default function CommunityDetail({
               </div>
             </DetailBlock>
 
-            <section className="overflow-hidden rounded-[1.5rem] border border-emerald-200/70 bg-gradient-to-br from-emerald-50 to-white shadow-sm">
-              <div className="border-b border-emerald-100 px-6 py-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-600">
+            <section className="overflow-hidden rounded-[1.5rem] border border-blue-200/70 bg-gradient-to-br from-blue-50 to-white shadow-sm">
+              <div className="border-b border-blue-100 px-6 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-600">
                   {t("community.social.chat.groupTitle")}
                 </p>
                 <p className="mt-1 text-sm text-zinc-600">
@@ -227,7 +227,7 @@ export default function CommunityDetail({
                     : t("community.social.chat.joinToChat")}
                 </p>
                 {joined && (
-                  <p className="mt-2 text-xs font-medium text-emerald-700">
+                  <p className="mt-2 text-xs font-medium text-blue-700">
                     {t("community.social.chat.memberCount", {
                       count: participantCount,
                     })}
@@ -259,7 +259,7 @@ export default function CommunityDetail({
                   />
                   <Link
                     href={`/community/${event.id}/participants`}
-                    className="mt-4 flex w-full items-center justify-center rounded-full border border-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300 hover:text-emerald-700"
+                    className="mt-4 flex w-full items-center justify-center rounded-full border border-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-blue-300 hover:text-blue-700"
                   >
                     {t("community.participants.viewAll")} →
                   </Link>
@@ -279,7 +279,7 @@ export default function CommunityDetail({
               {location && (
                 <Link
                   href={`/map?location=${location.id}`}
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 transition-colors hover:text-emerald-700"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
                 >
                   {t("common.viewOnMapArrow")}
                 </Link>
@@ -368,7 +368,7 @@ export default function CommunityDetail({
                     </div>
                     <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-300 transition-all duration-500"
+                        className="h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-300 transition-all duration-500"
                         style={{ width: `${fillPercent}%` }}
                       />
                     </div>
@@ -408,7 +408,7 @@ export default function CommunityDetail({
                   />
                   <Link
                     href={`/community/${event.id}/participants`}
-                    className="mt-4 flex w-full items-center justify-center rounded-full border border-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300 hover:text-emerald-700"
+                    className="mt-4 flex w-full items-center justify-center rounded-full border border-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-blue-300 hover:text-blue-700"
                   >
                     {t("community.participants.viewAll")} →
                   </Link>
@@ -417,15 +417,15 @@ export default function CommunityDetail({
             )}
 
             {location && (
-              <div className="overflow-hidden rounded-[1.5rem] border border-emerald-200/60 bg-gradient-to-br from-emerald-50 to-white p-6 shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-700/80">
+              <div className="overflow-hidden rounded-[1.5rem] border border-blue-200/60 bg-gradient-to-br from-blue-50 to-white p-6 shadow-sm">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-700/80">
                   {t("community.nearbyRental")}
                 </p>
                 <p className="mt-2 text-lg font-bold tracking-tight text-zinc-900">
                   {location.name}
                 </p>
                 <p className="mt-1 text-sm text-zinc-500">{location.address}</p>
-                <p className="mt-3 text-xs leading-relaxed text-emerald-800/80">
+                <p className="mt-3 text-xs leading-relaxed text-blue-800/80">
                   {t("community.nearbyRentalHint", { hours: location.openHours })}
                 </p>
                 <Link

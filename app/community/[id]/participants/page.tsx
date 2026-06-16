@@ -45,7 +45,7 @@ export default async function EventParticipantsPage({ params }: Props) {
       </div>
 
       <div className="mb-6">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-600">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-blue-600">
           {t("community.participants.pageTitle")}
         </p>
         <h1 className="mt-1 text-2xl font-bold text-zinc-900 sm:text-3xl">

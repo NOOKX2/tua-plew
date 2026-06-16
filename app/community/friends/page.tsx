@@ -26,7 +26,7 @@ export default async function CommunityFriendsPage() {
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
       <div className="mb-6">
-        <p className="mb-1 text-sm font-medium text-emerald-600">
+        <p className="mb-1 text-sm font-medium text-blue-600">
           Tua Plew Community
         </p>
         <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">

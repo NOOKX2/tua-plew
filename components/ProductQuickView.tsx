@@ -33,8 +33,8 @@ export default function ProductQuickView({
     <div
       className={
         embedded
-          ? "border-t border-emerald-200/80 bg-white/80 px-4 py-3"
-          : "rounded-xl border border-emerald-200 bg-white shadow-sm"
+          ? "border-t border-blue-200/80 bg-white/80 px-4 py-3"
+          : "rounded-xl border border-blue-200 bg-white shadow-sm"
       }
     >
       {!embedded && (
@@ -68,13 +68,13 @@ export default function ProductQuickView({
             <h3 className="text-sm font-bold text-zinc-900">
               <Link
                 href={`/products/${product.id}?from=map`}
-                className="hover:text-emerald-600 hover:underline"
+                className="hover:text-blue-600 hover:underline"
               >
                 {product.name}
               </Link>
             </h3>
             <div className="mt-1 flex flex-wrap items-center gap-2">
-              <p className="text-sm font-bold text-emerald-600">
+              <p className="text-sm font-bold text-blue-600">
                 ฿{product.pricePerRental}
                 <span className="font-normal text-zinc-500">
                   {" "}
@@ -115,7 +115,7 @@ export default function ProductQuickView({
         <div className="mt-3 flex flex-col gap-2">
           <Link
             href={`/products/${product.id}?from=map`}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300 hover:text-emerald-700"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-blue-300 hover:text-blue-700"
           >
             {t("common.fullDetails")}
           </Link>

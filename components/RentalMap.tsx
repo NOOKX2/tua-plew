@@ -10,6 +10,7 @@ import { getProductById } from "@/lib/products";
 import { getStockTotal, getTotalStock } from "@/lib/locations";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getSizeUnitLabel } from "@/lib/i18n/labels";
+import { jettsBranches } from "@/lib/jetts-locations";
 import GoogleMapsLoader from "./GoogleMapsLoader";
 
 const BANGKOK_CENTER = { lat: 13.7563, lng: 100.5018 };
@@ -29,11 +30,23 @@ const mapOptions: google.maps.MapOptions = {
 function markerIcon(selected: boolean): google.maps.Symbol {
   return {
     path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z",
-    fillColor: selected ? "#059669" : "#10b981",
+    fillColor: selected ? "#2b54cc" : "#3b6ef5",
     fillOpacity: 1,
-    strokeColor: selected ? "#fef08a" : "#ffffff",
+    strokeColor: selected ? "#fde68a" : "#ffffff",
     strokeWeight: selected ? 3 : 2,
     scale: selected ? 1.6 : 1.4,
+    anchor: new google.maps.Point(12, 22),
+  };
+}
+
+function jettsMarkerIcon(): google.maps.Symbol {
+  return {
+    path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z",
+    fillColor: "#dc2626",
+    fillOpacity: 1,
+    strokeColor: "#ffffff",
+    strokeWeight: 2,
+    scale: 1.2,
     anchor: new google.maps.Point(12, 22),
   };
 }
@@ -62,14 +75,12 @@ function GoogleMapsSetupHelp({
 
   return (
     <div
-      className={`flex h-full flex-col items-center justify-center gap-3 rounded-xl p-6 text-center ${
-        isMissingKey ? "bg-zinc-100" : "bg-red-50"
-      }`}
+      className={`flex h-full flex-col items-center justify-center gap-3 rounded-xl p-6 text-center ${isMissingKey ? "bg-zinc-100" : "bg-red-50"
+        }`}
     >
       <p
-        className={`text-sm font-semibold ${
-          isMissingKey ? "text-zinc-800" : "text-red-800"
-        }`}
+        className={`text-sm font-semibold ${isMissingKey ? "text-zinc-800" : "text-red-800"
+          }`}
       >
         {isMissingKey ? t("map.apiKeyMissing") : t("map.loadFailed")}
       </p>
@@ -101,7 +112,7 @@ function GoogleMapsSetupHelp({
         href="https://console.cloud.google.com/apis/library/maps-javascript-api.googleapis.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-xs font-medium text-emerald-600 underline hover:no-underline"
+        className="text-xs font-medium text-blue-600 underline hover:no-underline"
       >
         {t("map.enableApi")}
       </a>
@@ -144,7 +155,13 @@ function GoogleRentalMap({
   const { locale, messages } = useLocale();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [infoLocationId, setInfoLocationId] = useState<string | null>(null);
+  const [jettsInfoId, setJettsInfoId] = useState<string | null>(null);
   const mapRenderError = useGoogleMapRenderError();
+
+  const jettsInfo = useMemo(
+    () => jettsBranches.find((branch) => branch.id === jettsInfoId) ?? null,
+    [jettsInfoId],
+  );
 
   const focusLocation = useMemo(
     () => locations.find((l) => l.id === focusId) ?? null,
@@ -205,6 +222,34 @@ function GoogleRentalMap({
       onLoad={onMapLoad}
       options={mapOptions}
     >
+      {jettsBranches.map((branch) => (
+        <Marker
+          key={`jetts-${branch.id}`}
+          position={{ lat: branch.lat, lng: branch.lng }}
+          title={branch.name}
+          icon={jettsMarkerIcon()}
+          onClick={() => {
+            setJettsInfoId(branch.id);
+            setInfoLocationId(null);
+          }}
+        />
+      ))}
+
+      {jettsInfo && (
+        <InfoWindow
+          position={{ lat: jettsInfo.lat, lng: jettsInfo.lng }}
+          onCloseClick={() => setJettsInfoId(null)}
+        >
+          <div className="min-w-[200px] p-1">
+            <p className="mb-0.5 text-[10px] font-bold uppercase tracking-wider text-red-600">
+              Jetts Fitness
+            </p>
+            <h3 className="mb-1 font-bold text-zinc-900">{jettsInfo.name}</h3>
+            <p className="text-xs text-zinc-500">{jettsInfo.note}</p>
+          </div>
+        </InfoWindow>
+      )}
+
       {locations.map((loc) => (
         <Marker
           key={loc.id}
@@ -214,6 +259,7 @@ function GoogleRentalMap({
           onClick={() => {
             onSelect(loc.id);
             setInfoLocationId(loc.id);
+            setJettsInfoId(null);
           }}
         />
       ))}
@@ -226,7 +272,7 @@ function GoogleRentalMap({
           <div className="min-w-[220px] p-1">
             <h3 className="mb-1 font-bold text-zinc-900">{infoLocation.name}</h3>
             <p className="mb-2 text-xs text-zinc-500">{infoLocation.address}</p>
-            <p className="mb-3 text-xs font-medium text-emerald-600">
+            <p className="mb-3 text-xs font-medium text-blue-600">
               {t("common.totalRemaining", {
                 count: getTotalStock(infoLocation),
               })}
@@ -245,11 +291,10 @@ function GoogleRentalMap({
                       onClick={() =>
                         onProductClick(stock.productId, infoLocation.id)
                       }
-                      className={`flex w-full items-center gap-2 rounded-lg border p-1.5 text-left transition-colors hover:border-emerald-300 hover:bg-emerald-50/50 ${
-                        highlighted
-                          ? "border-emerald-300 bg-emerald-50"
+                      className={`flex w-full items-center gap-2 rounded-lg border p-1.5 text-left transition-colors hover:border-blue-300 hover:bg-blue-50/50 ${highlighted
+                          ? "border-blue-300 bg-blue-50"
                           : "border-zinc-100"
-                      }`}
+                        }`}
                     >
                       <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-neutral-50">
                         <Image
@@ -265,54 +310,12 @@ function GoogleRentalMap({
                           {product.name}
                         </p>
                         <p
-                          className={`text-[10px] font-bold ${
-                            qty === 0 ? "text-red-500" : "text-emerald-600"
-                          }`}
+                          className={`text-[10px] font-bold ${qty === 0 ? "text-red-500" : "text-blue-600"
+                            }`}
                         >
                           {qty === 0
                             ? t("stock.out")
                             : t("stock.remaining", {
-                                count: qty,
-                                unit: getSizeUnitLabel(
-                                  product.sizeUnit,
-                                  locale,
-                                  messages,
-                                ),
-                              })}
-                        </p>
-                      </div>
-                    </button>
-                  ) : (
-                  <Link
-                    key={stock.productId}
-                    href={`/products/${product.id}`}
-                    className={`flex items-center gap-2 rounded-lg border p-1.5 transition-colors hover:border-emerald-300 hover:bg-emerald-50/50 ${
-                      highlighted
-                        ? "border-emerald-300 bg-emerald-50"
-                        : "border-zinc-100"
-                    }`}
-                  >
-                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-neutral-50">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-contain p-0.5"
-                        sizes="40px"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-medium text-zinc-800">
-                        {product.name}
-                      </p>
-                      <p
-                        className={`text-[10px] font-bold ${
-                          qty === 0 ? "text-red-500" : "text-emerald-600"
-                        }`}
-                      >
-                        {qty === 0
-                          ? t("stock.out")
-                          : t("stock.remaining", {
                               count: qty,
                               unit: getSizeUnitLabel(
                                 product.sizeUnit,
@@ -320,9 +323,48 @@ function GoogleRentalMap({
                                 messages,
                               ),
                             })}
-                      </p>
-                    </div>
-                  </Link>
+                        </p>
+                      </div>
+                    </button>
+                  ) : (
+                    <Link
+                      key={stock.productId}
+                      href={`/products/${product.id}`}
+                      className={`flex items-center gap-2 rounded-lg border p-1.5 transition-colors hover:border-blue-300 hover:bg-blue-50/50 ${highlighted
+                          ? "border-blue-300 bg-blue-50"
+                          : "border-zinc-100"
+                        }`}
+                    >
+                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-neutral-50">
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-contain p-0.5"
+                          sizes="40px"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-xs font-medium text-zinc-800">
+                          {product.name}
+                        </p>
+                        <p
+                          className={`text-[10px] font-bold ${qty === 0 ? "text-red-500" : "text-blue-600"
+                            }`}
+                        >
+                          {qty === 0
+                            ? t("stock.out")
+                            : t("stock.remaining", {
+                              count: qty,
+                              unit: getSizeUnitLabel(
+                                product.sizeUnit,
+                                locale,
+                                messages,
+                              ),
+                            })}
+                        </p>
+                      </div>
+                    </Link>
                   )
                 );
               })}

@@ -26,7 +26,7 @@ export default function StockBadge({ total, unit = "ตัว", size = "md" }: P
       ? "bg-red-500 text-white"
       : total <= 5
         ? "bg-amber-500 text-white"
-        : "bg-emerald-600 text-white";
+        : "bg-blue-600 text-white";
 
   return (
     <span

@@ -47,7 +47,7 @@ export default function CampaignCard({
             {formatDiscount(campaign.discountPercent, locale, messages)}
           </span>
           {joined && (
-            <span className="absolute right-3 top-3 rounded-full bg-emerald-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+            <span className="absolute right-3 top-3 rounded-full bg-blue-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
               ✓ {t("campaign.joined")}
             </span>
           )}

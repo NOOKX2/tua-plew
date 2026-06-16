@@ -29,8 +29,8 @@ export default function LanguageSwitcher() {
             aria-pressed={active}
             className={`rounded-md px-2 py-1 transition-colors ${
               active
-                ? "bg-emerald-600 text-white"
-                : "text-zinc-600 hover:bg-zinc-50 hover:text-emerald-600"
+                ? "bg-blue-600 text-white"
+                : "text-zinc-600 hover:bg-zinc-50 hover:text-blue-600"
             } disabled:opacity-60`}
           >
             {LABELS[code]}

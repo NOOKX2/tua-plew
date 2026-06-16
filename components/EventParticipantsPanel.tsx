@@ -75,13 +75,13 @@ export default function EventParticipantsPanel({
                 <p className="truncate font-semibold text-zinc-900">
                   {participant.name}
                   {isSelf && (
-                    <span className="ml-2 text-xs font-medium text-emerald-600">
+                    <span className="ml-2 text-xs font-medium text-blue-600">
                       ({t("community.participants.you")})
                     </span>
                   )}
                 </p>
                 {!isSelf && participant.isFriend && (
-                  <p className="text-xs font-medium text-emerald-600">
+                  <p className="text-xs font-medium text-blue-600">
                     {t("community.social.participants.friend")}
                   </p>
                 )}
@@ -106,7 +106,7 @@ export default function EventParticipantsPanel({
                   <button
                     type="button"
                     onClick={() => handleAddFriend(participant.id)}
-                    className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700"
+                    className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700"
                   >
                     {t("community.social.participants.addFriend")}
                   </button>

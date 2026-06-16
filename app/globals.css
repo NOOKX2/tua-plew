@@ -13,6 +13,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Brand palette: bright royal blue. Remaps Tailwind's blue-* utilities. */
+@theme {
+  --color-blue-50: #eef4ff;
+  --color-blue-100: #dbe7ff;
+  --color-blue-200: #bdd1ff;
+  --color-blue-300: #93b2ff;
+  --color-blue-400: #6089fb;
+  --color-blue-500: #4575f7;
+  --color-blue-600: #3b6ef5;
+  --color-blue-700: #2b54cc;
+  --color-blue-800: #2543a3;
+  --color-blue-900: #233a80;
+  --color-blue-950: #18244d;
+}
+
 html {
   overflow-x: hidden;
   max-width: 100%;
@@ -42,10 +57,12 @@ body {
 }
 
 @keyframes home-float {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(12px);
   }

@@ -55,7 +55,7 @@ export default function ChatInboxList({ items }: Props) {
             onClick={() => setFilter(item.id)}
             className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
               filter === item.id
-                ? "bg-emerald-600 text-white"
+                ? "bg-blue-600 text-white"
                 : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
             }`}
           >
@@ -70,7 +70,7 @@ export default function ChatInboxList({ items }: Props) {
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <Link
               href="/community"
-              className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
             >
               {t("chat.inbox.browseEvents")}
             </Link>
@@ -120,7 +120,7 @@ export default function ChatInboxList({ items }: Props) {
                         className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                           item.kind === "event"
                             ? "bg-violet-100 text-violet-700"
-                            : "bg-emerald-100 text-emerald-700"
+                            : "bg-blue-100 text-blue-700"
                         }`}
                       >
                         {item.kind === "event"

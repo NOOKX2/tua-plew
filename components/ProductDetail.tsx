@@ -76,14 +76,14 @@ export default function ProductDetail({
 
   return (
     <main className="relative flex-1 bg-[#faf9f6] pb-24 lg:pb-10">
-      <div className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-emerald-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-blue-300/20 blur-3xl" />
       <div className="pointer-events-none absolute -left-20 top-40 h-56 w-56 rounded-full bg-teal-200/20 blur-3xl" />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-8">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <Link
             href={compact ? "/map" : "/"}
-            className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-medium text-zinc-600 shadow-sm transition-colors hover:border-emerald-300 hover:text-emerald-700"
+            className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-medium text-zinc-600 shadow-sm transition-colors hover:border-blue-300 hover:text-blue-700"
           >
             {compact ? t("common.backToMap") : t("product.backToCatalog")}
           </Link>
@@ -91,8 +91,8 @@ export default function ProductDetail({
           <div className="flex flex-wrap items-center gap-2">
             <span
               className={`rounded-full px-3 py-1 text-xs font-semibold ${isPartner
-                  ? "bg-amber-400 text-zinc-900"
-                  : "bg-white text-zinc-700 ring-1 ring-zinc-200"
+                ? "bg-amber-400 text-zinc-900"
+                : "bg-white text-zinc-700 ring-1 ring-zinc-200"
                 }`}
             >
               {isPartner && product.brand ? product.brand : categoryLabel}
@@ -109,16 +109,16 @@ export default function ProductDetail({
           <div className="grid lg:grid-cols-[1fr_1.05fr]">
             <div
               className={`relative p-6 sm:p-8 lg:sticky lg:top-24 lg:self-start ${isPartner
-                  ? "bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950"
-                  : "bg-gradient-to-br from-zinc-100 via-white to-emerald-50/40"
+                ? "bg-gradient-to-br from-zinc-950 via-zinc-900 to-blue-950"
+                : "bg-gradient-to-br from-zinc-100 via-white to-blue-50/40"
                 }`}
             >
               <div className="home-hero-grid absolute inset-0 opacity-30" />
 
               <div
                 className={`relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-[1.5rem] ${isPartner
-                    ? "bg-zinc-900/50 ring-1 ring-white/10"
-                    : "bg-white shadow-lg ring-1 ring-zinc-200/60"
+                  ? "bg-zinc-900/50 ring-1 ring-white/10"
+                  : "bg-white shadow-lg ring-1 ring-zinc-200/60"
                   }`}
               >
                 <Image
@@ -165,7 +165,7 @@ export default function ProductDetail({
                   {product.activities.map((activity) => (
                     <span
                       key={activity}
-                      className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-100"
+                      className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-100"
                     >
                       {activity}
                     </span>
@@ -178,7 +178,7 @@ export default function ProductDetail({
                   <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
                     {t("product.rentalPrice")}
                   </p>
-                  <p className="mt-1 text-2xl font-bold text-emerald-300">
+                  <p className="mt-1 text-2xl font-bold text-blue-300">
                     ฿{product.pricePerRental}
                     <span className="text-sm font-normal text-zinc-400">
                       {" "}
@@ -231,7 +231,7 @@ export default function ProductDetail({
 
               <Link
                 href={`/map?product=${product.id}`}
-                className="mt-6 hidden items-center justify-center gap-2 rounded-full bg-emerald-500 px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-all hover:scale-[1.01] hover:bg-emerald-400 lg:inline-flex"
+                className="mt-6 hidden items-center justify-center gap-2 rounded-full bg-blue-500 px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:scale-[1.01] hover:bg-blue-400 lg:inline-flex"
               >
                 {t("product.findNearby")}
                 <span aria-hidden>→</span>
@@ -261,9 +261,9 @@ export default function ProductDetail({
               {product.features.map((feature) => (
                 <li
                   key={feature}
-                  className="flex items-start gap-2.5 rounded-lg bg-emerald-50/60 px-3 py-2 text-sm text-zinc-700"
+                  className="flex items-start gap-2.5 rounded-lg bg-blue-50/60 px-3 py-2 text-sm text-zinc-700"
                 >
-                  <span className="mt-0.5 font-bold text-emerald-600">✓</span>
+                  <span className="mt-0.5 font-bold text-blue-600">✓</span>
                   {feature}
                 </li>
               ))}
@@ -333,7 +333,7 @@ export default function ProductDetail({
           </DetailSection>
 
           <DetailSection title={t("product.hygiene")}>
-            <div className="rounded-xl bg-emerald-50/50 p-4 ring-1 ring-emerald-100">
+            <div className="rounded-xl bg-blue-50/50 p-4 ring-1 ring-blue-100">
               <p className="text-sm leading-relaxed text-zinc-700">
                 {product.careNote}
               </p>
@@ -361,7 +361,7 @@ export default function ProductDetail({
                 <Link
                   key={item.id}
                   href={`/products/${item.id}`}
-                  className="group min-w-[42%] shrink-0 snap-start overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-lg sm:min-w-[28%] lg:min-w-[22%]"
+                  className="group min-w-[42%] shrink-0 snap-start overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg sm:min-w-[28%] lg:min-w-[22%]"
                 >
                   <div className="relative aspect-square bg-gradient-to-b from-zinc-100 to-zinc-50">
                     <Image
@@ -376,7 +376,7 @@ export default function ProductDetail({
                     <p className="line-clamp-2 text-sm font-semibold text-zinc-900">
                       {item.name}
                     </p>
-                    <p className="mt-1 text-sm font-bold text-emerald-600">
+                    <p className="mt-1 text-sm font-bold text-blue-600">
                       ฿{item.pricePerRental}
                       {t("common.perRental")}
                     </p>
@@ -402,7 +402,7 @@ export default function ProductDetail({
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-200/80 bg-white/95 p-4 backdrop-blur-md lg:hidden">
         <Link
           href={`/map?product=${product.id}`}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20"
         >
           {t("product.findNearby")}
           <span aria-hidden>→</span>

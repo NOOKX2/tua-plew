@@ -65,7 +65,7 @@ export default function ProductReviewForm({
         <p className="mb-3 text-sm text-zinc-600">{t("review.loginPrompt")}</p>
         <Link
           href={loginHref}
-          className="inline-flex rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+          className="inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
         >
           {t("review.loginToReview")}
         </Link>
@@ -75,8 +75,8 @@ export default function ProductReviewForm({
 
   if (submitted) {
     return (
-      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-        <p className="text-sm font-medium text-emerald-700">
+      <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+        <p className="text-sm font-medium text-blue-700">
           <span aria-hidden>✓ </span>
           {t("review.submitted")}
         </p>
@@ -112,7 +112,7 @@ export default function ProductReviewForm({
           rows={4}
           maxLength={500}
           placeholder={t("review.commentPlaceholder")}
-          className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           required
         />
         <p className="mt-1 text-xs text-zinc-400">
@@ -125,7 +125,7 @@ export default function ProductReviewForm({
       <button
         type="submit"
         disabled={loading}
-        className="inline-flex rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? t("review.submitting") : t("review.submit")}
       </button>

@@ -29,19 +29,17 @@ function StatCard({
 
   return (
     <div
-      className={`rounded-2xl px-5 py-5 shadow-lg ring-1 sm:px-6 sm:py-6 ${
-        isAccent
-          ? "bg-gradient-to-br from-emerald-50/80 via-white to-white text-zinc-900 shadow-emerald-900/5 ring-emerald-200/70"
+      className={`rounded-2xl px-5 py-5 shadow-lg ring-1 sm:px-6 sm:py-6 ${isAccent
+          ? "bg-gradient-to-br from-blue-50/80 via-white to-white text-zinc-900 shadow-blue-900/5 ring-blue-200/70"
           : "bg-white text-zinc-900 shadow-zinc-900/5 ring-zinc-200/80"
-      }`}
+        }`}
     >
       <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
         {label}
       </p>
       <p
-        className={`mt-2 text-4xl font-bold tracking-tight sm:text-5xl ${
-          isAccent ? "text-emerald-600" : "text-zinc-900"
-        }`}
+        className={`mt-2 text-4xl font-bold tracking-tight sm:text-5xl ${isAccent ? "text-blue-600" : "text-zinc-900"
+          }`}
       >
         {value}
         <span className="ml-1.5 text-sm font-medium text-zinc-500">
@@ -114,7 +112,7 @@ export default function MyRentalsList({
         </p>
         <Link
           href="/"
-          className="mt-8 inline-flex rounded-full bg-emerald-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 transition-colors hover:bg-emerald-700"
+          className="mt-8 inline-flex rounded-full bg-blue-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-colors hover:bg-blue-700"
         >
           {t("rental.browseProducts")}
         </Link>
@@ -142,16 +140,15 @@ export default function MyRentalsList({
         <button
           type="button"
           onClick={() => setTab("active")}
-          className={`flex-1 rounded-full px-4 py-2.5 text-xs font-bold transition-all ${
-            tab === "active"
-              ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/20"
+          className={`flex-1 rounded-full px-4 py-2.5 text-xs font-bold transition-all ${tab === "active"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
               : "text-zinc-500 hover:text-zinc-800"
-          }`}
+            }`}
         >
           {t("rental.activeTab")}
           {activeRentals.length > 0 && (
             <span
-              className={`ml-1.5 ${tab === "active" ? "text-emerald-100" : "text-emerald-600"}`}
+              className={`ml-1.5 ${tab === "active" ? "text-blue-100" : "text-blue-600"}`}
             >
               ({activeRentals.length})
             </span>
@@ -160,11 +157,10 @@ export default function MyRentalsList({
         <button
           type="button"
           onClick={() => setTab("all")}
-          className={`flex-1 rounded-full px-4 py-2.5 text-xs font-bold transition-all ${
-            tab === "all"
-              ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/20"
+          className={`flex-1 rounded-full px-4 py-2.5 text-xs font-bold transition-all ${tab === "all"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
               : "text-zinc-500 hover:text-zinc-800"
-          }`}
+            }`}
         >
           {t("rental.historyTab")}
         </button>
@@ -196,22 +192,20 @@ export default function MyRentalsList({
                 >
                   {product && (
                     <div
-                      className={`relative overflow-hidden ${
-                        isActive
-                          ? "bg-gradient-to-br from-zinc-100 via-white to-emerald-50/50 p-6 lg:p-8"
+                      className={`relative overflow-hidden ${isActive
+                          ? "bg-gradient-to-br from-zinc-100 via-white to-blue-50/50 p-6 lg:p-8"
                           : "flex items-center gap-4 border-b border-zinc-100 p-5 sm:px-6"
-                      }`}
+                        }`}
                     >
                       {isActive && (
                         <div className="home-hero-grid absolute inset-0 opacity-25" />
                       )}
 
                       <div
-                        className={`relative shrink-0 overflow-hidden bg-white ring-1 ring-zinc-200/80 ${
-                          isActive
+                        className={`relative shrink-0 overflow-hidden bg-white ring-1 ring-zinc-200/80 ${isActive
                             ? "mx-auto aspect-square w-full max-w-[200px] rounded-[1.25rem] shadow-lg"
                             : "h-16 w-16 rounded-xl"
-                        }`}
+                          }`}
                       >
                         <Image
                           src={product.image}
@@ -252,7 +246,7 @@ export default function MyRentalsList({
                             </span>
                           </p>
                         </div>
-                        <span className="rounded-full bg-emerald-50 px-3.5 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100">
+                        <span className="rounded-full bg-blue-50 px-3.5 py-1.5 text-xs font-semibold text-blue-700 ring-1 ring-blue-100">
                           {statusLabel(rental.status)}
                         </span>
                       </div>
@@ -267,14 +261,14 @@ export default function MyRentalsList({
                     )}
 
                     {isActive && (
-                      <div className="relative mb-6 overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-emerald-50 via-white to-teal-50/60 px-6 py-7 text-center ring-1 ring-emerald-200/80">
+                      <div className="relative mb-6 overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-blue-50 via-white to-teal-50/60 px-6 py-7 text-center ring-1 ring-blue-200/80">
                         <div className="home-hero-grid absolute inset-0 opacity-[0.05]" />
-                        <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-emerald-200/30 blur-2xl" />
+                        <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-blue-200/30 blur-2xl" />
 
                         <p className="relative text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
                           {t("rental.pickupCode")}
                         </p>
-                        <p className="relative mt-2 font-mono text-[2.5rem] font-bold leading-none tracking-[0.22em] text-emerald-700 sm:text-5xl">
+                        <p className="relative mt-2 font-mono text-[2.5rem] font-bold leading-none tracking-[0.22em] text-blue-700 sm:text-5xl">
                           {rental.pickupCode}
                         </p>
                         <p className="relative mt-3 text-xs text-amber-700/80">
@@ -317,7 +311,7 @@ export default function MyRentalsList({
                       {isActive && (
                         <Link
                           href={`/map?product=${rental.productId}&location=${rental.locationId}`}
-                          className="inline-flex rounded-full bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 transition-colors hover:bg-emerald-700"
+                          className="inline-flex rounded-full bg-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-600/20 transition-colors hover:bg-blue-700"
                         >
                           {t("common.viewOnMap")}
                         </Link>

@@ -58,14 +58,14 @@ export default function CommunityJoinButton({
   const loginClass = premium
     ? "inline-flex w-full items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-zinc-100"
     : compact
-      ? "inline-flex rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-emerald-700"
-      : "inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 sm:w-auto";
+      ? "inline-flex rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-700"
+      : "inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:w-auto";
 
   const joinedClass = premium
-    ? "inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-400/20 px-8 py-4 text-sm font-bold text-emerald-200 ring-1 ring-emerald-400/30"
+    ? "inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-400/20 px-8 py-4 text-sm font-bold text-blue-200 ring-1 ring-blue-400/30"
     : compact
-      ? "inline-flex w-full items-center justify-center gap-1 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200"
-      : "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-50 px-6 py-3.5 text-sm font-semibold text-emerald-700 ring-1 ring-emerald-200 sm:w-auto";
+      ? "inline-flex w-full items-center justify-center gap-1 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 ring-1 ring-blue-200"
+      : "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-50 px-6 py-3.5 text-sm font-semibold text-blue-700 ring-1 ring-blue-200 sm:w-auto";
 
   const leaveClass = premium
     ? "inline-flex w-full items-center justify-center rounded-full border border-red-400/40 bg-red-500/10 px-8 py-3.5 text-sm font-semibold text-red-200 transition-colors hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
@@ -76,8 +76,8 @@ export default function CommunityJoinButton({
   const buttonClass = premium
     ? "inline-flex w-full items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-zinc-950 transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:bg-zinc-600 disabled:text-zinc-300"
     : compact
-      ? "inline-flex rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
-      : "inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
+      ? "inline-flex rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+      : "inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
 
   async function handleJoin() {
     setError(null);
@@ -140,7 +140,7 @@ export default function CommunityJoinButton({
   }
 
   const compactActionClass =
-    "inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 transition-colors hover:bg-emerald-100";
+    "inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-800 transition-colors hover:bg-blue-100";
 
   if (joined) {
     if (compact) {

@@ -120,7 +120,7 @@ function ActivityFilterMenu({
         aria-label={t("common.filterBy")}
         className={`inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors ${
           isFiltered
-            ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20"
+            ? "bg-blue-600 text-white shadow-sm shadow-blue-600/20"
             : "bg-white text-zinc-700 ring-1 ring-zinc-200 hover:bg-zinc-50"
         }`}
       >
@@ -151,7 +151,7 @@ function ActivityFilterMenu({
                 }}
                 className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
                   selected
-                    ? "bg-emerald-50 font-semibold text-emerald-800"
+                    ? "bg-blue-50 font-semibold text-blue-800"
                     : "text-zinc-700 hover:bg-zinc-50"
                 }`}
               >

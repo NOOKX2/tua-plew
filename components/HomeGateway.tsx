@@ -33,8 +33,8 @@ export default async function HomeGateway({
       ],
       cta: t("home.gatewayCommunityCta"),
       ctaClass:
-        "bg-emerald-500 text-zinc-950 group-hover:bg-emerald-400",
-      eyebrowClass: "text-emerald-300",
+        "bg-blue-500 text-zinc-950 group-hover:bg-blue-400",
+      eyebrowClass: "text-blue-300",
     },
     {
       href: "/map",
@@ -48,8 +48,8 @@ export default async function HomeGateway({
         t("home.readyCount", { count: readyCount }),
       ],
       cta: t("home.gatewayRentalCta"),
-      ctaClass: "bg-white text-zinc-950 group-hover:bg-emerald-50",
-      eyebrowClass: "text-emerald-200",
+      ctaClass: "bg-white text-zinc-950 group-hover:bg-blue-50",
+      eyebrowClass: "text-blue-200",
     },
   ];
 

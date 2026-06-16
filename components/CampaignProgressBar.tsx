@@ -33,8 +33,8 @@ export default function CampaignProgressBar({
           className={`font-semibold ${
             complete
               ? premium
-                ? "text-emerald-300"
-                : "text-emerald-600"
+                ? "text-blue-300"
+                : "text-blue-600"
               : premium
                 ? "text-amber-300"
                 : "text-amber-700"
@@ -51,7 +51,7 @@ export default function CampaignProgressBar({
         <div
           className={`h-full rounded-full transition-all duration-500 ${
             complete
-              ? "bg-emerald-500"
+              ? "bg-blue-500"
               : premium
                 ? "bg-gradient-to-r from-amber-400 to-orange-400"
                 : "bg-gradient-to-r from-amber-400 to-orange-500"
@@ -62,7 +62,7 @@ export default function CampaignProgressBar({
       {complete ? (
         <p
           className={`mt-1.5 text-xs font-medium ${
-            premium ? "text-emerald-300" : "text-emerald-600"
+            premium ? "text-blue-300" : "text-blue-600"
           }`}
         >
           {t("campaign.progressComplete")}

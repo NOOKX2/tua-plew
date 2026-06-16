@@ -64,13 +64,13 @@ export default async function HomeHero({
           <div className="home-hero-grid absolute inset-0 opacity-[0.06]" />
 
           <div className="relative flex h-full flex-col justify-end px-5 py-6 sm:px-8 sm:py-8">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-300/90 sm:text-[11px]">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-300/90 sm:text-[11px]">
               {t("home.tagline")}
             </p>
 
             <h1 className="max-w-3xl text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-5xl">
               {t("home.heroTitle")}
-              <span className="text-emerald-300">
+              <span className="text-blue-300">
                 {" "}
                 {t("home.heroTitleAccent")}
               </span>
@@ -83,13 +83,13 @@ export default async function HomeHero({
             <div className="mt-5 grid gap-3 sm:flex sm:flex-wrap">
               <Link
                 href="/community"
-                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-300"
+                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-blue-400 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-300"
               >
                 {t("home.browseEvents")}
               </Link>
               <Link
                 href="/map"
-                className="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-50"
+                className="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-50"
               >
                 {t("home.rentGear")}
               </Link>
@@ -97,7 +97,7 @@ export default async function HomeHero({
 
             <div className="mt-6 flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-6">
               <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
-                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300/90">
+                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300/90">
                   {t("home.heroCommunityLabel")}
                 </p>
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-white/85 sm:text-sm">
@@ -112,7 +112,7 @@ export default async function HomeHero({
                 </div>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
-                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300/90">
+                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300/90">
                   {t("home.heroRentalLabel")}
                 </p>
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-white/85 sm:text-sm">

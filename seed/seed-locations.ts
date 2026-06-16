@@ -122,11 +122,43 @@ export const rentalLocations: RentalLocation[] = [
     ],
   },
   {
+    id: "central-park",
+    name: "Central Park",
+    address: "ถ. ราชดำริ แขวงลุมพินี เขตปทุมวัน กรุงเทพฯ",
+    lat: 13.72829,
+    lng: 100.53782,
+    type: "booth",
+    openHours: "06:00 – 20:00",
+    products: [
+      { productId: "dri-fit-tee", inventory: { XS: 2, S: 3, M: 4, L: 3, XL: 1 } },
+      { productId: "running-shorts", inventory: { XS: 1, S: 2, M: 3, L: 2, XL: 1 } },
+      { productId: "leggings", inventory: { XS: 1, S: 2, M: 2, L: 2, XL: 1 } },
+      { productId: "running-shoes", inventory: { "38": 1, "39": 2, "40": 2, "41": 2, "42": 1, "43": 0 } },
+    ],
+  },
+  {
+    id: "sirikit",
+    name: "ศูนย์ประชุมแห่งชาติสิริกิติ์",
+    address: "ถ. รัชดาภิเษก แขวงคลองเตย เขตคลองเตย กรุงเทพฯ",
+    lat: 13.7226,
+    lng: 100.5597,
+    type: "booth",
+    openHours: "06:00 – 21:00",
+    products: [
+      { productId: "dri-fit-tee", inventory: { XS: 1, S: 2, M: 3, L: 2, XL: 1 } },
+      { productId: "running-shorts", inventory: { XS: 1, S: 2, M: 2, L: 2, XL: 0 } },
+      { productId: "yoga-set", inventory: { XS: 0, S: 1, M: 2, L: 1, XL: 0 } },
+      { productId: "training-shoes", inventory: { "38": 0, "39": 1, "40": 2, "41": 1, "42": 1, "43": 0 } },
+    ],
+  },
+  {
     id: "rotfai",
-    name: "สวนรถไฟ",
-    address: "ถ. กำแพงเพชร แขวงจตุจักร เขตจตุจักร กรุงเทพฯ",
-    lat: 13.7592,
-    lng: 100.5385,
+    name: "สวนรถไฟ (สวนวชิรเบญจทัศ)",
+    address: "สวนวชิรเบญจทัศ ถ. กำแพงเพชร แขวงจตุจักร เขตจตุจักร กรุงเทพฯ",
+    // Wachirabenchathat Park (Rot Fai Park) approximate landmark coordinates
+    // Source: public coordinate references for the park
+    lat: 13.811944,
+    lng: 100.553889,
     type: "booth",
     openHours: "05:00 – 19:00",
     products: [

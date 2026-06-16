@@ -22,7 +22,7 @@ export default async function PartnerShoeCatalog({
   return (
     <section
       id="partner-shoes"
-      className="scroll-mt-24 border-t border-zinc-200/80 bg-emerald-50/40 py-10 sm:py-14"
+      className="scroll-mt-24 border-t border-zinc-200/80 bg-blue-50/40 py-10 sm:py-14"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -56,7 +56,7 @@ export default async function PartnerShoeCatalog({
         </p>
 
         <div className="relative">
-          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-emerald-50/90 via-emerald-50/70 to-transparent sm:hidden" />
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-blue-50/90 via-blue-50/70 to-transparent sm:hidden" />
 
           <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4 lg:gap-5">
             {partnerShoes.map((product, index) => (

@@ -37,7 +37,7 @@ export default function ProductAvailabilityList({ items, product }: Props) {
               <div>
                 <h3 className="font-semibold text-zinc-900">{location.name}</h3>
                 {location.partnerName && (
-                  <p className="text-xs text-emerald-600">{location.partnerName}</p>
+                  <p className="text-xs text-blue-600">{location.partnerName}</p>
                 )}
                 <p className="mt-0.5 text-xs text-zinc-500">{location.address}</p>
               </div>
@@ -62,7 +62,7 @@ export default function ProductAvailabilityList({ items, product }: Props) {
 
       <Link
         href={`/map?product=${product.id}`}
-        className="mt-1 inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+        className="mt-1 inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
       >
         {t("common.viewOnMap")}
       </Link>

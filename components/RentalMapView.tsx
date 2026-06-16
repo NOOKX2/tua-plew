@@ -195,7 +195,7 @@ export default function RentalMapView({
         <button
           type="button"
           onClick={() => setMobileListExpanded(true)}
-          className="mb-3 w-full rounded-xl border border-dashed border-zinc-300 bg-white px-4 py-3 text-left text-sm font-medium text-zinc-600 transition-colors hover:border-emerald-300 hover:text-emerald-700 lg:hidden"
+          className="mb-3 w-full rounded-xl border border-dashed border-zinc-300 bg-white px-4 py-3 text-left text-sm font-medium text-zinc-600 transition-colors hover:border-blue-300 hover:text-blue-700 lg:hidden"
         >
           {t("map.browseOtherLocations", {
             count: filteredLocations.length - 1,
@@ -235,7 +235,7 @@ export default function RentalMapView({
       <button
         type="button"
         onClick={() => setSheetSnap("hidden")}
-        className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+        className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-800"
         aria-label={t("map.expandMap")}
       >
         <span aria-hidden>🗺️</span>
@@ -248,7 +248,7 @@ export default function RentalMapView({
     selectedLocation && !isMapSheetHidden(sheetSnap) ? (
       <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-200 bg-white px-4 py-2.5">
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-600">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-blue-600">
             {t("map.selectedLocation")}
           </p>
           <p className="truncate text-sm font-semibold text-zinc-900">
@@ -258,7 +258,7 @@ export default function RentalMapView({
         <button
           type="button"
           onClick={clearMobileFocus}
-          className="shrink-0 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+          className="shrink-0 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-800"
         >
           {t("map.showAllLocations")}
         </button>
@@ -268,8 +268,8 @@ export default function RentalMapView({
   return (
     <div className="flex h-[calc(100dvh-7.75rem-env(safe-area-inset-bottom,0px))] min-h-0 flex-col overflow-hidden lg:h-[calc(100dvh-4.25rem)]">
       {selectedProductId && selectedProduct && (
-        <div className="shrink-0 border-b border-zinc-200 bg-emerald-50 px-4 py-2 sm:px-6">
-          <div className="flex flex-wrap items-center gap-2 text-sm text-emerald-800">
+        <div className="shrink-0 border-b border-zinc-200 bg-blue-50 px-4 py-2 sm:px-6">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-blue-800">
             <span className="text-xs font-medium">{t("common.filterBy")}</span>
             <span className="font-semibold">{selectedProduct.name}</span>
             <StockBadge
@@ -314,7 +314,7 @@ export default function RentalMapView({
             <button
               type="button"
               onClick={() => setSheetSnap("peek")}
-              className="absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-zinc-200/80 bg-white/95 px-4 py-2.5 text-sm font-semibold text-zinc-800 shadow-lg shadow-zinc-900/10 backdrop-blur-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800 lg:hidden"
+              className="absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-zinc-200/80 bg-white/95 px-4 py-2.5 text-sm font-semibold text-zinc-800 shadow-lg shadow-zinc-900/10 backdrop-blur-sm transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-800 lg:hidden"
             >
               <span aria-hidden>📍</span>
               {t("map.showList")}

@@ -30,7 +30,7 @@ export const ACTIVITY_GRADIENT: Record<CommunityActivityType, string> = {
   cycling: "from-sky-500 to-blue-600",
   swim: "from-cyan-500 to-teal-500",
   pilates: "from-pink-500 to-rose-400",
-  hiking: "from-emerald-600 to-lime-500",
+  hiking: "from-blue-600 to-lime-500",
 };
 
 export const DIFFICULTY_LABELS: Record<

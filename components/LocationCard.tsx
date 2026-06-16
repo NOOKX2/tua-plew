@@ -47,8 +47,8 @@ export default function LocationCard({
       id={`location-card-${location.id}`}
       className={`w-full scroll-mt-3 rounded-xl border transition-all ${
         selected
-          ? "border-emerald-500 bg-emerald-50 shadow-md ring-2 ring-emerald-500/20"
-          : "border-zinc-200 bg-white hover:border-emerald-300 hover:shadow-sm"
+          ? "border-blue-500 bg-blue-50 shadow-md ring-2 ring-blue-500/20"
+          : "border-zinc-200 bg-white hover:border-blue-300 hover:shadow-sm"
       }`}
     >
       <button
@@ -60,7 +60,7 @@ export default function LocationCard({
           <div>
             <h3 className="font-semibold text-zinc-900">{location.name}</h3>
             {location.partnerName && (
-              <p className="text-xs text-emerald-600">{location.partnerName}</p>
+              <p className="text-xs text-blue-600">{location.partnerName}</p>
             )}
             <p className="mt-0.5 text-xs text-zinc-500">{location.address}</p>
           </div>
@@ -77,7 +77,7 @@ export default function LocationCard({
                 ? "font-medium text-red-500"
                 : total <= 5
                   ? "font-medium text-amber-600"
-                  : "font-medium text-emerald-600"
+                  : "font-medium text-blue-600"
             }
           >
             {t("common.totalItems", {
@@ -99,11 +99,11 @@ export default function LocationCard({
             highlightProductId === stock.productId;
           const thumbClass = `relative shrink-0 rounded-lg border p-1.5 transition-colors ${
             onProductClick
-              ? "cursor-pointer hover:border-emerald-300 hover:shadow-sm"
+              ? "cursor-pointer hover:border-blue-300 hover:shadow-sm"
               : ""
           } ${
             isActive
-              ? "border-emerald-500 bg-emerald-100 ring-2 ring-emerald-500/30"
+              ? "border-blue-500 bg-blue-100 ring-2 ring-blue-500/30"
               : "border-zinc-100 bg-zinc-50"
           }`;
 

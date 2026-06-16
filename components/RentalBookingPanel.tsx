@@ -126,19 +126,19 @@ export default function RentalBookingPanel({
   if (reservation) {
     return (
       <div
-        className={`rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 ${compact ? "mt-3" : "mt-6"
+        className={`rounded-2xl border border-blue-200 bg-blue-50/60 p-4 ${compact ? "mt-3" : "mt-6"
           }`}
       >
-        <p className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
+        <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
           {t("rental.confirmed")}
         </p>
         <p className="mt-1 text-sm text-zinc-600">{t("rental.pickupInstructions")}</p>
 
-        <div className="mt-4 rounded-xl bg-white px-4 py-5 text-center ring-1 ring-emerald-100">
+        <div className="mt-4 rounded-xl bg-white px-4 py-5 text-center ring-1 ring-blue-100">
           <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
             {t("rental.pickupCode")}
           </p>
-          <p className="mt-1 font-mono text-3xl font-bold tracking-[0.2em] text-emerald-700">
+          <p className="mt-1 font-mono text-3xl font-bold tracking-[0.2em] text-blue-700">
             {reservation.pickupCode}
           </p>
         </div>
@@ -175,7 +175,7 @@ export default function RentalBookingPanel({
 
         <Link
           href="/rentals"
-          className="mt-4 flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+          className="mt-4 flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
         >
           {t("rental.viewMyRentals")}
         </Link>
@@ -193,7 +193,7 @@ export default function RentalBookingPanel({
         <p className="mt-1 text-xs text-zinc-500">{t("rental.loginPrompt")}</p>
         <Link
           href={loginHref}
-          className={`mt-3 inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 ${compact ? "" : ""
+          className={`mt-3 inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 ${compact ? "" : ""
             }`}
         >
           {t("rental.loginToReserve")}
@@ -212,7 +212,7 @@ export default function RentalBookingPanel({
 
   return (
     <div
-      className={`rounded-2xl border border-emerald-200/80 bg-white p-4 shadow-sm ${compact ? "mt-3" : "mt-6"
+      className={`rounded-2xl border border-blue-200/80 bg-white p-4 shadow-sm ${compact ? "mt-3" : "mt-6"
         }`}
     >
       <p className="text-sm font-semibold text-zinc-900">{t("rental.title")}</p>
@@ -241,10 +241,10 @@ export default function RentalBookingPanel({
                   if (!fixedLocationId) setSelectedLocationId(null);
                 }}
                 className={`min-w-[2.75rem] rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${active
-                    ? "bg-emerald-600 text-white"
+                    ? "bg-blue-600 text-white"
                     : disabled
                       ? "cursor-not-allowed bg-zinc-100 text-zinc-300"
-                      : "bg-zinc-100 text-zinc-700 hover:bg-emerald-50 hover:text-emerald-700"
+                      : "bg-zinc-100 text-zinc-700 hover:bg-blue-50 hover:text-blue-700"
                   }`}
               >
                 {size}
@@ -266,7 +266,7 @@ export default function RentalBookingPanel({
             id={`rental-location-${product.id}`}
             value={selectedLocationId ?? ""}
             onChange={(e) => setSelectedLocationId(e.target.value || null)}
-            className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+            className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
           >
             <option value="">{t("rental.chooseLocation")}</option>
             {locationsForSize.map((item) => (
@@ -288,7 +288,7 @@ export default function RentalBookingPanel({
         type="button"
         disabled={!canReserve || loading}
         onClick={handleReserve}
-        className="mt-4 flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-4 flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? t("rental.reserving") : t("rental.reserve")}
       </button>

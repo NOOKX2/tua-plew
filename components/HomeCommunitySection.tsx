@@ -25,7 +25,7 @@ export default async function HomeCommunitySection({
     >
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
             {t("home.eventsEyebrow")}
           </p>
           <h2 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
@@ -37,7 +37,7 @@ export default async function HomeCommunitySection({
         </div>
         <Link
           href="/community"
-          className="inline-flex shrink-0 items-center rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400"
+          className="inline-flex shrink-0 items-center rounded-full bg-blue-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-400"
         >
           {t("home.viewAllEvents")} →
         </Link>

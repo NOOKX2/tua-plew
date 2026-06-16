@@ -28,7 +28,7 @@ export default function BackButton({
       type="button"
       onClick={handleBack}
       aria-label={t("common.goBack")}
-      className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-700 shadow-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 ${className}`}
+      className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 ${className}`}
     >
       <svg
         aria-hidden

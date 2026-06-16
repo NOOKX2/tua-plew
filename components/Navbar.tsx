@@ -26,7 +26,7 @@ export default function Navbar({
           href="/"
           className="shrink-0 text-lg font-bold tracking-tight text-zinc-900"
         >
-          Tua <span className="text-emerald-600">Plew</span>
+          Tua <span className="text-blue-600">Plew</span>
         </Link>
 
         <nav className="hidden flex-1 items-center justify-center gap-1 md:flex sm:gap-2">

@@ -73,7 +73,7 @@ export default function ProductCard({
       <div
         className={
           isFeatured
-            ? "relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-emerald-900"
+            ? "relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-blue-900"
             : isCatalogCard
               ? "relative aspect-square w-full overflow-hidden rounded-t-2xl bg-gradient-to-b from-zinc-100 to-zinc-50"
               : isCatalog
@@ -141,7 +141,7 @@ export default function ProductCard({
             ) : (
               <Link
                 href={`/products/${product.id}`}
-                className="hover:text-emerald-600 hover:underline"
+                className="hover:text-blue-600 hover:underline"
               >
                 {product.name}
               </Link>
@@ -211,7 +211,7 @@ export default function ProductCard({
 
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-zinc-100/80 pt-3">
           <p
-            className={`font-bold text-emerald-600 ${
+            className={`font-bold text-blue-600 ${
               isFeatured ? "text-lg" : "text-sm"
             }`}
           >
@@ -239,12 +239,12 @@ export default function ProductCard({
         href={`/products/${product.id}`}
         className={`group block h-full transition-all duration-300 ${
           isFeatured
-            ? "rounded-[1.75rem] border border-zinc-200/80 bg-white shadow-sm hover:-translate-y-1 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-900/10"
-            : `rounded-2xl border bg-white hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-900/5 ${
+            ? "rounded-[1.75rem] border border-zinc-200/80 bg-white shadow-sm hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/10"
+            : `rounded-2xl border bg-white hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-900/5 ${
                 isCatalogCard ? "overflow-hidden" : ""
               } ${
                 selected
-                  ? "border-emerald-500 shadow-md ring-2 ring-emerald-500/20"
+                  ? "border-blue-500 shadow-md ring-2 ring-blue-500/20"
                   : "border-zinc-200/80"
               }`
         }`}

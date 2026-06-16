@@ -1,10 +1,14 @@
 import "server-only";
 
-import { fetchLocationById, fetchLocations } from "./data";
+import { fetchLocationById, fetchLocations, fetchLocationsFresh } from "./data";
 import type { RentalLocation } from "./types";
 
 export async function getRentalLocations(): Promise<RentalLocation[]> {
   return fetchLocations();
+}
+
+export async function getRentalLocationsFresh(): Promise<RentalLocation[]> {
+  return fetchLocationsFresh();
 }
 
 export async function getLocationByIdAsync(

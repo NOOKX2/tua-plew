@@ -44,7 +44,7 @@ export default async function CommunityJoinWelcome({
 
   return (
     <main className="relative flex-1 overflow-x-hidden bg-[#faf9f6] pb-28 lg:pb-14">
-      <div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-emerald-300/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-blue-300/15 blur-3xl" />
       <div className="pointer-events-none absolute -left-24 top-64 h-72 w-72 rounded-full bg-violet-200/20 blur-3xl" />
 
       <section className="relative overflow-hidden border-b border-zinc-200/80 bg-zinc-950 text-white">
@@ -68,7 +68,7 @@ export default async function CommunityJoinWelcome({
             {t("community.joinWelcome.backToEvent")}
           </Link>
 
-          <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-300">
+          <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-blue-300">
             {t("community.joinWelcome.eyebrow")}
           </p>
           <h1 className="mt-2 max-w-3xl break-words text-3xl font-bold tracking-tight sm:text-4xl">
@@ -99,9 +99,9 @@ export default async function CommunityJoinWelcome({
       </section>
 
       <div className="mx-auto min-w-0 max-w-7xl space-y-10 px-4 py-10 sm:px-8 lg:px-10">
-        <section className="overflow-hidden rounded-[1.5rem] border border-emerald-200/70 bg-white shadow-sm">
-          <div className="border-b border-emerald-100 px-6 py-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-600">
+        <section className="overflow-hidden rounded-[1.5rem] border border-blue-200/70 bg-white shadow-sm">
+          <div className="border-b border-blue-100 px-6 py-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-600">
               {t("community.social.chat.groupTitle")}
             </p>
             <h2 className="mt-1 text-xl font-bold text-zinc-900">
@@ -121,9 +121,9 @@ export default async function CommunityJoinWelcome({
           </div>
         </section>
 
-        <section className="min-w-0 overflow-hidden rounded-[1.5rem] border border-emerald-200/80 bg-gradient-to-br from-emerald-50 via-white to-white shadow-sm">
-          <div className="border-b border-emerald-100/80 px-4 py-5 sm:px-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-600">
+        <section className="min-w-0 overflow-hidden rounded-[1.5rem] border border-blue-200/80 bg-gradient-to-br from-blue-50 via-white to-white shadow-sm">
+          <div className="border-b border-blue-100/80 px-4 py-5 sm:px-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-600">
               {t("community.joinWelcome.rentalEyebrow")}
             </p>
             <h2 className="mt-1 text-2xl font-bold tracking-tight text-zinc-900">
@@ -133,7 +133,7 @@ export default async function CommunityJoinWelcome({
               {t("community.joinWelcome.rentalSubtitle")}
             </p>
             {rentalPerk && (
-              <p className="mt-3 inline-flex max-w-full items-center gap-2 break-words rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-800">
+              <p className="mt-3 inline-flex max-w-full items-center gap-2 break-words rounded-full bg-blue-100 px-3 py-1.5 text-xs font-semibold text-blue-800">
                 {t("community.joinWelcome.useCode", { code: rentalPerk.code })}
               </p>
             )}
@@ -157,7 +157,7 @@ export default async function CommunityJoinWelcome({
                   <Link
                     key={product.id}
                     href={mapHref}
-                    className="group min-w-0 overflow-hidden rounded-[1.25rem] border border-zinc-200/80 bg-white transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-lg"
+                    className="group min-w-0 overflow-hidden rounded-[1.25rem] border border-zinc-200/80 bg-white transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-zinc-50 to-white">
                       <Image
@@ -183,7 +183,7 @@ export default async function CommunityJoinWelcome({
                           size="sm"
                         />
                       </div>
-                      <p className="mt-3 text-xs font-semibold text-emerald-600">
+                      <p className="mt-3 text-xs font-semibold text-blue-600">
                         {t("community.joinWelcome.rentProduct")} →
                       </p>
                     </div>
@@ -195,14 +195,14 @@ export default async function CommunityJoinWelcome({
             <div className="p-6">
               <Link
                 href={location ? `/map?location=${location.id}` : "/map"}
-                className="inline-flex items-center rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400"
+                className="inline-flex items-center rounded-full bg-blue-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-400"
               >
                 {t("community.findNearbyRental")}
               </Link>
             </div>
           )}
 
-          <div className="flex flex-wrap gap-3 border-t border-emerald-100/80 px-4 py-5 sm:px-6">
+          <div className="flex flex-wrap gap-3 border-t border-blue-100/80 px-4 py-5 sm:px-6">
             <Link
               href={location ? `/map?location=${location.id}` : "/map"}
               className="inline-flex items-center rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"

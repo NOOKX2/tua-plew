@@ -53,7 +53,7 @@ export default function AuthButton({
   if (status === "loading") {
     return (
       <span
-        className={`text-xs ${isLight ? "text-emerald-100" : "text-zinc-400"}`}
+        className={`text-xs ${isLight ? "text-blue-100" : "text-zinc-400"}`}
       >
         {t("common.loading")}
       </span>
@@ -87,7 +87,7 @@ export default function AuthButton({
               className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
                 isLight
                   ? "bg-white/20 text-white"
-                  : "bg-emerald-100 text-emerald-700"
+                  : "bg-blue-100 text-blue-700"
               }`}
             >
               {(session.user.name ?? "U").charAt(0).toUpperCase()}
@@ -103,7 +103,7 @@ export default function AuthButton({
             </p>
             <p
               className={`max-w-[120px] truncate text-[10px] ${
-                isLight ? "text-emerald-100" : "text-zinc-500"
+                isLight ? "text-blue-100" : "text-zinc-500"
               }`}
             >
               {session.user.email}
@@ -111,7 +111,7 @@ export default function AuthButton({
           </div>
           <svg
             className={`hidden h-3.5 w-3.5 sm:block ${
-              isLight ? "text-emerald-100" : "text-zinc-400"
+              isLight ? "text-blue-100" : "text-zinc-400"
             } ${open ? "rotate-180" : ""} transition-transform`}
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -160,14 +160,14 @@ export default function AuthButton({
                 <span>
                   <span className="block font-medium">{t("rental.myRentals")}</span>
                   {activeRentals > 0 && (
-                    <span className="text-xs text-emerald-600">
+                    <span className="text-xs text-blue-600">
                       {t("rental.activeCount", { count: activeRentals })}
                     </span>
                   )}
                 </span>
               </span>
               {activeRentals > 0 && (
-                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[10px] font-bold text-white">
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-500 px-1.5 text-[10px] font-bold text-white">
                   {activeRentals}
                 </span>
               )}
@@ -211,8 +211,8 @@ export default function AuthButton({
       href="/login"
       className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
         isLight
-          ? "bg-white text-emerald-700 hover:bg-emerald-50"
-          : "bg-emerald-600 text-white hover:bg-emerald-700"
+          ? "bg-white text-blue-700 hover:bg-blue-50"
+          : "bg-blue-600 text-white hover:bg-blue-700"
       }`}
     >
       {t("auth.login")}

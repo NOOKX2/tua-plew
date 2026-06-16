@@ -15,7 +15,7 @@ export default async function ProductNotFound() {
       </p>
       <Link
         href="/"
-        className="rounded-xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
+        className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700"
       >
         {t("notFound.backHome")}
       </Link>

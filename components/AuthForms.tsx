@@ -8,7 +8,7 @@ import { registerUserAction } from "@/lib/actions/register";
 import { useTranslations } from "@/lib/i18n/client";
 
 const inputClass =
-  "w-full rounded-xl border-0 bg-zinc-100 px-4 py-3 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:bg-white focus:ring-2 focus:ring-emerald-500/25";
+  "w-full rounded-xl border-0 bg-zinc-100 px-4 py-3 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:bg-white focus:ring-2 focus:ring-blue-500/25";
 
 function EmailIcon() {
   return (
@@ -172,7 +172,7 @@ export function CredentialsSignInForm({
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 disabled:opacity-60"
+        className="w-full rounded-xl bg-blue-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 disabled:opacity-60"
       >
         {loading ? t("auth.signingIn") : t("auth.login")}
       </button>
@@ -305,7 +305,7 @@ export function RegisterForm({
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 disabled:opacity-60"
+        className="w-full rounded-xl bg-blue-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 disabled:opacity-60"
       >
         {loading ? t("auth.signingUp") : t("auth.register")}
       </button>
