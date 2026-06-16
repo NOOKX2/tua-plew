@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { Campaign, RentalLocation } from "@/lib/types";
+import type { Campaign, RentalLocation, CampaignProgress } from "@/lib/types";
 import {
   CAMPAIGN_TYPE_EMOJI,
   CAMPAIGN_TYPE_GRADIENT,
@@ -14,12 +14,14 @@ import {
   getCampaignTypeLabel,
 } from "@/lib/i18n/labels";
 import CampaignJoinButton from "./CampaignJoinButton";
+import CampaignProgressBar from "./CampaignProgressBar";
 
 type Props = {
   campaign: Campaign;
   partnerLocations: RentalLocation[];
   joined?: boolean;
   enrollmentCount?: number;
+  progress?: CampaignProgress | null;
 };
 
 function DetailBlock({
@@ -50,6 +52,7 @@ export default function CampaignDetail({
   partnerLocations,
   joined = false,
   enrollmentCount = 0,
+  progress = null,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -178,6 +181,11 @@ export default function CampaignDetail({
                     {t("campaign.howToClaim")}
                   </h2>
                 </div>
+                {joined && progress && (
+                  <div className="border-b border-amber-200/40 px-6 py-4">
+                    <CampaignProgressBar progress={progress} />
+                  </div>
+                )}
                 <ol className="divide-y divide-amber-200/40">
                   {[
                     t("campaign.step1"),
@@ -264,6 +272,11 @@ export default function CampaignDetail({
                 )}
               </div>
               <div className="px-6 py-5">
+                {joined && progress && (
+                  <div className="mb-4">
+                    <CampaignProgressBar progress={progress} variant="premium" />
+                  </div>
+                )}
                 <CampaignJoinButton
                   campaign={campaign}
                   initialJoined={joined}

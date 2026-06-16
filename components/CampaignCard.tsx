@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Campaign } from "@/lib/types";
+import type { CampaignProgress } from "@/lib/types";
 import { CAMPAIGN_TYPE_EMOJI } from "@/lib/campaigns";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { formatCampaignPeriod } from "@/lib/i18n/format";
@@ -11,13 +12,19 @@ import {
   getCampaignTypeLabel,
 } from "@/lib/i18n/labels";
 import CampaignJoinButton from "./CampaignJoinButton";
+import CampaignProgressBar from "./CampaignProgressBar";
 
 type Props = {
   campaign: Campaign;
   joined?: boolean;
+  progress?: CampaignProgress | null;
 };
 
-export default function CampaignCard({ campaign, joined = false }: Props) {
+export default function CampaignCard({
+  campaign,
+  joined = false,
+  progress = null,
+}: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
 
@@ -74,6 +81,10 @@ export default function CampaignCard({ campaign, joined = false }: Props) {
               })}
             </span>
           </div>
+
+          {joined && progress && (
+            <CampaignProgressBar progress={progress} variant="compact" />
+          )}
 
           <div className="mt-auto flex items-center justify-between">
             <span className="text-xs text-zinc-500">

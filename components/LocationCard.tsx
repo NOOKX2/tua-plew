@@ -18,6 +18,7 @@ type Props = {
   expandedProductId?: string | null;
   onProductClick?: (productId: string) => void;
   onCloseProduct?: () => void;
+  hideEmbeddedQuickView?: boolean;
 };
 
 export default function LocationCard({
@@ -29,6 +30,7 @@ export default function LocationCard({
   expandedProductId,
   onProductClick,
   onCloseProduct,
+  hideEmbeddedQuickView = false,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -168,13 +170,15 @@ export default function LocationCard({
       </div>
 
       {expandedProduct && expandedStock && onCloseProduct && (
-        <ProductQuickView
-          embedded
-          product={expandedProduct}
-          stock={expandedStock}
-          location={location}
-          onClose={onCloseProduct}
-        />
+        <div className={hideEmbeddedQuickView ? "hidden lg:block" : undefined}>
+          <ProductQuickView
+            embedded
+            product={expandedProduct}
+            stock={expandedStock}
+            location={location}
+            onClose={onCloseProduct}
+          />
+        </div>
       )}
     </div>
   );

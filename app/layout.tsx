@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "@/components/Navbar";
+import AppShell from "@/components/AppShell";
 import Providers from "@/components/Providers";
 import { getLocale, getTranslator } from "@/lib/i18n/server";
+import { getActiveRentalCountForSession } from "@/lib/rentals.server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,16 +30,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
+  const activeRentalCount = await getActiveRentalCountForSession();
 
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full overflow-x-hidden antialiased`}
     >
-      <body className="flex min-h-screen flex-col bg-[#faf9f6] text-zinc-900">
+      <body className="flex min-h-screen max-w-full flex-col overflow-x-hidden bg-[#faf9f6] text-zinc-900">
         <Providers locale={locale}>
-          <Navbar />
-          {children}
+          <AppShell activeRentalCount={activeRentalCount}>{children}</AppShell>
         </Providers>
       </body>
     </html>

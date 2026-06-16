@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import type { Campaign } from "@/lib/types";
 import { isCampaignActive, isCampaignUpcoming } from "@/lib/campaigns";
+import { joinCampaignAction } from "@/lib/actions/campaigns";
 import { useTranslations } from "@/lib/i18n/client";
 
 type Props = {
@@ -60,15 +61,12 @@ export default function CampaignJoinButton({
     setError(null);
     setLoading(true);
 
-    const response = await fetch(`/api/campaigns/${campaign.id}/join`, {
-      method: "POST",
-    });
-    const data = (await response.json()) as { error?: string };
+    const result = await joinCampaignAction(campaign.id);
 
     setLoading(false);
 
-    if (!response.ok) {
-      setError(data.error ?? t("campaign.errors.joinFailed"));
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
 

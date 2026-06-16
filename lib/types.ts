@@ -139,6 +139,19 @@ export type CommunityEvent = {
   featured?: boolean;
 };
 
+export type EventJoinPerkCategory = "rental" | "food" | "coffee" | "gaming";
+
+export type EventJoinPerk = {
+  id: string;
+  category: EventJoinPerkCategory;
+  partnerName: string;
+  title: string;
+  description: string;
+  code: string;
+  validUntil?: string;
+  highlight?: boolean;
+};
+
 export type CampaignType = "loyalty" | "first-time" | "bundle" | "seasonal";
 
 export type Campaign = {
@@ -155,4 +168,11 @@ export type Campaign = {
   endDate: string;
   terms: string[];
   featured?: boolean;
+};
+
+export type CampaignProgress = {
+  current: number;
+  target: number;
+  percent: number;
+  complete: boolean;
 };

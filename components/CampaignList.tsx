@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Campaign, CampaignType } from "@/lib/types";
+import type { Campaign, CampaignType, CampaignProgress } from "@/lib/types";
 import { getActiveCampaigns } from "@/lib/campaigns";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getCampaignTypeLabel } from "@/lib/i18n/labels";
@@ -10,6 +10,7 @@ import CampaignCard from "./CampaignCard";
 type Props = {
   campaigns: Campaign[];
   enrolledCampaignIds?: string[];
+  progressByCampaignId?: Record<string, CampaignProgress>;
 };
 
 const ALL = "all" as const;
@@ -18,6 +19,7 @@ type Filter = typeof ALL | CampaignType;
 export default function CampaignList({
   campaigns,
   enrolledCampaignIds = [],
+  progressByCampaignId = {},
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -64,6 +66,7 @@ export default function CampaignList({
               key={campaign.id}
               campaign={campaign}
               joined={enrolledCampaignIds.includes(campaign.id)}
+              progress={progressByCampaignId[campaign.id] ?? null}
             />
           ))}
         </div>

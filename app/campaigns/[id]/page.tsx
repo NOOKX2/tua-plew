@@ -6,6 +6,7 @@ import {
   getCampaignEnrollmentCount,
   isUserEnrolledInCampaign,
 } from "@/lib/campaign-enrollments";
+import { getCampaignProgressForUser } from "@/lib/campaign-progress";
 import {
   getCampaignByIdAsync,
 } from "@/lib/campaigns.server";
@@ -42,18 +43,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CampaignPage({ params }: Props) {
   const { id } = await params;
   const session = await auth();
-  const [campaign, rentalLocations, joined, enrollmentCount] = await Promise.all([
-    getCampaignByIdAsync(id),
-    getRentalLocations(),
-    session?.user?.id
-      ? isUserEnrolledInCampaign(session.user.id, id)
-      : Promise.resolve(false),
-    getCampaignEnrollmentCount(id),
-  ]);
-
+  const campaign = await getCampaignByIdAsync(id);
   if (!campaign) {
     notFound();
   }
+
+  const [rentalLocations, joined, enrollmentCount, progress] =
+    await Promise.all([
+      getRentalLocations(),
+      session?.user?.id
+        ? isUserEnrolledInCampaign(session.user.id, id)
+        : Promise.resolve(false),
+      getCampaignEnrollmentCount(id),
+      session?.user?.id
+        ? getCampaignProgressForUser(session.user.id, campaign)
+        : Promise.resolve(null),
+    ]);
 
   const partnerLocations = rentalLocations.filter((location) =>
     campaign.partnerLocationIds.includes(location.id),
@@ -65,6 +70,7 @@ export default async function CampaignPage({ params }: Props) {
       partnerLocations={partnerLocations}
       joined={joined}
       enrollmentCount={enrollmentCount}
+      progress={progress}
     />
   );
 }

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import type { Locale } from "./config";
 import type { Messages } from "./translate";
 import { createTranslator, t as translate } from "./translate";
+import { setLocaleAction } from "@/lib/actions/locale";
 
 type LocaleContextValue = {
   locale: Locale;
@@ -43,11 +44,7 @@ export function LocaleProvider({
     (next: Locale) => {
       if (next === locale) return;
       startTransition(async () => {
-        await fetch("/api/locale", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ locale: next }),
-        });
+        await setLocaleAction(next);
         router.refresh();
       });
     },

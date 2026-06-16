@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { registerUserAction } from "@/lib/actions/register";
 import { useTranslations } from "@/lib/i18n/client";
 
 const inputClass =
@@ -204,21 +205,15 @@ export function RegisterForm({
 
     setLoading(true);
 
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        password,
-      }),
+    const result = await registerUserAction({
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      password,
     });
 
-    const data = (await response.json()) as { error?: string };
-
-    if (!response.ok) {
+    if (!result.ok) {
       setLoading(false);
-      setError(data.error ?? t("auth.errors.registerFailed"));
+      setError(result.error);
       return;
     }
 

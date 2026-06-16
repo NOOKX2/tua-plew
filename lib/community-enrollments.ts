@@ -69,6 +69,36 @@ export async function enrollUserInEvent(
   };
 }
 
+export async function unenrollUserFromEvent(
+  userId: string,
+  eventId: string,
+): Promise<{ participantCount: number }> {
+  await connectDB();
+
+  const deleted = await CommunityEnrollment.deleteOne({ userId, eventId });
+  if (deleted.deletedCount === 0) {
+    throw new Error("NOT_ENROLLED");
+  }
+
+  const updated = await CommunityEventModel.findByIdAndUpdate(
+    eventId,
+    [
+      {
+        $set: {
+          participantCount: {
+            $max: [0, { $subtract: ["$participantCount", 1] }],
+          },
+        },
+      },
+    ],
+    { new: true },
+  ).lean();
+
+  return {
+    participantCount: (updated?.participantCount as number) ?? 0,
+  };
+}
+
 export async function isUserEnrolledInEvent(
   userId: string,
   eventId: string,

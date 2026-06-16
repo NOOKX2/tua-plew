@@ -14,6 +14,7 @@ export type CatalogItem = {
 type Props = {
   items: CatalogItem[];
   embedded?: boolean;
+  secondary?: boolean;
 };
 
 const CATEGORIES: Array<ProductCategory | "all"> = [
@@ -27,6 +28,7 @@ const CATEGORIES: Array<ProductCategory | "all"> = [
 export default function HomeCatalogSection({
   items,
   embedded = false,
+  secondary = false,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -52,19 +54,27 @@ export default function HomeCatalogSection({
         }`}
       >
         <div>
-          {!embedded && (
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600">
+          {(!embedded || secondary) && (
+            <p
+              className={`mb-2 text-xs font-semibold uppercase tracking-[0.18em] ${
+                secondary ? "text-zinc-500" : "text-emerald-600"
+              }`}
+            >
               {t("home.catalogEyebrow")}
             </p>
           )}
           <h2
             className={`font-bold tracking-tight text-zinc-900 ${
-              embedded ? "text-lg sm:text-xl" : "text-2xl sm:text-3xl"
+              embedded && secondary
+                ? "text-lg sm:text-xl"
+                : embedded
+                  ? "text-2xl sm:text-3xl"
+                  : "text-2xl sm:text-3xl"
             }`}
           >
             {t("home.catalogTitle")}
           </h2>
-          {!embedded && (
+          {(secondary || !embedded) && (
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-500">
               {t("home.catalogSubtitle")}
             </p>

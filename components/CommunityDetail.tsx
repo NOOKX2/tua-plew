@@ -76,11 +76,11 @@ export default function CommunityDetail({
   const activityGradient = ACTIVITY_GRADIENT[event.activityType];
 
   return (
-    <main className="relative flex-1 bg-[#faf9f6] pb-28 lg:pb-14">
+    <main className="relative flex-1 overflow-x-hidden bg-[#faf9f6] pb-28 lg:pb-14">
       <div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-emerald-300/15 blur-3xl" />
       <div className="pointer-events-none absolute -left-24 top-64 h-72 w-72 rounded-full bg-orange-200/20 blur-3xl" />
 
-      <div className="relative">
+      <div className="relative overflow-x-hidden">
         <div className="relative min-h-[52vh] overflow-hidden lg:min-h-[62vh]">
           <Image
             src={event.image}
@@ -88,7 +88,7 @@ export default function CommunityDetail({
             fill
             priority
             sizes="100vw"
-            className="object-cover scale-105"
+            className="object-cover lg:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/55 to-zinc-900/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/40 to-transparent lg:max-w-[70%]" />
@@ -98,10 +98,10 @@ export default function CommunityDetail({
 
           <div className="home-hero-grid absolute inset-0 opacity-[0.07]" />
 
-          <div className="absolute left-0 right-0 top-0 z-10 mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-8 lg:px-10">
+          <div className="absolute left-0 right-0 top-0 z-10 mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10">
             <Link
               href="/community"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
+              className="inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
             >
               {t("community.backToList")}
             </Link>
@@ -120,7 +120,7 @@ export default function CommunityDetail({
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-300/90">
               Tua Plew Community
             </p>
-            <h1 className="max-w-3xl text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-3xl break-words text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
               {event.title}
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">
@@ -186,8 +186,8 @@ export default function CommunityDetail({
         </div>
       </div>
 
-      <div className="mx-auto mt-10 w-full max-w-7xl px-4 sm:px-8 lg:mt-14 lg:px-10">
-        <div className="grid gap-8 lg:grid-cols-[1fr_22rem] xl:grid-cols-[1fr_24rem]">
+      <div className="mx-auto mt-10 w-full max-w-7xl min-w-0 px-4 sm:px-8 lg:mt-14 lg:px-10">
+        <div className="grid min-w-0 gap-8 lg:grid-cols-[1fr_22rem] xl:grid-cols-[1fr_24rem]">
           <div className="min-w-0 space-y-6">
             <DetailBlock title={t("community.details")}>
               <p className="text-base leading-relaxed text-zinc-600">
@@ -225,7 +225,7 @@ export default function CommunityDetail({
             </DetailBlock>
 
             {recommended.length > 0 && (
-              <section>
+              <section className="min-w-0 overflow-hidden">
                 <div className="mb-5 flex items-end justify-between gap-4">
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
@@ -240,7 +240,7 @@ export default function CommunityDetail({
                   </div>
                 </div>
 
-                <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none">
+                <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 snap-x snap-mandatory scrollbar-none sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0">
                   {recommended.map((product) => {
                     const total = getStockTotal(
                       getAggregatedProductInventory(
@@ -290,7 +290,7 @@ export default function CommunityDetail({
             )}
           </div>
 
-          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <aside className="min-w-0 space-y-4 lg:sticky lg:top-24 lg:self-start">
             <div className="overflow-hidden rounded-[1.5rem] bg-zinc-950 text-white shadow-2xl shadow-zinc-900/25">
               <div className="border-b border-white/10 px-6 py-5">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
@@ -323,6 +323,7 @@ export default function CommunityDetail({
                   event={{ ...event, participantCount }}
                   initialJoined={joined}
                   onJoined={setParticipantCount}
+                  onLeft={setParticipantCount}
                   variant="premium"
                 />
               </div>
@@ -352,11 +353,12 @@ export default function CommunityDetail({
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-200/80 bg-white/95 p-4 backdrop-blur-md lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 max-w-full overflow-hidden border-t border-zinc-200/80 bg-white/95 p-4 backdrop-blur-md lg:hidden">
         <CommunityJoinButton
           event={{ ...event, participantCount }}
           initialJoined={joined}
           onJoined={setParticipantCount}
+          onLeft={setParticipantCount}
         />
       </div>
     </main>

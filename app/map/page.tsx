@@ -24,11 +24,13 @@ export default async function MapPage({ searchParams }: Props) {
   ]);
 
   return (
-    <RentalMapView
-      initialProductId={product ?? null}
-      initialLocationId={location ?? null}
-      locations={locations}
-      products={products}
-    />
+    <div className="flex min-h-0 flex-1 flex-col">
+      <RentalMapView
+        initialProductId={product ?? null}
+        initialLocationId={location ?? null}
+        locations={locations}
+        products={products}
+      />
+    </div>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { submitProductReviewAction } from "@/lib/actions/reviews";
 import { useTranslations } from "@/lib/i18n/client";
 import StarRating from "./StarRating";
 
@@ -36,17 +37,16 @@ export default function ProductReviewForm({
     setError(null);
     setLoading(true);
 
-    const response = await fetch(`/api/products/${productId}/reviews`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating, comment }),
+    const result = await submitProductReviewAction({
+      productId,
+      rating,
+      comment,
     });
-    const data = (await response.json()) as { error?: string };
 
     setLoading(false);
 
-    if (!response.ok) {
-      setError(data.error ?? t("review.errors.submitFailed"));
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
 

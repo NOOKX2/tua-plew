@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { Product, RentalReservation } from "@/lib/types";
 import { isReservationActive } from "@/lib/rental-status";
+import { cancelRentalReservationAction } from "@/lib/actions/rentals";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 
 type Props = {
@@ -85,26 +86,20 @@ export default function MyRentalsList({
     setError(null);
     setCancellingId(id);
 
-    const response = await fetch(`/api/rentals/${id}/cancel`, {
-      method: "POST",
-    });
-    const data = (await response.json()) as {
-      error?: string;
-      rental?: RentalReservation;
-    };
+    const result = await cancelRentalReservationAction(id);
 
     setCancellingId(null);
 
-    if (!response.ok) {
-      setError(data.error ?? t("rental.errors.cancelFailed"));
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
 
-    if (data.rental) {
-      setRentals((prev) =>
-        prev.map((rental) => (rental.id === id ? data.rental! : rental)),
-      );
-    }
+    setRentals((prev) =>
+      prev.map((rental) =>
+        rental.id === id ? result.data.rental : rental,
+      ),
+    );
     router.refresh();
   }
 

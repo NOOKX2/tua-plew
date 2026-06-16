@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import CampaignList from "@/components/CampaignList";
 import { auth } from "@/auth";
 import { getUserEnrolledCampaignIds } from "@/lib/campaign-enrollments";
+import { getCampaignProgressMapForUser } from "@/lib/campaign-progress";
 import { getCampaigns } from "@/lib/campaigns.server";
 import { getTranslator } from "@/lib/i18n/server";
 
@@ -15,12 +16,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function CampaignsPage() {
   const session = await auth();
-  const [campaigns, t, enrolledCampaignIds] = await Promise.all([
-    getCampaigns(),
+  const campaigns = await getCampaigns();
+  const [t, enrolledCampaignIds, progressByCampaignId] = await Promise.all([
     getTranslator(),
     session?.user?.id
       ? getUserEnrolledCampaignIds(session.user.id)
       : Promise.resolve([] as string[]),
+    session?.user?.id
+      ? getCampaignProgressMapForUser(session.user.id, campaigns)
+      : Promise.resolve({}),
   ]);
 
   return (
@@ -40,6 +44,7 @@ export default async function CampaignsPage() {
       <CampaignList
         campaigns={campaigns}
         enrolledCampaignIds={enrolledCampaignIds}
+        progressByCampaignId={progressByCampaignId}
       />
     </main>
   );

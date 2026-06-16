@@ -8,15 +8,23 @@ import { useTranslations } from "@/lib/i18n/client";
 
 type Props = {
   variant?: "light" | "dark";
+  initialActiveRentals?: number;
 };
 
-export default function AuthButton({ variant = "dark" }: Props) {
+export default function AuthButton({
+  variant = "dark",
+  initialActiveRentals = 0,
+}: Props) {
   const { data: session, status } = useSession();
   const t = useTranslations();
   const [open, setOpen] = useState(false);
-  const [activeRentals, setActiveRentals] = useState(0);
+  const [activeRentals, setActiveRentals] = useState(initialActiveRentals);
   const menuRef = useRef<HTMLDivElement>(null);
   const isLight = variant === "light";
+
+  useEffect(() => {
+    setActiveRentals(initialActiveRentals);
+  }, [initialActiveRentals]);
 
   useEffect(() => {
     if (!open) return;
@@ -41,24 +49,6 @@ export default function AuthButton({ variant = "dark" }: Props) {
       document.removeEventListener("keydown", handleEscape);
     };
   }, [open]);
-
-  useEffect(() => {
-    if (!open || status !== "authenticated") return;
-
-    let cancelled = false;
-    fetch("/api/rentals")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: { activeCount?: number } | null) => {
-        if (!cancelled && data && typeof data.activeCount === "number") {
-          setActiveRentals(data.activeCount);
-        }
-      })
-      .catch(() => {});
-
-    return () => {
-      cancelled = true;
-    };
-  }, [open, status]);
 
   if (status === "loading") {
     return (

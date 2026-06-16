@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { ProductAvailability } from "@/lib/locations";
 import type { Product, RentalReservation } from "@/lib/types";
+import { createRentalReservationAction } from "@/lib/actions/rentals";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 
 type Props = {
@@ -97,31 +98,21 @@ export default function RentalBookingPanel({
     setError(null);
     setLoading(true);
 
-    const response = await fetch("/api/rentals", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        productId: product.id,
-        locationId: selectedLocationId,
-        size: selectedSize,
-      }),
+    const result = await createRentalReservationAction({
+      productId: product.id,
+      locationId: selectedLocationId,
+      size: selectedSize,
     });
-    const data = (await response.json()) as {
-      error?: string;
-      rental?: RentalReservation;
-    };
 
     setLoading(false);
 
-    if (!response.ok) {
-      setError(data.error ?? t("rental.errors.reserveFailed"));
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
 
-    if (data.rental) {
-      setReservation(data.rental);
-      router.refresh();
-    }
+    setReservation(result.data.rental);
+    router.refresh();
   }
 
   if (status === "loading") {
