@@ -37,7 +37,7 @@ export default async function HomeGateway({
       eyebrowClass: "text-blue-300",
     },
     {
-      href: "/map",
+      href: "/rentals/shop",
       image: "/products/leggings.jpg",
       imageAlt: t("home.gatewayRentalImageAlt"),
       eyebrow: t("home.gatewayRentalEyebrow"),

@@ -82,16 +82,16 @@ export default async function HomeHero({
 
             <div className="mt-5 grid gap-3 sm:flex sm:flex-wrap">
               <Link
-                href="/community"
-                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-blue-400 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-300"
-              >
-                {t("home.browseEvents")}
-              </Link>
-              <Link
-                href="/map"
-                className="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-50"
+                href="/rentals/shop"
+                className="inline-flex items-center justify-center rounded-full bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-400"
               >
                 {t("home.rentGear")}
+              </Link>
+              <Link
+                href="/community"
+                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-50"
+              >
+                {t("home.browseEvents")}
               </Link>
             </div>
 

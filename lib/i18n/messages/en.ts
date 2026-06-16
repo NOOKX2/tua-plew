@@ -204,7 +204,7 @@ export const en: Messages = {
     gatewayRentalTitle: "Rent and go",
     gatewayRentalDesc:
       "Clean gear ready to wear — pick up and return near your event, no buying or laundry",
-    gatewayRentalCta: "View rental map →",
+    gatewayRentalCta: "Rent now →",
     gatewayRentalImageAlt: "Sportswear for rent",
     rentalEyebrow: "Sportswear rental",
     rentalTitle: "Clean sportswear rentals",
@@ -213,6 +213,15 @@ export const en: Messages = {
     rentalBannerImageAlt: "Tua Plew sportswear rentals",
     viewMap: "View rental map →",
     exploreCatalog: "Browse rentals ↓",
+    spotlightEyebrow: "Most popular service",
+    spotlightTitle: "Rent sportswear, ready for any workout",
+    spotlightSubtitle:
+      "Clean gear ready to wear — pick by your workout style and reserve pickup near you. No buying, no laundry.",
+    spotlightCta: "Start renting",
+    spotlightMapCta: "View rental map",
+    spotlightTierEssential: "Everyday",
+    spotlightTierStudio: "Yoga & Pilates",
+    spotlightTierTactical: "Heavy training",
     stepBrowse: "Pick an event",
     stepJoin: "Join the community",
     stepGo: "Work out together",
@@ -231,6 +240,47 @@ export const en: Messages = {
     partnerShoesTitle: "Partner brand shoe rentals",
     partnerShoesSubtitle:
       "Top-brand running shoes at partner locations — check size stock and read renter reviews",
+  },
+  apparelTiers: {
+    eyebrow: "Apparel tiers",
+    title: "Pick gear that fits your workout style",
+    subtitle:
+      "Three sportswear tiers — from everyday wear to hardcore training — with reference price ranges",
+    priceLabel: "Price range",
+    perRentalNote: "Reference retail price (rental costs much less)",
+    forLabel: "Best for",
+    tiers: {
+      essential: {
+        name: "Everyday gear for any sport",
+        segment: "Budget-friendly · Most popular",
+        description:
+          "Affordable basics — comfy, breathable and with a good amount of stretch",
+        feature:
+          "Quick-dry, lightweight fabric that's comfy and not too tight — great for general use",
+        forWho: "Running, badminton, aerobics, football, basketball",
+        price: "800 – 3,500 THB",
+      },
+      studio: {
+        name: "Snug yoga & Pilates wear",
+        segment: "Premium · Flattering fit",
+        description:
+          "A snug second-skin fit that flatters your shape and stays opaque when you bend",
+        feature:
+          "Soft, smooth fabric that stretches every way, seamless and gentle on skin, high-waist tummy support",
+        forWho: "Yoga, Pilates",
+        price: "1,290 – 5,000 THB",
+      },
+      tactical: {
+        name: "Tough gear for heavy training",
+        segment: "Serious & rugged",
+        description:
+          "For intense workouts — durable fabric that resists pulling and supports your muscles",
+        feature:
+          "Extra-tough, abrasion-resistant fabric, odor-resistant, with a snug fit that supports muscles",
+        forWho: "CrossFit, Hyrox training, indoor climbing",
+        price: "1,500 – 5,500 THB",
+      },
+    },
   },
   product: {
     backToCatalog: "← Back to home",
@@ -277,6 +327,8 @@ export const en: Messages = {
     expandMap: "Expand map",
     showList: "Show locations",
     dragHint: "Drag up or down to resize",
+    viewListTab: "Browse gear",
+    viewMapTab: "Rental map",
   },
   community: {
     title: "Fitness community events",

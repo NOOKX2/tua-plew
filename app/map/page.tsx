@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import RentalMapView from "@/components/RentalMapView";
+import RentalViewTabs from "@/components/RentalViewTabs";
 import { getRentalLocationsFresh } from "@/lib/locations.server";
 import { getProducts } from "@/lib/products.server";
 import { getTranslator } from "@/lib/i18n/server";
@@ -31,6 +32,7 @@ export default async function MapPage({ searchParams }: Props) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      <RentalViewTabs />
       <RentalMapView
         initialProductId={product ?? null}
         initialLocationId={location ?? null}

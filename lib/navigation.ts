@@ -41,9 +41,12 @@ export const mainNavItems: MainNavItem[] = [
     match: (path) => path.startsWith("/campaigns"),
   },
   {
-    href: "/map",
+    href: "/rentals/shop",
     messageKey: "nav.rental",
-    match: (path) => path === "/map" || path.startsWith("/products"),
+    match: (path) =>
+      path === "/map" ||
+      path.startsWith("/rentals/shop") ||
+      path.startsWith("/products"),
   },
 ];
 

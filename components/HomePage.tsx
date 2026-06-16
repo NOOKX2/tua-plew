@@ -6,6 +6,7 @@ import HomeCommunitySection from "./HomeCommunitySection";
 import HomeGateway from "./HomeGateway";
 import HomeHero from "./HomeHero";
 import HomeRentalSection from "./HomeRentalSection";
+import HomeRentalSpotlight from "./HomeRentalSpotlight";
 
 type Props = {
   events: CommunityEvent[];
@@ -59,6 +60,12 @@ export default async function HomePage({
         activityTypeCount={activityTypes.size}
         locationCount={locations.length}
         productCount={rentalProductCount}
+        readyCount={readyCount}
+      />
+
+      <HomeRentalSpotlight
+        productCount={rentalProductCount}
+        locationCount={locations.length}
         readyCount={readyCount}
       />
 
