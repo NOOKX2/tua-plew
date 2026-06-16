@@ -1,6 +1,7 @@
 export type NavMessageKey =
   | "nav.home"
   | "nav.community"
+  | "nav.chat"
   | "nav.campaigns"
   | "nav.rental";
 
@@ -9,6 +10,13 @@ export type MainNavItem = {
   messageKey: NavMessageKey;
   match: (path: string) => boolean;
 };
+
+function isCommunityChatPath(path: string) {
+  return (
+    path.startsWith("/community/messages") ||
+    /\/community\/[^/]+\/chat$/.test(path)
+  );
+}
 
 export const mainNavItems: MainNavItem[] = [
   {
@@ -19,7 +27,13 @@ export const mainNavItems: MainNavItem[] = [
   {
     href: "/community",
     messageKey: "nav.community",
-    match: (path) => path.startsWith("/community"),
+    match: (path) =>
+      path.startsWith("/community") && !isCommunityChatPath(path),
+  },
+  {
+    href: "/chat",
+    messageKey: "nav.chat",
+    match: (path) => path.startsWith("/chat") || isCommunityChatPath(path),
   },
   {
     href: "/campaigns",

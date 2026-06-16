@@ -183,6 +183,63 @@ const accountSchema = new Schema(
 );
 accountSchema.index({ provider: 1, providerAccountId: 1 }, { unique: true });
 
+const friendshipSchema = new Schema(
+  {
+    requesterId: { type: String, required: true },
+    addresseeId: { type: String, required: true },
+    status: {
+      type: String,
+      required: true,
+      enum: ["pending", "accepted", "blocked"],
+      default: "pending",
+    },
+  },
+  { timestamps: true },
+);
+friendshipSchema.index({ requesterId: 1, addresseeId: 1 }, { unique: true });
+friendshipSchema.index({ addresseeId: 1, status: 1 });
+friendshipSchema.index({ requesterId: 1, status: 1 });
+
+const eventChatMessageSchema = new Schema(
+  {
+    eventId: { type: String, required: true },
+    senderId: { type: String, required: true },
+    senderName: { type: String, required: true },
+    senderImage: { type: String },
+    body: { type: String, required: true, maxlength: 2000 },
+  },
+  { timestamps: true },
+);
+eventChatMessageSchema.index({ eventId: 1, createdAt: -1 });
+
+const directConversationSchema = new Schema(
+  {
+    participantKey: { type: String, required: true, unique: true },
+    participantIds: { type: [String], required: true },
+    lastMessageAt: { type: Date, default: Date.now },
+    lastMessagePreview: { type: String, default: "" },
+  },
+  { timestamps: true },
+);
+directConversationSchema.index({ participantIds: 1 });
+directConversationSchema.index({ lastMessageAt: -1 });
+
+const directMessageSchema = new Schema(
+  {
+    conversationId: {
+      type: Schema.Types.ObjectId,
+      ref: "DirectConversation",
+      required: true,
+    },
+    senderId: { type: String, required: true },
+    senderName: { type: String, required: true },
+    senderImage: { type: String },
+    body: { type: String, required: true, maxlength: 2000 },
+  },
+  { timestamps: true },
+);
+directMessageSchema.index({ conversationId: 1, createdAt: -1 });
+
 function getModel(name: string, schema: Schema, collection: string) {
   return mongoose.models[name] ?? mongoose.model(name, schema, collection);
 }
@@ -222,3 +279,19 @@ export const RentalReservation = getModel(
 );
 export const User = getModel("User", userSchema, "User");
 export const Account = getModel("Account", accountSchema, "Account");
+export const Friendship = getModel("Friendship", friendshipSchema, "Friendship");
+export const EventChatMessage = getModel(
+  "EventChatMessage",
+  eventChatMessageSchema,
+  "EventChatMessage",
+);
+export const DirectConversation = getModel(
+  "DirectConversation",
+  directConversationSchema,
+  "DirectConversation",
+);
+export const DirectMessage = getModel(
+  "DirectMessage",
+  directMessageSchema,
+  "DirectMessage",
+);

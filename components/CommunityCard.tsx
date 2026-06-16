@@ -112,6 +112,7 @@ export default function CommunityCard({ event, compact = false, joined = false }
           event={event}
           initialJoined={joined}
           compact
+          showGroupChat={joined}
           callbackUrl={`/community/${event.id}`}
         />
       </div>

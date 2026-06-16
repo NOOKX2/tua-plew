@@ -99,6 +99,28 @@ export default async function CommunityJoinWelcome({
       </section>
 
       <div className="mx-auto min-w-0 max-w-7xl space-y-10 px-4 py-10 sm:px-8 lg:px-10">
+        <section className="overflow-hidden rounded-[1.5rem] border border-emerald-200/70 bg-white shadow-sm">
+          <div className="border-b border-emerald-100 px-6 py-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-600">
+              {t("community.social.chat.groupTitle")}
+            </p>
+            <h2 className="mt-1 text-xl font-bold text-zinc-900">
+              {event.title}
+            </h2>
+            <p className="mt-2 text-sm text-zinc-500">
+              {t("community.social.chat.groupSubtitle")}
+            </p>
+          </div>
+          <div className="px-6 py-5">
+            <Link
+              href={`/community/${event.id}/chat`}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-zinc-800"
+            >
+              💬 {t("community.social.chat.openGroup")}
+            </Link>
+          </div>
+        </section>
+
         <section className="min-w-0 overflow-hidden rounded-[1.5rem] border border-emerald-200/80 bg-gradient-to-br from-emerald-50 via-white to-white shadow-sm">
           <div className="border-b border-emerald-100/80 px-4 py-5 sm:px-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-600">

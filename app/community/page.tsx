@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CommunityList from "@/components/CommunityList";
+import CommunitySocialNav from "@/components/CommunitySocialNav";
 import { auth } from "@/auth";
 import { getUserEnrolledEventIds } from "@/lib/community-enrollments";
 import { getCommunityEvents } from "@/lib/community.server";
@@ -36,6 +37,8 @@ export default async function CommunityPage() {
           {t("community.subtitle")}
         </p>
       </div>
+
+      <CommunitySocialNav />
 
       <CommunityList events={events} enrolledEventIds={enrolledEventIds} />
     </main>

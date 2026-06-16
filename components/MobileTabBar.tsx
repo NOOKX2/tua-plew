@@ -43,6 +43,25 @@ function CommunityIcon() {
   );
 }
 
+function ChatIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      className="h-5 w-5"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 10h8M8 14h5M21 12c0 3.866-3.582 7-8 7-.847 0-1.658-.12-2.4-.34L5 20l1.34-4.6A6.96 6.96 0 015 12c0-3.866 3.582-7 8-7s8 3.134 8 7z"
+      />
+    </svg>
+  );
+}
+
 function CampaignIcon() {
   return (
     <svg
@@ -81,7 +100,13 @@ function RentalIcon() {
   );
 }
 
-const icons = [HomeIcon, CommunityIcon, CampaignIcon, RentalIcon] as const;
+const icons = [
+  HomeIcon,
+  CommunityIcon,
+  ChatIcon,
+  CampaignIcon,
+  RentalIcon,
+] as const;
 
 export default function MobileTabBar() {
   const pathname = usePathname();
@@ -115,7 +140,7 @@ export default function MobileTabBar() {
                 }`}
               />
               <Icon />
-              <span className="max-w-full truncate text-[9px] font-semibold uppercase tracking-wide sm:text-[10px]">
+              <span className="max-w-full truncate text-[8px] font-semibold uppercase tracking-wide sm:text-[9px]">
                 {t(item.messageKey)}
               </span>
             </Link>

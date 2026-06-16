@@ -16,6 +16,7 @@ type Props = {
   event: CommunityEvent;
   initialJoined?: boolean;
   compact?: boolean;
+  showGroupChat?: boolean;
   variant?: "default" | "premium";
   callbackUrl?: string;
   redirectOnJoin?: boolean;
@@ -27,6 +28,7 @@ export default function CommunityJoinButton({
   event,
   initialJoined = false,
   compact = false,
+  showGroupChat = false,
   variant = "default",
   callbackUrl,
   redirectOnJoin = true,
@@ -137,35 +139,69 @@ export default function CommunityJoinButton({
     );
   }
 
+  const compactActionClass =
+    "inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 transition-colors hover:bg-emerald-100";
+
   if (joined) {
-    return (
-      <div className={compact ? "space-y-2" : "space-y-2"}>
-        <div className={compact ? "space-y-2" : "space-y-2"}>
-          <Link
-            href={`/community/${event.id}/welcome`}
-            onClick={compact ? (e) => e.stopPropagation() : undefined}
-            className={joinedClass}
-          >
-            <span aria-hidden>✓</span>
-            {compact ? t("community.viewPerks") : t("community.viewPerks")}
-          </Link>
+    if (compact) {
+      return (
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            {showGroupChat && (
+              <Link
+                href={`/community/${event.id}/chat`}
+                onClick={(e) => e.stopPropagation()}
+                className={compactActionClass}
+              >
+                <span aria-hidden>💬</span>
+                {t("community.social.chat.openGroupShort")}
+              </Link>
+            )}
+            <Link
+              href={`/community/${event.id}/welcome`}
+              onClick={(e) => e.stopPropagation()}
+              className={`${compactActionClass} ${showGroupChat ? "" : "flex-1"}`}
+            >
+              <span aria-hidden>✓</span>
+              {t("community.viewPerksShort")}
+            </Link>
+          </div>
           <button
             type="button"
             disabled={leaving}
             onClick={(e) => {
-              if (compact) e.stopPropagation();
+              e.stopPropagation();
               handleLeave();
             }}
+            className="w-full py-1 text-center text-xs font-medium text-zinc-400 transition-colors hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {leaving ? t("community.leaving") : t("community.leave")}
+          </button>
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-2">
+        <div className="space-y-2">
+          <Link
+            href={`/community/${event.id}/welcome`}
+            className={joinedClass}
+          >
+            <span aria-hidden>✓</span>
+            {t("community.viewPerks")}
+          </Link>
+          <button
+            type="button"
+            disabled={leaving}
+            onClick={handleLeave}
             className={leaveClass}
           >
             {leaving ? t("community.leaving") : t("community.leave")}
           </button>
         </div>
-        {error && (
-          <p className={`text-xs text-red-600 ${compact ? "mt-1" : ""}`}>
-            {error}
-          </p>
-        )}
+        {error && <p className="text-xs text-red-600">{error}</p>}
       </div>
     );
   }

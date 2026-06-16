@@ -3,12 +3,11 @@ import { notFound, redirect } from "next/navigation";
 import CommunityJoinWelcome from "@/components/CommunityJoinWelcome";
 import { auth } from "@/auth";
 import { isUserEnrolledInEvent } from "@/lib/community-enrollments";
-import { getCommunityEventByIdAsync } from "@/lib/community.server";
+import { getCommunityEventByIdAsync, getCommunityEventIds } from "@/lib/community.server";
 import { getLocalizedEventJoinPerks } from "@/lib/event-perks.server";
 import { getLocale, getTranslator } from "@/lib/i18n/server";
 import { getRentalLocations } from "@/lib/locations.server";
 import { getProducts } from "@/lib/products.server";
-import { getCommunityEventIds } from "@/lib/community.server";
 
 type Props = {
   params: Promise<{ id: string }>;

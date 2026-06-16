@@ -176,3 +176,53 @@ export type CampaignProgress = {
   percent: number;
   complete: boolean;
 };
+
+export type UserProfile = {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+};
+
+export type FriendshipStatus = "pending" | "accepted" | "blocked";
+
+export type FriendshipView = {
+  id: string;
+  user: UserProfile;
+  status: FriendshipStatus;
+  direction: "incoming" | "outgoing" | "friend";
+  createdAt: string;
+};
+
+export type ChatMessage = {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderImage?: string;
+  body: string;
+  createdAt: string;
+};
+
+export type DirectConversationSummary = {
+  id: string;
+  otherUser: UserProfile;
+  lastMessage?: string;
+  lastMessageAt?: string;
+};
+
+export type ChatInboxKind = "direct" | "event";
+
+export type ChatInboxItem = {
+  id: string;
+  kind: ChatInboxKind;
+  title: string;
+  image?: string;
+  lastMessage?: string;
+  lastMessageAt: string;
+  href: string;
+};
+
+export type EventParticipant = UserProfile & {
+  isFriend: boolean;
+  friendshipStatus?: FriendshipStatus;
+};

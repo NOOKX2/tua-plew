@@ -5,6 +5,10 @@ import { connectDB } from "@/lib/mongoose";
 import { Account, User } from "@/lib/models";
 import { verifyPassword } from "@/lib/password";
 
+function isMongoObjectId(value: string) {
+  return /^[a-f\d]{24}$/i.test(value);
+}
+
 // Vercel/production must not use a localhost AUTH_URL — it breaks OAuth redirect_uri
 // and can make sign-in appear to "bounce" away from /login.
 if (
@@ -96,9 +100,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     async jwt({ token, user, account, profile }) {
-      if (user?.id) {
-        token.sub = user.id;
-      } else if (account?.provider === "google") {
+      if (account?.provider === "google") {
         const email =
           typeof profile?.email === "string"
             ? profile.email.toLowerCase()
@@ -109,6 +111,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const dbUser = await User.findOne({ email });
           if (dbUser) token.sub = dbUser._id.toString();
         }
+      } else if (user?.id) {
+        token.sub = user.id;
+      } else if (
+        typeof token.sub === "string" &&
+        !isMongoObjectId(token.sub) &&
+        typeof token.email === "string"
+      ) {
+        await connectDB();
+        const dbUser = await User.findOne({
+          email: token.email.toLowerCase(),
+        });
+        if (dbUser) token.sub = dbUser._id.toString();
       }
       return token;
     },

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { CommunityEvent, Product, RentalLocation } from "@/lib/types";
+import type { CommunityEvent, EventParticipant, Product, RentalLocation } from "@/lib/types";
 import { ACTIVITY_EMOJI, ACTIVITY_GRADIENT } from "@/lib/community";
 import { getAggregatedProductInventory, getStockTotal } from "@/lib/locations";
 import { getProductById } from "@/lib/products";
@@ -17,6 +17,7 @@ import {
   getDifficultyLabel,
 } from "@/lib/i18n/labels";
 import CommunityJoinButton from "./CommunityJoinButton";
+import EventParticipantsPanel from "./EventParticipantsPanel";
 import StockBadge from "./StockBadge";
 
 type Props = {
@@ -25,6 +26,8 @@ type Props = {
   locations: RentalLocation[];
   products: Product[];
   joined?: boolean;
+  participants?: EventParticipant[];
+  currentUserId?: string | null;
 };
 
 function DetailBlock({
@@ -56,6 +59,8 @@ export default function CommunityDetail({
   locations,
   products,
   joined = false,
+  participants = [],
+  currentUserId = null,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -148,9 +153,12 @@ export default function CommunityDetail({
               </p>
             </div>
 
-            <div className="rounded-2xl bg-white px-5 py-4 shadow-xl shadow-zinc-900/8 ring-1 ring-zinc-200/80">
+            <Link
+              href={`/community/${event.id}/participants`}
+              className="block rounded-2xl bg-white px-5 py-4 shadow-xl shadow-zinc-900/8 ring-1 ring-zinc-200/80 transition-all hover:-translate-y-0.5 hover:ring-emerald-300"
+            >
               <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
-                {t("community.participants")}
+                {t("community.participants.label")}
               </p>
               <p className="mt-1.5 text-lg font-bold tracking-tight text-zinc-900">
                 {participantCount}
@@ -169,7 +177,10 @@ export default function CommunityDetail({
                   {t("common.spotsLeft", { count: remaining })}
                 </p>
               )}
-            </div>
+              <p className="mt-2 text-xs font-semibold text-emerald-600">
+                {t("community.participants.viewAll")} →
+              </p>
+            </Link>
 
             <div className="rounded-2xl bg-zinc-950 px-5 py-4 shadow-xl shadow-zinc-900/20">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
@@ -204,6 +215,57 @@ export default function CommunityDetail({
                 ))}
               </div>
             </DetailBlock>
+
+            <section className="overflow-hidden rounded-[1.5rem] border border-emerald-200/70 bg-gradient-to-br from-emerald-50 to-white shadow-sm">
+              <div className="border-b border-emerald-100 px-6 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-600">
+                  {t("community.social.chat.groupTitle")}
+                </p>
+                <p className="mt-1 text-sm text-zinc-600">
+                  {joined
+                    ? t("community.social.chat.groupSubtitle")
+                    : t("community.social.chat.joinToChat")}
+                </p>
+                {joined && (
+                  <p className="mt-2 text-xs font-medium text-emerald-700">
+                    {t("community.social.chat.memberCount", {
+                      count: participantCount,
+                    })}
+                  </p>
+                )}
+              </div>
+              <div className="px-6 py-5">
+                {joined ? (
+                  <Link
+                    href={`/community/${event.id}/chat`}
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-zinc-800"
+                  >
+                    💬 {t("community.social.chat.openGroup")}
+                  </Link>
+                ) : (
+                  <p className="text-center text-sm text-zinc-500">
+                    {t("community.social.chat.joinToChat")}
+                  </p>
+                )}
+              </div>
+            </section>
+
+            {joined && currentUserId && (
+              <div className="lg:hidden">
+                <DetailBlock title={t("community.social.participants.title")}>
+                  <EventParticipantsPanel
+                    participants={participants}
+                    currentUserId={currentUserId}
+                  />
+                  <Link
+                    href={`/community/${event.id}/participants`}
+                    className="mt-4 flex w-full items-center justify-center rounded-full border border-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300 hover:text-emerald-700"
+                  >
+                    {t("community.participants.viewAll")} →
+                  </Link>
+                </DetailBlock>
+              </div>
+            )}
 
             <DetailBlock title={t("community.venue")}>
               <p className="text-lg font-bold tracking-tight text-zinc-900">
@@ -326,8 +388,33 @@ export default function CommunityDetail({
                   onLeft={setParticipantCount}
                   variant="premium"
                 />
+                {joined && (
+                  <Link
+                    href={`/community/${event.id}/chat`}
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/20"
+                  >
+                    {t("community.social.chat.openGroup")}
+                  </Link>
+                )}
               </div>
             </div>
+
+            {joined && currentUserId && (
+              <div className="hidden lg:block">
+                <DetailBlock title={t("community.social.participants.title")}>
+                  <EventParticipantsPanel
+                    participants={participants}
+                    currentUserId={currentUserId}
+                  />
+                  <Link
+                    href={`/community/${event.id}/participants`}
+                    className="mt-4 flex w-full items-center justify-center rounded-full border border-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300 hover:text-emerald-700"
+                  >
+                    {t("community.participants.viewAll")} →
+                  </Link>
+                </DetailBlock>
+              </div>
+            )}
 
             {location && (
               <div className="overflow-hidden rounded-[1.5rem] border border-emerald-200/60 bg-gradient-to-br from-emerald-50 to-white p-6 shadow-sm">
