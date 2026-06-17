@@ -4,13 +4,15 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useState,
   useTransition,
 } from "react";
-import { useRouter } from "next/navigation";
-import type { Locale } from "./config";
+import { DEFAULT_LOCALE, type Locale } from "./config";
+import { readLocaleCookie } from "./read-locale-cookie";
 import type { Messages } from "./translate";
-import { createTranslator, t as translate } from "./translate";
+import { createTranslator, getMessages, t as translate } from "./translate";
 import { setLocaleAction } from "@/lib/actions/locale";
 
 type LocaleContextValue = {
@@ -24,16 +26,18 @@ type LocaleContextValue = {
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({
-  locale,
-  messages,
   children,
 }: {
-  locale: Locale;
-  messages: Messages;
   children: React.ReactNode;
 }) {
-  const router = useRouter();
+  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setLocaleState(readLocaleCookie());
+  }, []);
+
+  const messages = useMemo(() => getMessages(locale), [locale]);
 
   const translator = useMemo(
     () => createTranslator(locale),
@@ -45,10 +49,10 @@ export function LocaleProvider({
       if (next === locale) return;
       startTransition(async () => {
         await setLocaleAction(next);
-        router.refresh();
+        setLocaleState(next);
       });
     },
-    [locale, router],
+    [locale],
   );
 
   const value = useMemo(

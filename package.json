@@ -11,7 +11,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:seed": "bun --env-file=.env.local scripts/seed.ts"
+    "db:seed": "bun --env-file=.env.local scripts/seed.ts",
+    "db:promote-admin": "bun --env-file=.env.local scripts/promote-admin.ts",
+    "db:migrate-user-roles": "bun --env-file=.env.local scripts/migrate-user-roles.ts"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.8",
@@ -30,6 +32,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "sharp": "^0.35.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

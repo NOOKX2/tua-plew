@@ -1,21 +1,21 @@
+"use client";
+
 import Link from "next/link";
 import type { CommunityEvent } from "@/lib/types";
 import { getUpcomingEvents } from "@/lib/community";
-import { getTranslator } from "@/lib/i18n/server";
+import { useTranslations } from "@/lib/i18n/client";
 import CommunityCard from "./CommunityCard";
+import { useUser } from "./UserProvider";
 
 type Props = {
   events: CommunityEvent[];
-  enrolledEventIds: string[];
 };
 
 const HOME_EVENT_LIMIT = 6;
 
-export default async function HomeCommunitySection({
-  events,
-  enrolledEventIds,
-}: Props) {
-  const t = await getTranslator();
+export default function HomeCommunitySection({ events }: Props) {
+  const t = useTranslations();
+  const { enrolledEventIds, isAuthenticated } = useUser();
   const upcoming = getUpcomingEvents(events).slice(0, HOME_EVENT_LIMIT);
 
   return (
@@ -37,6 +37,7 @@ export default async function HomeCommunitySection({
         </div>
         <Link
           href="/community"
+          prefetch
           className="inline-flex shrink-0 items-center rounded-full bg-blue-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-400"
         >
           {t("home.viewAllEvents")} →
@@ -54,6 +55,7 @@ export default async function HomeCommunitySection({
               key={event.id}
               event={event}
               joined={enrolledEventIds.includes(event.id)}
+              isAuthenticated={isAuthenticated}
             />
           ))}
         </div>

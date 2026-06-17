@@ -1,8 +1,8 @@
 import "server-only";
 
 import { auth } from "@/auth";
-import { getUserRentalReservations } from "@/lib/rentals";
-import { isReservationActive } from "@/lib/rental-status";
+import { connectDB } from "@/lib/mongoose";
+import { RentalReservation as RentalReservationModel } from "@/lib/models";
 
 export async function getActiveRentalCountForSession(): Promise<number> {
   const session = await auth();
@@ -11,6 +11,10 @@ export async function getActiveRentalCountForSession(): Promise<number> {
     return 0;
   }
 
-  const rentals = await getUserRentalReservations(session.user.id);
-  return rentals.filter(isReservationActive).length;
+  await connectDB();
+  return RentalReservationModel.countDocuments({
+    userId: session.user.id,
+    status: "pending_pickup",
+    expiresAt: { $gt: new Date() },
+  });
 }

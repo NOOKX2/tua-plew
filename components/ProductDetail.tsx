@@ -17,6 +17,7 @@ import RentalBookingPanel from "./RentalBookingPanel";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
 import StarRating from "./StarRating";
+import { useUser } from "./UserProvider";
 
 type Props = {
   product: Product;
@@ -60,6 +61,7 @@ export default function ProductDetail({
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const { isAuthenticated } = useUser();
   const availability = getLocationsWithProduct(product.id, locations);
   const aggregatedInventory = getAggregatedProductInventory(
     product.id,
@@ -394,6 +396,7 @@ export default function ProductDetail({
               reviews={reviews}
               ratingSummary={ratingSummary}
               hasReviewed={hasReviewed}
+              isAuthenticated={isAuthenticated}
             />
           </div>
         )}

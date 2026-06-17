@@ -6,6 +6,7 @@ import { Shirt } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
   isAuthRoute,
+  isAdminRoute,
   mainNavItems,
   type MainNavItem,
   type NavMessageKey,
@@ -50,25 +51,6 @@ function CommunityIcon({ className = "h-5 w-5" }: { className?: string }) {
   );
 }
 
-function ChatIcon({ className = "h-5 w-5" }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      className={className}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M8 10h8M8 14h5M21 12c0 3.866-3.582 7-8 7-.847 0-1.658-.12-2.4-.34L5 20l1.34-4.6A6.96 6.96 0 015 12c0-3.866 3.582-7 8-7s8 3.134 8 7z"
-      />
-    </svg>
-  );
-}
-
 function CampaignIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg
@@ -108,30 +90,30 @@ function MemberIcon({ className = "h-5 w-5" }: { className?: string }) {
 }
 
 const iconByKey: Record<
-  NavMessageKey,
+  Exclude<NavMessageKey, "nav.rental">,
   ComponentType<{ className?: string }>
 > = {
   "nav.home": HomeIcon,
   "nav.community": CommunityIcon,
-  "nav.chat": ChatIcon,
   "nav.campaigns": CampaignIcon,
-  "nav.rental": Shirt,
   "nav.member": MemberIcon,
 };
 
 function TabLink({ item, active }: { item: MainNavItem; active: boolean }) {
   const t = useTranslations();
-  const Icon = iconByKey[item.messageKey];
+  const Icon =
+    iconByKey[item.messageKey as Exclude<NavMessageKey, "nav.rental">];
 
   return (
     <Link
       href={item.href}
+      prefetch
       className={`flex flex-1 flex-col items-center justify-center gap-0.5 px-1 py-2 transition-colors ${
         active ? "text-blue-600" : "text-zinc-400"
       }`}
     >
       <Icon />
-      <span className="max-w-full truncate text-[9px] font-semibold">
+      <span className="max-w-full truncate text-xs font-semibold">
         {t(item.messageKey)}
       </span>
     </Link>
@@ -142,7 +124,7 @@ export default function MobileTabBar() {
   const pathname = usePathname();
   const t = useTranslations();
 
-  if (isAuthRoute(pathname)) {
+  if (isAuthRoute(pathname) || isAdminRoute(pathname)) {
     return null;
   }
 
@@ -174,6 +156,7 @@ export default function MobileTabBar() {
           <div className="relative flex w-20 shrink-0 flex-col items-center">
             <Link
               href={centerItem.href}
+              prefetch
               aria-label={t(centerItem.messageKey)}
               aria-current={centerActive ? "page" : undefined}
               className={`absolute -top-7 flex h-16 w-16 items-center justify-center rounded-full shadow-lg transition-transform active:scale-95 ${
@@ -185,8 +168,8 @@ export default function MobileTabBar() {
               <Shirt className="h-9 w-9" strokeWidth={2.25} aria-hidden />
             </Link>
             <span
-              className={`pb-2 pt-9 text-[9px] font-bold ${
-                centerActive ? "text-amber-600" : "text-zinc-500"
+              className={`pb-2 pt-9 text-xs font-bold ${
+                centerActive ? "text-blue-600" : "text-zinc-400"
               }`}
             >
               {t(centerItem.messageKey)}

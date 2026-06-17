@@ -40,7 +40,12 @@ type EventOverride = Partial<
 type CampaignOverride = Partial<
   Pick<
     Campaign,
-    "title" | "shortDescription" | "description" | "terms"
+    | "title"
+    | "shortDescription"
+    | "description"
+    | "terms"
+    | "rewardLabel"
+    | "howToClaimSteps"
   >
 >;
 
@@ -442,6 +447,28 @@ export const catalogEn = {
         "Must return on time for a rental to count",
         "5% discount valid once within 30 days after unlocking",
         "Cannot be combined with other promotions",
+        "Tua Plew reserves the right to change terms without notice",
+      ],
+    },
+    "rent-10-gaming-reward": {
+      title: "Rent 10 times, get an in-game code",
+      shortDescription:
+        "Complete 10 sportswear rentals and receive an in-game code for ROV or Roblox",
+      description:
+        "A Tua Plew member perk for regular sportswear renters. After 10 successful rent-and-return cycles during the campaign period, receive one in-game code — choose ROV (Realm of Valor) or Roblox. Codes are delivered via the app or your registered email.",
+      rewardLabel: "In-game code",
+      howToClaimSteps: [
+        "Join the campaign and rent sportswear through Tua Plew",
+        "Return on time — each completed rental counts as one",
+        "After 10 rentals, choose an in-game code for ROV or Roblox",
+      ],
+      terms: [
+        "Counts only successful sportswear returns during the campaign period",
+        "One code per reward — choose ROV or Roblox",
+        "In-game codes are sent via the app or email within 7 business days after qualifying",
+        "Codes expire per each game's terms and cannot be exchanged for cash",
+        "Claim within 30 days after completing 10 rentals",
+        "Rewards and codes are non-transferable",
         "Tua Plew reserves the right to change terms without notice",
       ],
     },

@@ -1,31 +1,19 @@
 import type { Metadata } from "next";
 import CampaignList from "@/components/CampaignList";
-import { auth } from "@/auth";
-import { getUserEnrolledCampaignIds } from "@/lib/campaign-enrollments";
-import { getCampaignProgressMapForUser } from "@/lib/campaign-progress";
+import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getCampaigns } from "@/lib/campaigns.server";
-import { getTranslator } from "@/lib/i18n/server";
+import { staticT } from "@/lib/i18n/static";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslator();
-  return {
-    title: t("meta.campaignsTitle"),
-    description: t("meta.campaignsDescription"),
-  };
-}
+export const revalidate = CATALOG_PAGE_REVALIDATE;
+
+export const metadata: Metadata = {
+  title: staticT("meta.campaignsTitle"),
+  description: staticT("meta.campaignsDescription"),
+};
 
 export default async function CampaignsPage() {
-  const session = await auth();
   const campaigns = await getCampaigns();
-  const [t, enrolledCampaignIds, progressByCampaignId] = await Promise.all([
-    getTranslator(),
-    session?.user?.id
-      ? getUserEnrolledCampaignIds(session.user.id)
-      : Promise.resolve([] as string[]),
-    session?.user?.id
-      ? getCampaignProgressMapForUser(session.user.id, campaigns)
-      : Promise.resolve({}),
-  ]);
+  const t = staticT;
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
@@ -41,11 +29,7 @@ export default async function CampaignsPage() {
         </p>
       </div>
 
-      <CampaignList
-        campaigns={campaigns}
-        enrolledCampaignIds={enrolledCampaignIds}
-        progressByCampaignId={progressByCampaignId}
-      />
+      <CampaignList campaigns={campaigns} />
     </main>
   );
 }

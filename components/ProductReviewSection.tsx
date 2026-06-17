@@ -10,6 +10,7 @@ type Props = {
   reviews: ProductReview[];
   ratingSummary: ProductRatingSummary;
   hasReviewed?: boolean;
+  isAuthenticated?: boolean;
 };
 
 function formatReviewDate(iso: string, locale: string) {
@@ -25,6 +26,7 @@ export default function ProductReviewSection({
   reviews,
   ratingSummary,
   hasReviewed = false,
+  isAuthenticated = false,
 }: Props) {
   const t = useTranslations();
   const { locale } = useLocale();
@@ -52,6 +54,7 @@ export default function ProductReviewSection({
         <ProductReviewForm
           productId={productId}
           hasReviewed={hasReviewed}
+          isAuthenticated={isAuthenticated}
         />
 
         {reviews.length === 0 ? (

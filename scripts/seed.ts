@@ -128,6 +128,8 @@ async function main() {
         endDate: campaign.endDate,
         terms: campaign.terms,
         featured: campaign.featured ?? false,
+        rewardLabel: campaign.rewardLabel,
+        howToClaimSteps: campaign.howToClaimSteps,
       },
       { upsert: true, new: true },
     );

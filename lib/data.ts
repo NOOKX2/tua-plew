@@ -20,8 +20,7 @@ import {
   Product as ProductModel,
   RentalLocation as RentalLocationModel,
 } from "./models";
-import type { Locale } from "./i18n/config";
-import { getLocale } from "./i18n/server";
+import { DEFAULT_LOCALE, type Locale } from "./i18n/config";
 import {
   localizeCampaign,
   localizeCommunityEvent,
@@ -102,6 +101,8 @@ type CampaignRow = {
   endDate: string;
   terms: string[];
   featured: boolean;
+  rewardLabel?: string | null;
+  howToClaimSteps?: string[] | null;
 };
 
 const catalogCache = {
@@ -201,6 +202,8 @@ function mapCampaign(row: CampaignRow): Campaign {
     endDate: row.endDate,
     terms: row.terms,
     featured: row.featured || undefined,
+    rewardLabel: row.rewardLabel ?? undefined,
+    howToClaimSteps: row.howToClaimSteps ?? undefined,
   };
 }
 
@@ -318,17 +321,15 @@ const loadCampaignById = unstable_cache(
   { ...catalogCache, tags: ["catalog-campaigns"] },
 );
 
-export async function fetchProducts(locale?: Locale): Promise<Product[]> {
-  const resolvedLocale = locale ?? (await getLocale());
-  return loadProducts(resolvedLocale);
+export async function fetchProducts(locale: Locale = DEFAULT_LOCALE): Promise<Product[]> {
+  return loadProducts(locale);
 }
 
 export async function fetchProductById(
   id: string,
-  locale?: Locale,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<Product | undefined> {
-  const resolvedLocale = locale ?? (await getLocale());
-  return loadProductById(id, resolvedLocale);
+  return loadProductById(id, locale);
 }
 
 export async function fetchProductIds(): Promise<string[]> {
@@ -337,15 +338,15 @@ export async function fetchProductIds(): Promise<string[]> {
   return rows.map((row) => row._id as string);
 }
 
-export async function fetchLocations(locale?: Locale): Promise<RentalLocation[]> {
-  const resolvedLocale = locale ?? (await getLocale());
-  return loadLocations(resolvedLocale);
+export async function fetchLocations(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<RentalLocation[]> {
+  return loadLocations(locale);
 }
 
 export async function fetchLocationsFresh(
-  locale?: Locale,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<RentalLocation[]> {
-  const resolvedLocale = locale ?? (await getLocale());
   await connectDB();
 
   const [rows, stocks] = await Promise.all([
@@ -357,32 +358,29 @@ export async function fetchLocationsFresh(
   return rows.map((row) =>
     localizeLocation(
       mapLocationRow(row, stocksByLocation.get(row._id) ?? []),
-      resolvedLocale,
+      locale,
     ),
   );
 }
 
 export async function fetchLocationById(
   id: string,
-  locale?: Locale,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<RentalLocation | undefined> {
-  const resolvedLocale = locale ?? (await getLocale());
-  return loadLocationById(id, resolvedLocale);
+  return loadLocationById(id, locale);
 }
 
 export async function fetchCommunityEvents(
-  locale?: Locale,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<CommunityEvent[]> {
-  const resolvedLocale = locale ?? (await getLocale());
-  return loadCommunityEvents(resolvedLocale);
+  return loadCommunityEvents(locale);
 }
 
 export async function fetchCommunityEventById(
   id: string,
-  locale?: Locale,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<CommunityEvent | undefined> {
-  const resolvedLocale = locale ?? (await getLocale());
-  return loadCommunityEventById(id, resolvedLocale);
+  return loadCommunityEventById(id, locale);
 }
 
 export async function fetchCommunityEventIds(): Promise<string[]> {
@@ -391,17 +389,15 @@ export async function fetchCommunityEventIds(): Promise<string[]> {
   return rows.map((row) => row._id as string);
 }
 
-export async function fetchCampaigns(locale?: Locale): Promise<Campaign[]> {
-  const resolvedLocale = locale ?? (await getLocale());
-  return loadCampaigns(resolvedLocale);
+export async function fetchCampaigns(locale: Locale = DEFAULT_LOCALE): Promise<Campaign[]> {
+  return loadCampaigns(locale);
 }
 
 export async function fetchCampaignById(
   id: string,
-  locale?: Locale,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<Campaign | undefined> {
-  const resolvedLocale = locale ?? (await getLocale());
-  return loadCampaignById(id, resolvedLocale);
+  return loadCampaignById(id, locale);
 }
 
 export async function fetchCampaignIds(): Promise<string[]> {

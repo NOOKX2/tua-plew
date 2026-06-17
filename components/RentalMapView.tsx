@@ -33,6 +33,7 @@ type Props = {
   initialLocationId?: string | null;
   locations: RentalLocation[];
   products: Product[];
+  isAuthenticated?: boolean;
 };
 
 export default function RentalMapView({
@@ -40,6 +41,7 @@ export default function RentalMapView({
   initialLocationId = null,
   locations,
   products,
+  isAuthenticated = false,
 }: Props) {
   const t = useTranslations();
   const [selectedId, setSelectedId] = useState<string | null>(
@@ -219,6 +221,7 @@ export default function RentalMapView({
           }
           onCloseProduct={clearProductExpansion}
           hideEmbeddedQuickView
+          isAuthenticated={isAuthenticated}
         />
       ))}
     </>
@@ -344,6 +347,7 @@ export default function RentalMapView({
           stock={expandedStock}
           location={expandedLocation}
           onClose={clearProductExpansion}
+          isAuthenticated={isAuthenticated}
         />
       )}
     </div>

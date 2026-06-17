@@ -1,8 +1,14 @@
 import "server-only";
 
 import crypto from "crypto";
-import type { RentalReservation, RentalStatus } from "./types";
+import type { RentalPaymentMethod, RentalReservation, RentalStatus } from "./types";
 import { isReservationActive } from "./rental-status";
+import {
+  debitRentalTokens,
+  getRentalTokenBalance,
+  refundRentalTokensForReservation,
+  resolveRentalTokenPayment,
+} from "./rental-tokens";
 import { connectDB } from "./mongoose";
 import {
   LocationStock,
@@ -23,6 +29,8 @@ type RentalRow = {
   status: RentalStatus;
   pickupCode: string;
   price: number;
+  paymentMethod?: RentalPaymentMethod;
+  tokensSpent?: number;
   productName: string;
   locationName: string;
   locationAddress: string;
@@ -42,6 +50,8 @@ function mapRental(row: RentalRow): RentalReservation {
     status: row.status,
     pickupCode: row.pickupCode,
     price: row.price,
+    paymentMethod: row.paymentMethod ?? "cash",
+    tokensSpent: row.tokensSpent ?? 0,
     productName: row.productName,
     locationName: row.locationName,
     locationAddress: row.locationAddress,
@@ -91,6 +101,16 @@ async function incrementStock(
   );
 }
 
+async function refundTokensIfNeeded(row: RentalRow): Promise<void> {
+  if (!row.tokensSpent || row.tokensSpent <= 0) return;
+
+  await refundRentalTokensForReservation({
+    userId: row.userId,
+    tokensSpent: row.tokensSpent,
+    rentalId: row._id.toString(),
+  });
+}
+
 export async function expirePendingReservations(): Promise<number> {
   await connectDB();
   const now = new Date();
@@ -101,6 +121,7 @@ export async function expirePendingReservations(): Promise<number> {
 
   for (const row of expired) {
     await incrementStock(row.locationId, row.productId, row.size);
+    await refundTokensIfNeeded(row);
     await RentalReservationModel.updateOne(
       { _id: row._id },
       { $set: { status: "expired" } },
@@ -115,9 +136,13 @@ export async function createRentalReservation(input: {
   productId: string;
   locationId: string;
   size: string;
+  paymentMethod?: RentalPaymentMethod;
+  tokensToUse?: number;
 }): Promise<RentalReservation> {
   await connectDB();
   await expirePendingReservations();
+
+  const paymentMethod = input.paymentMethod ?? "cash";
 
   const pendingCount = await RentalReservationModel.countDocuments({
     userId: input.userId,
@@ -137,6 +162,14 @@ export async function createRentalReservation(input: {
   if (!product) throw new Error("PRODUCT_NOT_FOUND");
   if (!location) throw new Error("LOCATION_NOT_FOUND");
   if (!product.sizes.includes(input.size)) throw new Error("INVALID_SIZE");
+
+  const balance = await getRentalTokenBalance(input.userId);
+  const tokensSpent = resolveRentalTokenPayment({
+    paymentMethod,
+    pricePerRental: product.pricePerRental,
+    tokensToUse: input.tokensToUse,
+    balance,
+  });
 
   const reservedAt = new Date();
   const expiresAt = new Date(reservedAt.getTime() + PICKUP_TTL_MS);
@@ -160,12 +193,28 @@ export async function createRentalReservation(input: {
           status: "pending_pickup",
           pickupCode,
           price: product.pricePerRental,
+          paymentMethod,
+          tokensSpent,
           productName: product.name,
           locationName: location.name,
           locationAddress: location.address,
           reservedAt,
           expiresAt,
         });
+
+        if (tokensSpent > 0) {
+          try {
+            await debitRentalTokens({
+              userId: input.userId,
+              amount: tokensSpent,
+              rentalId: doc._id.toString(),
+            });
+          } catch (error) {
+            await RentalReservationModel.deleteOne({ _id: doc._id });
+            throw error;
+          }
+        }
+
         return mapRental(doc.toObject() as RentalRow);
       } catch (error) {
         if (
@@ -207,6 +256,7 @@ export async function cancelRentalReservation(
   await rental.save();
 
   await incrementStock(rental.locationId, rental.productId, rental.size);
+  await refundTokensIfNeeded(rental.toObject() as RentalRow);
 
   return mapRental(rental.toObject() as RentalRow);
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import type { Campaign } from "@/lib/types";
 import type { CampaignProgress } from "@/lib/types";
@@ -12,18 +11,21 @@ import {
   getCampaignTypeLabel,
 } from "@/lib/i18n/labels";
 import CampaignJoinButton from "./CampaignJoinButton";
+import CampaignCoverImage from "./CampaignCoverImage";
 import CampaignProgressBar from "./CampaignProgressBar";
 
 type Props = {
   campaign: Campaign;
   joined?: boolean;
   progress?: CampaignProgress | null;
+  isAuthenticated?: boolean;
 };
 
 export default function CampaignCard({
   campaign,
   joined = false,
   progress = null,
+  isAuthenticated = false,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -35,16 +37,16 @@ export default function CampaignCard({
         className="group flex flex-1 flex-col"
       >
         <div className="relative aspect-[16/10] w-full overflow-hidden">
-          <Image
-            src={campaign.image}
-            alt={campaign.title}
-            fill
+          <CampaignCoverImage
+            campaign={campaign}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            imageClassName="object-cover transition-transform duration-300 group-hover:scale-105"
+            variant="card"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/10" />
           <span className="absolute left-3 top-3 rounded-full bg-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
-            {formatDiscount(campaign.discountPercent, locale, messages)}
+            {campaign.rewardLabel ??
+              formatDiscount(campaign.discountPercent, locale, messages)}
           </span>
           {joined && (
             <span className="absolute right-3 top-3 rounded-full bg-blue-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
@@ -88,9 +90,11 @@ export default function CampaignCard({
 
           <div className="mt-auto flex items-center justify-between">
             <span className="text-xs text-zinc-500">
-              {campaign.campaignType === "loyalty"
-                ? t("campaign.loyaltyCta")
-                : t("campaign.instantCta")}
+              {campaign.rewardLabel
+                ? t("campaign.rewardCta")
+                : campaign.campaignType === "loyalty"
+                  ? t("campaign.loyaltyCta")
+                  : t("campaign.instantCta")}
             </span>
             <span className="text-xs font-medium text-amber-600">
               {t("common.viewDetails")}
@@ -105,6 +109,7 @@ export default function CampaignCard({
           initialJoined={joined}
           compact
           callbackUrl={`/campaigns/${campaign.id}`}
+          isAuthenticated={isAuthenticated}
         />
       </div>
     </div>

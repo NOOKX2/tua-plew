@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import type { CommunityEvent } from "@/lib/types";
 import { isEventFull, isEventJoinable } from "@/lib/community";
 import {
@@ -22,6 +21,7 @@ type Props = {
   redirectOnJoin?: boolean;
   onJoined?: (participantCount: number) => void;
   onLeft?: (participantCount: number) => void;
+  isAuthenticated?: boolean;
 };
 
 export default function CommunityJoinButton({
@@ -34,10 +34,10 @@ export default function CommunityJoinButton({
   redirectOnJoin = true,
   onJoined,
   onLeft,
+  isAuthenticated = false,
 }: Props) {
   const t = useTranslations();
   const router = useRouter();
-  const { status } = useSession();
   const [joined, setJoined] = useState(initialJoined);
   const [loading, setLoading] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -119,15 +119,7 @@ export default function CommunityJoinButton({
     router.refresh();
   }
 
-  if (status === "loading") {
-    return (
-      <span className={`text-xs text-zinc-400 ${compact ? "" : "block"}`}>
-        {t("common.loading")}
-      </span>
-    );
-  }
-
-  if (status === "unauthenticated") {
+  if (!isAuthenticated) {
     return (
       <Link
         href={loginHref}

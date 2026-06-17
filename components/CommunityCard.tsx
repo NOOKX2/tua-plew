@@ -19,9 +19,15 @@ type Props = {
   event: CommunityEvent;
   compact?: boolean;
   joined?: boolean;
+  isAuthenticated?: boolean;
 };
 
-export default function CommunityCard({ event, compact = false, joined = false }: Props) {
+export default function CommunityCard({
+  event,
+  compact = false,
+  joined = false,
+  isAuthenticated = false,
+}: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
   const remaining = spotsLeft(event);
@@ -114,6 +120,7 @@ export default function CommunityCard({ event, compact = false, joined = false }
           compact
           showGroupChat={joined}
           callbackUrl={`/community/${event.id}`}
+          isAuthenticated={isAuthenticated}
         />
       </div>
     </div>

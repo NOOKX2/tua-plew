@@ -3,22 +3,25 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signInWithGoogleAction, signOutAction } from "@/lib/actions/auth-session";
+import type { AppSessionUser } from "@/lib/auth-session";
 import { useTranslations } from "@/lib/i18n/client";
 
 type Props = {
   variant?: "light" | "dark";
   initialActiveRentals?: number;
+  sessionUser?: AppSessionUser | null;
 };
 
 export default function AuthButton({
   variant = "dark",
   initialActiveRentals = 0,
+  sessionUser = null,
 }: Props) {
-  const { data: session, status } = useSession();
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [activeRentals, setActiveRentals] = useState(initialActiveRentals);
+  const [signingOut, setSigningOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const isLight = variant === "light";
 
@@ -50,17 +53,7 @@ export default function AuthButton({
     };
   }, [open]);
 
-  if (status === "loading") {
-    return (
-      <span
-        className={`text-xs ${isLight ? "text-blue-100" : "text-zinc-400"}`}
-      >
-        {t("common.loading")}
-      </span>
-    );
-  }
-
-  if (session?.user) {
+  if (sessionUser) {
     return (
       <div ref={menuRef} className="relative">
         <button
@@ -74,10 +67,10 @@ export default function AuthButton({
               : "hover:bg-zinc-100"
           }`}
         >
-          {session.user.image ? (
+          {sessionUser.image ? (
             <Image
-              src={session.user.image}
-              alt={session.user.name ?? t("common.user")}
+              src={sessionUser.image}
+              alt={sessionUser.name ?? t("common.user")}
               width={32}
               height={32}
               className={`rounded-full ${isLight ? "ring-2 ring-white/30" : "ring-2 ring-zinc-200"}`}
@@ -90,7 +83,7 @@ export default function AuthButton({
                   : "bg-blue-100 text-blue-700"
               }`}
             >
-              {(session.user.name ?? "U").charAt(0).toUpperCase()}
+              {(sessionUser.name ?? "U").charAt(0).toUpperCase()}
             </span>
           )}
           <div className="hidden text-left sm:block">
@@ -99,14 +92,14 @@ export default function AuthButton({
                 isLight ? "text-white" : "text-zinc-800"
               }`}
             >
-              {session.user.name}
+              {sessionUser.name}
             </p>
             <p
               className={`max-w-[120px] truncate text-[10px] ${
                 isLight ? "text-blue-100" : "text-zinc-500"
               }`}
             >
-              {session.user.email}
+              {sessionUser.email}
             </p>
           </div>
           <svg
@@ -132,10 +125,10 @@ export default function AuthButton({
           >
             <div className="border-b border-zinc-100 px-4 py-3 sm:hidden">
               <p className="truncate text-sm font-medium text-zinc-900">
-                {session.user.name}
+                {sessionUser.name}
               </p>
               <p className="truncate text-xs text-zinc-500">
-                {session.user.email}
+                {sessionUser.email}
               </p>
             </div>
             <Link
@@ -172,14 +165,38 @@ export default function AuthButton({
                 </span>
               )}
             </Link>
+            {sessionUser.role === "admin" ? (
+              <Link
+                href="/admin"
+                role="menuitem"
+                onClick={() => setOpen(false)}
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+              >
+                <svg
+                  className="h-4 w-4 text-zinc-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M11.983 1.907a1 1 0 00-1.966 0l-.757 2.55a7.002 7.002 0 00-2.637 1.529l-2.55-.757a1 1 0 00-1.257 1.257l.757 2.55a7.002 7.002 0 00-1.529 2.637l-2.55.757a1 1 0 000 1.966l2.55.757a7.002 7.002 0 001.529 2.637l-.757 2.55a1 1 0 001.257 1.257l2.55-.757a7.002 7.002 0 002.637 1.529l.757 2.55a1 1 0 001.966 0l.757-2.55a7.002 7.002 0 002.637-1.529l2.55.757a1 1 0 001.257-1.257l-.757-2.55a7.002 7.002 0 001.529-2.637l2.55-.757a1 1 0 000-1.966l-2.55-.757a7.002 7.002 0 00-1.529-2.637l.757-2.55zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                หลังบ้าน
+              </Link>
+            ) : null}
             <button
               type="button"
               role="menuitem"
-              onClick={() => {
+              disabled={signingOut}
+              onClick={async () => {
                 setOpen(false);
-                signOut();
+                setSigningOut(true);
+                await signOutAction();
               }}
-              className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+              className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60"
             >
               <svg
                 className="h-4 w-4 text-zinc-400"
@@ -228,14 +245,15 @@ export function GoogleSignInButton({
   const t = useTranslations();
 
   return (
-    <button
-      type="button"
-      onClick={() => signIn("google", { callbackUrl })}
-      className="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
-    >
-      <GoogleIcon />
-      {t("auth.loginWithGoogle")}
-    </button>
+    <form action={signInWithGoogleAction.bind(null, callbackUrl)}>
+      <button
+        type="submit"
+        className="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
+      >
+        <GoogleIcon />
+        {t("auth.loginWithGoogle")}
+      </button>
+    </form>
   );
 }
 

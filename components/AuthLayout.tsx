@@ -45,9 +45,9 @@ export default async function AuthLayout({ variant, children }: Props) {
         <div className="relative z-10 flex h-full w-full flex-col justify-between p-10 xl:p-14">
           <Link
             href="/"
-            className="inline-flex w-fit items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-lg font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
+            className="inline-flex w-fit shrink-0 text-2xl font-bold tracking-tight text-white sm:text-3xl"
           >
-            Tua Plew
+            Tua <span className="text-blue-300">Plew</span>
           </Link>
 
           <div className="max-w-lg">
@@ -66,19 +66,21 @@ export default async function AuthLayout({ variant, children }: Props) {
         </div>
       </aside>
 
-      <main className="flex flex-1 flex-col justify-center px-6 py-10 sm:px-10 lg:px-14 xl:px-20">
-        <div className="mx-auto w-full max-w-md">
+      <main className="flex flex-1 flex-col">
+        <header className="flex items-center justify-between gap-3 px-5 py-3.5 sm:px-8 lg:px-10">
           <Link
             href="/"
-            className="mb-8 inline-block text-lg font-bold text-blue-600 lg:hidden"
+            className="shrink-0 text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl lg:hidden"
           >
-            Tua Plew
+            Tua <span className="text-blue-600">Plew</span>
           </Link>
-
-          <div className="mb-6 flex justify-end lg:justify-start">
+          <div className="ml-auto flex shrink-0 items-center">
             <LanguageSwitcher />
           </div>
+        </header>
 
+        <div className="flex flex-1 flex-col justify-center px-6 pb-10 sm:px-10 lg:px-14 lg:pb-10 xl:px-20">
+        <div className="mx-auto w-full max-w-md">
           <div className="mb-8">
             <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
               {copy.title}
@@ -103,6 +105,7 @@ export default async function AuthLayout({ variant, children }: Props) {
               {t("common.skipToCatalog")}
             </Link>
           </p>
+        </div>
         </div>
       </main>
     </div>

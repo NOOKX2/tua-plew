@@ -1,7 +1,7 @@
 import type { CommunityEvent, Product, RentalLocation } from "@/lib/types";
 import { getAggregatedProductInventory } from "@/lib/locations";
 import { getProductRatingSummaries } from "@/lib/reviews";
-import { getTranslator } from "@/lib/i18n/server";
+import { staticT } from "@/lib/i18n/static";
 import HomeCommunitySection from "./HomeCommunitySection";
 import HomeGateway from "./HomeGateway";
 import HomeHero from "./HomeHero";
@@ -10,18 +10,16 @@ import HomeRentalSpotlight from "./HomeRentalSpotlight";
 
 type Props = {
   events: CommunityEvent[];
-  enrolledEventIds: string[];
   locations: RentalLocation[];
   products: Product[];
 };
 
 export default async function HomePage({
   events,
-  enrolledEventIds,
   locations,
   products,
 }: Props) {
-  const t = await getTranslator();
+  const t = staticT;
   const partnerShoeIds = products
     .filter((p) => p.isPartnerBrand)
     .map((p) => p.id);
@@ -77,10 +75,7 @@ export default async function HomePage({
         readyCount={readyCount}
       />
 
-      <HomeCommunitySection
-        events={events}
-        enrolledEventIds={enrolledEventIds}
-      />
+      <HomeCommunitySection events={events} />
 
       <HomeRentalSection
         locations={locations}

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import type { Campaign, RentalLocation, CampaignProgress } from "@/lib/types";
 import {
@@ -13,8 +12,10 @@ import {
   formatDiscount,
   getCampaignTypeLabel,
 } from "@/lib/i18n/labels";
+import CampaignCoverImage from "./CampaignCoverImage";
 import CampaignJoinButton from "./CampaignJoinButton";
 import CampaignProgressBar from "./CampaignProgressBar";
+import { useUser } from "./UserProvider";
 
 type Props = {
   campaign: Campaign;
@@ -22,6 +23,7 @@ type Props = {
   joined?: boolean;
   enrollmentCount?: number;
   progress?: CampaignProgress | null;
+  isAuthenticated?: boolean;
 };
 
 function DetailBlock({
@@ -50,18 +52,34 @@ function DetailBlock({
 export default function CampaignDetail({
   campaign,
   partnerLocations,
-  joined = false,
+  joined: joinedProp,
   enrollmentCount = 0,
   progress = null,
+  isAuthenticated: isAuthenticatedProp,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const { enrolledCampaignIds, isAuthenticated: isAuthenticatedFromUser } =
+    useUser();
+  const joined = joinedProp ?? enrolledCampaignIds.includes(campaign.id);
+  const isAuthenticated = isAuthenticatedProp ?? isAuthenticatedFromUser;
   const typeGradient = CAMPAIGN_TYPE_GRADIENT[campaign.campaignType];
   const discountLabel = formatDiscount(
     campaign.discountPercent,
     locale,
     messages,
   );
+  const benefitLabel = campaign.rewardLabel ?? discountLabel;
+  const claimSteps =
+    campaign.howToClaimSteps ??
+    [
+      t("campaign.step1"),
+      t("campaign.step2"),
+      t("campaign.step3", {
+        rentals: campaign.requiredRentals ?? 1,
+        percent: campaign.discountPercent,
+      }),
+    ];
 
   return (
     <main className="relative flex-1 bg-[#faf9f6] pb-28 lg:pb-14">
@@ -70,13 +88,12 @@ export default function CampaignDetail({
 
       <div className="relative">
         <div className="relative min-h-[52vh] overflow-hidden lg:min-h-[62vh]">
-          <Image
-            src={campaign.image}
-            alt={campaign.title}
-            fill
+          <CampaignCoverImage
+            campaign={campaign}
             priority
             sizes="100vw"
-            className="object-cover scale-105"
+            imageClassName="object-cover scale-105"
+            variant="hero"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/55 to-zinc-900/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/40 to-transparent lg:max-w-[70%]" />
@@ -95,7 +112,7 @@ export default function CampaignDetail({
             </Link>
             <div className="flex flex-wrap items-center justify-end gap-2">
               <span className="rounded-full bg-amber-400 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-zinc-950">
-                {discountLabel}
+                {benefitLabel}
               </span>
               <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
                 {CAMPAIGN_TYPE_EMOJI[campaign.campaignType]}{" "}
@@ -134,10 +151,10 @@ export default function CampaignDetail({
 
             <div className="rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 px-5 py-4 shadow-xl shadow-amber-900/20">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-950/70">
-                {t("campaign.discount")}
+                {t(campaign.rewardLabel ? "campaign.reward" : "campaign.discount")}
               </p>
               <p className="mt-1.5 text-2xl font-bold tracking-tight text-zinc-950">
-                {discountLabel}
+                {benefitLabel}
               </p>
               {campaign.requiredRentals ? (
                 <p className="mt-0.5 text-xs font-medium text-amber-950/80">
@@ -187,16 +204,9 @@ export default function CampaignDetail({
                   </div>
                 )}
                 <ol className="divide-y divide-amber-200/40">
-                  {[
-                    t("campaign.step1"),
-                    t("campaign.step2"),
-                    t("campaign.step3", {
-                      rentals: campaign.requiredRentals,
-                      percent: campaign.discountPercent,
-                    }),
-                  ].map((step, index) => (
+                  {claimSteps.map((step, index) => (
                     <li
-                      key={step}
+                      key={`${index}-${step}`}
                       className="flex gap-4 px-6 py-4"
                     >
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-sm font-bold text-white">
@@ -281,6 +291,7 @@ export default function CampaignDetail({
                   campaign={campaign}
                   initialJoined={joined}
                   variant="premium"
+                  isAuthenticated={isAuthenticated}
                 />
               </div>
             </div>
@@ -308,7 +319,11 @@ export default function CampaignDetail({
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-200/80 bg-white/95 p-4 backdrop-blur-md lg:hidden">
-        <CampaignJoinButton campaign={campaign} initialJoined={joined} />
+        <CampaignJoinButton
+          campaign={campaign}
+          initialJoined={joined}
+          isAuthenticated={isAuthenticated}
+        />
       </div>
     </main>
   );

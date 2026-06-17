@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import AppShell from "@/components/AppShell";
 import Providers from "@/components/Providers";
-import { getLocale, getTranslator } from "@/lib/i18n/server";
-import { getActiveRentalCountForSession } from "@/lib/rentals.server";
+import { DEFAULT_LOCALE } from "@/lib/i18n/config";
+import { staticT } from "@/lib/i18n/static";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,30 +16,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslator();
-  return {
-    title: t("meta.title"),
-    description: t("meta.description"),
-  };
-}
+export const metadata: Metadata = {
+  title: staticT("meta.title"),
+  description: staticT("meta.description"),
+};
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
-  const activeRentalCount = await getActiveRentalCountForSession();
-
   return (
     <html
-      lang={locale}
+      lang={DEFAULT_LOCALE}
       className={`${geistSans.variable} ${geistMono.variable} h-full overflow-x-hidden antialiased`}
     >
       <body className="flex min-h-screen max-w-full flex-col overflow-x-hidden bg-[#faf9f6] text-zinc-900">
-        <Providers locale={locale}>
-          <AppShell activeRentalCount={activeRentalCount}>{children}</AppShell>
+        <Providers>
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

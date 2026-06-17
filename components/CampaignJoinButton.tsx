@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 import type { Campaign } from "@/lib/types";
 import { isCampaignActive, isCampaignUpcoming } from "@/lib/campaigns";
 import { joinCampaignAction } from "@/lib/actions/campaigns";
@@ -15,6 +14,7 @@ type Props = {
   compact?: boolean;
   variant?: "default" | "premium";
   callbackUrl?: string;
+  isAuthenticated?: boolean;
 };
 
 export default function CampaignJoinButton({
@@ -23,10 +23,10 @@ export default function CampaignJoinButton({
   compact = false,
   variant = "default",
   callbackUrl,
+  isAuthenticated = false,
 }: Props) {
   const t = useTranslations();
   const router = useRouter();
-  const { status } = useSession();
   const [joined, setJoined] = useState(initialJoined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,15 +74,7 @@ export default function CampaignJoinButton({
     router.refresh();
   }
 
-  if (status === "loading") {
-    return (
-      <span className={`text-xs text-zinc-400 ${compact ? "" : "block"}`}>
-        {t("common.loading")}
-      </span>
-    );
-  }
-
-  if (status === "unauthenticated") {
+  if (!isAuthenticated) {
     return (
       <Link
         href={loginHref}

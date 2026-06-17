@@ -21,7 +21,7 @@ export default async function HomeRentalSpotlight({
   ];
 
   return (
-    <section className="px-4 pt-6 sm:px-6 sm:pt-8">
+    <section className="px-4 pt-2 sm:px-6 sm:pt-3">
       <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-linear-to-br from-blue-600 via-blue-600 to-blue-700 shadow-xl shadow-blue-900/20">
         <div
           className="absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"
@@ -32,8 +32,8 @@ export default async function HomeRentalSpotlight({
           aria-hidden
         />
 
-        <div className="relative flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-          <div className="max-w-xl">
+        <div className="relative flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+          <div className="relative z-10 max-w-xl">
             <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white ring-1 ring-white/20">
               {t("home.spotlightEyebrow")}
             </p>
@@ -67,7 +67,7 @@ export default async function HomeRentalSpotlight({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5 lg:w-80 lg:shrink-0">
+          <div className="relative z-10 grid w-full grid-cols-3 gap-2.5 lg:w-80 lg:shrink-0">
             {tiers.map((tier) => (
               <Link
                 key={tier.label}

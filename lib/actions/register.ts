@@ -2,6 +2,7 @@
 
 import { connectDB } from "@/lib/mongoose";
 import { User } from "@/lib/models";
+import { grantWelcomeBonus } from "@/lib/rental-tokens";
 import { hashPassword, isPasswordStrongEnough } from "@/lib/password";
 import { getTranslator } from "@/lib/i18n/server";
 import type { ActionResult } from "./types";
@@ -40,11 +41,15 @@ export async function registerUserAction(input: {
 
   const passwordHash = await hashPassword(rawPassword);
 
-  await User.create({
+  const user = await User.create({
     name: trimmedName,
     email: normalizedEmail,
     passwordHash,
+    role: "user",
+    rentalTokenBalance: 0,
   });
+
+  await grantWelcomeBonus(user._id.toString());
 
   return { ok: true, data: undefined };
 }

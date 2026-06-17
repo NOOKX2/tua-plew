@@ -7,7 +7,7 @@ import {
   cancelRentalReservation,
   createRentalReservation,
 } from "@/lib/rentals";
-import type { RentalReservation } from "@/lib/types";
+import type { RentalPaymentMethod, RentalReservation } from "@/lib/types";
 import type { ActionResult } from "./types";
 
 function mapRentalError(
@@ -25,6 +25,10 @@ function mapRentalError(
       return t("rental.errors.locationNotFound");
     case "INVALID_SIZE":
       return t("rental.errors.invalidSize");
+    case "INSUFFICIENT_TOKENS":
+      return t("rental.errors.insufficientTokens");
+    case "INVALID_TOKEN_AMOUNT":
+      return t("rental.errors.invalidTokenAmount");
     default:
       return t("rental.errors.reserveFailed");
   }
@@ -50,6 +54,8 @@ export async function createRentalReservationAction(input: {
   productId: string;
   locationId: string;
   size: string;
+  paymentMethod?: RentalPaymentMethod;
+  tokensToUse?: number;
 }): Promise<ActionResult<{ rental: RentalReservation }>> {
   const t = await getTranslator();
   const session = await auth();
@@ -58,7 +64,7 @@ export async function createRentalReservationAction(input: {
     return { ok: false, error: t("rental.errors.loginRequired") };
   }
 
-  const { productId, locationId, size } = input;
+  const { productId, locationId, size, paymentMethod, tokensToUse } = input;
   if (!productId || !locationId || !size) {
     return { ok: false, error: t("rental.errors.invalidData") };
   }
@@ -69,12 +75,15 @@ export async function createRentalReservationAction(input: {
       productId,
       locationId,
       size,
+      paymentMethod,
+      tokensToUse,
     });
 
     revalidatePath("/rentals");
     revalidatePath(`/rentals/checkout/${rental.id}`);
     revalidatePath(`/products/${productId}`);
     revalidatePath("/map");
+    revalidatePath("/member");
     revalidatePath("/", "layout");
 
     return { ok: true, data: { rental } };
@@ -101,6 +110,7 @@ export async function cancelRentalReservationAction(
     revalidatePath("/rentals");
     revalidatePath(`/products/${rental.productId}`);
     revalidatePath("/map");
+    revalidatePath("/member");
     revalidatePath("/", "layout");
 
     return { ok: true, data: { rental } };

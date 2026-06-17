@@ -15,6 +15,8 @@ type RentalRow = {
   status: string;
   pickupCode: string;
   price: number;
+  paymentMethod?: "cash" | "tokens" | "mixed";
+  tokensSpent?: number;
   productName: string;
   locationName: string;
   locationAddress: string;
@@ -34,6 +36,8 @@ function mapRental(row: RentalRow): RentalReservation {
     status: row.status as RentalReservation["status"],
     pickupCode: row.pickupCode,
     price: row.price,
+    paymentMethod: row.paymentMethod ?? "cash",
+    tokensSpent: row.tokensSpent ?? 0,
     productName: row.productName,
     locationName: row.locationName,
     locationAddress: row.locationAddress,

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signInWithCredentialsAction } from "@/lib/actions/auth-session";
 import { registerUserAction } from "@/lib/actions/register";
 import { useTranslations } from "@/lib/i18n/client";
 
@@ -102,7 +102,6 @@ export function CredentialsSignInForm({
 }: {
   callbackUrl?: string;
 }) {
-  const router = useRouter();
   const t = useTranslations();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -114,21 +113,18 @@ export function CredentialsSignInForm({
     setError(null);
     setLoading(true);
 
-    const result = await signIn("credentials", {
-      email: email.trim().toLowerCase(),
+    const result = await signInWithCredentialsAction({
+      email,
       password,
-      redirect: false,
+      callbackUrl,
     });
 
     setLoading(false);
 
-    if (result?.error) {
+    if (!result.ok) {
       setError(t("auth.errors.invalidCredentials"));
       return;
     }
-
-    router.push(callbackUrl);
-    router.refresh();
   }
 
   return (
@@ -217,22 +213,18 @@ export function RegisterForm({
       return;
     }
 
-    const signInResult = await signIn("credentials", {
-      email: email.trim().toLowerCase(),
+    const signInResult = await signInWithCredentialsAction({
+      email,
       password,
-      redirect: false,
+      callbackUrl,
     });
 
     setLoading(false);
 
-    if (signInResult?.error) {
+    if (!signInResult.ok) {
       router.push("/login");
       router.refresh();
-      return;
     }
-
-    router.push(callbackUrl);
-    router.refresh();
   }
 
   return (

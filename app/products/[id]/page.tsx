@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductDetail from "@/components/ProductDetail";
-import { auth } from "@/auth";
+import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getRentalLocations } from "@/lib/locations.server";
 import {
   getProductByIdAsync,
@@ -11,14 +11,15 @@ import {
 import {
   fetchReviewsByProductId,
   getProductRatingSummary,
-  hasUserReviewedProduct,
 } from "@/lib/reviews";
-import { getTranslator } from "@/lib/i18n/server";
+import { staticT } from "@/lib/i18n/static";
 
 type Props = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ from?: string }>;
 };
+
+export const revalidate = CATALOG_PAGE_REVALIDATE;
 
 export async function generateStaticParams() {
   const ids = await getProductIds();
@@ -27,13 +28,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const [product, t] = await Promise.all([
-    getProductByIdAsync(id),
-    getTranslator(),
-  ]);
+  const product = await getProductByIdAsync(id);
 
   if (!product) {
-    return { title: t("meta.productNotFound") };
+    return { title: staticT("meta.productNotFound") };
   }
 
   return {
@@ -45,26 +43,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params, searchParams }: Props) {
   const { id } = await params;
   const { from } = await searchParams;
-  const [product, products, locations, session] = await Promise.all([
+  const [product, products, locations] = await Promise.all([
     getProductByIdAsync(id),
     getProducts(),
     getRentalLocations(),
-    auth(),
   ]);
 
   if (!product) {
     notFound();
   }
 
-  const [reviews, ratingSummary, hasReviewed] = product.isPartnerBrand
+  const [reviews, ratingSummary] = product.isPartnerBrand
     ? await Promise.all([
         fetchReviewsByProductId(id),
         getProductRatingSummary(id),
-        session?.user?.id
-          ? hasUserReviewedProduct(session.user.id, id)
-          : Promise.resolve(false),
       ])
-    : [[], { averageRating: 0, count: 0 }, false];
+    : [[], { averageRating: 0, count: 0 }];
 
   return (
     <ProductDetail
@@ -74,7 +68,6 @@ export default async function ProductPage({ params, searchParams }: Props) {
       compact={from === "map"}
       reviews={reviews}
       ratingSummary={ratingSummary}
-      hasReviewed={hasReviewed}
     />
   );
 }

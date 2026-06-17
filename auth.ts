@@ -4,9 +4,29 @@ import Google from "next-auth/providers/google";
 import { connectDB } from "@/lib/mongoose";
 import { Account, User } from "@/lib/models";
 import { verifyPassword } from "@/lib/password";
+import type { UserRole } from "@/lib/types";
+import { resolveUserRole } from "@/lib/user-role.server";
+import { grantWelcomeBonus } from "@/lib/rental-tokens";
+import { isMongoObjectId } from "@/lib/users.server";
 
-function isMongoObjectId(value: string) {
-  return /^[a-f\d]{24}$/i.test(value);
+async function syncSessionUserFromDb(
+  sessionUser: { id?: string; email?: string | null; role?: UserRole },
+  tokenSub?: string,
+  tokenRole?: UserRole,
+) {
+  if (tokenSub && isMongoObjectId(tokenSub)) {
+    sessionUser.id = tokenSub;
+  } else if (sessionUser.email) {
+    await connectDB();
+    const dbUser = await User.findOne({
+      email: sessionUser.email.toLowerCase(),
+    })
+      .select("_id")
+      .lean<{ _id: { toString(): string } }>();
+    if (dbUser) sessionUser.id = dbUser._id.toString();
+  }
+
+  sessionUser.role = tokenRole === "admin" ? "admin" : "user";
 }
 
 // Vercel/production must not use a localhost AUTH_URL — it breaks OAuth redirect_uri
@@ -52,6 +72,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: user.email,
           name: user.name,
           image: user.image,
+          role: user.role === "admin" ? "admin" : "user",
         };
       },
     }),
@@ -73,7 +94,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email,
           image: user.image,
           emailVerified: new Date(),
+          role: "user",
+          rentalTokenBalance: 0,
         });
+        await grantWelcomeBonus(dbUser._id.toString());
       }
 
       await Account.findOneAndUpdate(
@@ -113,6 +137,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       } else if (user?.id) {
         token.sub = user.id;
+        token.role = user.role === "admin" ? "admin" : "user";
       } else if (
         typeof token.sub === "string" &&
         !isMongoObjectId(token.sub) &&
@@ -124,14 +149,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
         if (dbUser) token.sub = dbUser._id.toString();
       }
+
+      if (typeof token.sub === "string" && isMongoObjectId(token.sub)) {
+        token.role = await resolveUserRole(token.sub, token.email);
+      }
+
       return token;
     },
     async session({ session, token }) {
-      if (session.user && token.sub) {
-        session.user.id = token.sub;
+      if (session.user) {
+        await syncSessionUserFromDb(
+          session.user,
+          token.sub,
+          token.role === "admin" ? "admin" : "user",
+        );
       }
       return session;
     },
   },
   trustHost: true,
 });
+
+export const { GET, POST } = handlers;

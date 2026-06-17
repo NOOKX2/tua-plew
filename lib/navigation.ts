@@ -1,7 +1,6 @@
 export type NavMessageKey =
   | "nav.home"
   | "nav.community"
-  | "nav.chat"
   | "nav.campaigns"
   | "nav.rental"
   | "nav.member";
@@ -30,12 +29,9 @@ export const mainNavItems: MainNavItem[] = [
     href: "/community",
     messageKey: "nav.community",
     match: (path) =>
-      path.startsWith("/community") && !isCommunityChatPath(path),
-  },
-  {
-    href: "/chat",
-    messageKey: "nav.chat",
-    match: (path) => path.startsWith("/chat") || isCommunityChatPath(path),
+      path.startsWith("/community") ||
+      path.startsWith("/chat") ||
+      isCommunityChatPath(path),
   },
   {
     href: "/campaigns",
@@ -60,4 +56,8 @@ export const mainNavItems: MainNavItem[] = [
 
 export function isAuthRoute(pathname: string) {
   return pathname === "/login" || pathname === "/register";
+}
+
+export function isAdminRoute(pathname: string) {
+  return pathname === "/admin" || pathname.startsWith("/admin/");
 }

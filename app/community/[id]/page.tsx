@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CommunityDetail from "@/components/CommunityDetail";
-import { auth } from "@/auth";
-import { isUserEnrolledInEvent } from "@/lib/community-enrollments";
+import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getEventParticipants } from "@/lib/community-participants";
 import {
   getCommunityEventByIdAsync,
+  getCommunityEventIds,
 } from "@/lib/community.server";
+import { staticT } from "@/lib/i18n/static";
 import { getRentalLocations } from "@/lib/locations.server";
-import { getTranslator } from "@/lib/i18n/server";
 import { getProducts } from "@/lib/products.server";
-import { getCommunityEventIds } from "@/lib/community.server";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+export const revalidate = CATALOG_PAGE_REVALIDATE;
 
 export async function generateStaticParams() {
   const ids = await getCommunityEventIds();
@@ -23,13 +24,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const [event, t] = await Promise.all([
-    getCommunityEventByIdAsync(id),
-    getTranslator(),
-  ]);
+  const event = await getCommunityEventByIdAsync(id);
 
   if (!event) {
-    return { title: t("meta.eventNotFound") };
+    return { title: staticT("meta.eventNotFound") };
   }
 
   return {
@@ -40,15 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CommunityEventPage({ params }: Props) {
   const { id } = await params;
-  const session = await auth();
-  const [event, locations, products, joined, participants] = await Promise.all([
+  const [event, locations, products, participants] = await Promise.all([
     getCommunityEventByIdAsync(id),
     getRentalLocations(),
     getProducts(),
-    session?.user?.id
-      ? isUserEnrolledInEvent(session.user.id, id)
-      : Promise.resolve(false),
-    getEventParticipants(id, session?.user?.id ?? undefined),
+    getEventParticipants(id),
   ]);
 
   if (!event) {
@@ -63,9 +57,7 @@ export default async function CommunityEventPage({ params }: Props) {
       location={location}
       locations={locations}
       products={products}
-      joined={joined}
       participants={participants}
-      currentUserId={session?.user?.id ?? null}
     />
   );
 }

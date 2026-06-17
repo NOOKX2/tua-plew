@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import RentalViewTabs from "@/components/RentalViewTabs";
 import HomeRentalSection from "@/components/HomeRentalSection";
+import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getAggregatedProductInventory } from "@/lib/locations";
 import { getRentalLocations } from "@/lib/locations.server";
 import { getProducts } from "@/lib/products.server";
 import { getProductRatingSummaries } from "@/lib/reviews";
-import { getTranslator } from "@/lib/i18n/server";
+import { staticT } from "@/lib/i18n/static";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslator();
-  return {
-    title: t("meta.mapTitle"),
-    description: t("meta.mapDescription"),
-  };
-}
+export const revalidate = CATALOG_PAGE_REVALIDATE;
+
+export const metadata: Metadata = {
+  title: staticT("meta.mapTitle"),
+  description: staticT("meta.mapDescription"),
+};
 
 export default async function RentalShopPage() {
   const [locations, products] = await Promise.all([

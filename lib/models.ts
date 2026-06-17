@@ -101,6 +101,8 @@ const campaignSchema = new Schema(
     endDate: { type: String, required: true },
     terms: { type: [String], required: true },
     featured: { type: Boolean, default: false },
+    rewardLabel: { type: String },
+    howToClaimSteps: { type: [String] },
   },
   { timestamps: true, _id: false },
 );
@@ -140,6 +142,12 @@ const rentalReservationSchema = new Schema(
     },
     pickupCode: { type: String, required: true },
     price: { type: Number, required: true },
+    paymentMethod: {
+      type: String,
+      enum: ["cash", "tokens", "mixed"],
+      default: "cash",
+    },
+    tokensSpent: { type: Number, default: 0 },
     productName: { type: String, required: true },
     locationName: { type: String, required: true },
     locationAddress: { type: String, required: true },
@@ -161,6 +169,8 @@ const userSchema = new Schema(
     emailVerified: { type: Date },
     image: { type: String },
     passwordHash: { type: String },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+    rentalTokenBalance: { type: Number, default: 0, min: 0 },
   },
   { timestamps: true },
 );
@@ -240,6 +250,22 @@ const directMessageSchema = new Schema(
 );
 directMessageSchema.index({ conversationId: 1, createdAt: -1 });
 
+const rentalTokenTransactionSchema = new Schema(
+  {
+    userId: { type: String, required: true },
+    amount: { type: Number, required: true },
+    type: {
+      type: String,
+      required: true,
+      enum: ["welcome", "spend", "refund", "earn", "topup"],
+    },
+    rentalId: { type: String },
+    description: { type: String },
+  },
+  { timestamps: true },
+);
+rentalTokenTransactionSchema.index({ userId: 1, createdAt: -1 });
+
 function getModel(name: string, schema: Schema, collection: string) {
   return mongoose.models[name] ?? mongoose.model(name, schema, collection);
 }
@@ -294,4 +320,9 @@ export const DirectMessage = getModel(
   "DirectMessage",
   directMessageSchema,
   "DirectMessage",
+);
+export const RentalTokenTransaction = getModel(
+  "RentalTokenTransaction",
+  rentalTokenTransactionSchema,
+  "RentalTokenTransaction",
 );

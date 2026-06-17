@@ -44,6 +44,22 @@ export default async function RentalCheckoutView({
   locale,
 }: Props) {
   const t = await getTranslator();
+  const paidWithTokens = rental.tokensSpent > 0;
+  const isMixed = rental.paymentMethod === "mixed";
+  const cashDue = rental.price - rental.tokensSpent;
+
+  function paymentSummary() {
+    if (rental.paymentMethod === "tokens") {
+      return t("rental.paidWithTokens", { count: rental.tokensSpent });
+    }
+    if (isMixed) {
+      return t("rental.mixedPaymentSummary", {
+        tokens: rental.tokensSpent,
+        cash: cashDue,
+      });
+    }
+    return t("rental.payWithCash");
+  }
 
   return (
     <div className="space-y-5">
@@ -83,7 +99,14 @@ export default async function RentalCheckoutView({
           {rental.pickupCode}
         </p>
         <p className="mt-4 text-center text-xs leading-relaxed text-blue-100/80">
-          {t("rental.payAtPickup")}
+          {paidWithTokens
+            ? isMixed
+              ? t("rental.mixedPaymentSummary", {
+                  tokens: rental.tokensSpent,
+                  cash: cashDue,
+                })
+              : t("rental.paidWithTokens", { count: rental.tokensSpent })
+            : t("rental.payment.paidOnlineShort", { amount: rental.price })}
         </p>
       </div>
 
@@ -102,12 +125,45 @@ export default async function RentalCheckoutView({
             value={`฿${rental.price}${t("common.perRental")}`}
           />
           <DetailRow
+            label={t("rental.selectPayment")}
+            value={paymentSummary()}
+            valueClassName={paidWithTokens ? "text-amber-700" : "text-zinc-900"}
+          />
+          {isMixed && (
+            <DetailRow
+              label={t("rental.cashDueAtPickup")}
+              value={`฿${cashDue}`}
+              valueClassName="text-blue-700"
+            />
+          )}
+          <DetailRow
             label={t("rental.pickupBy")}
             value={formatDateTime(rental.expiresAt, locale)}
             valueClassName="text-amber-700"
           />
         </dl>
       </div>
+
+      {paidWithTokens ? (
+        <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 p-5 text-center shadow-sm">
+          <p className="text-sm font-semibold text-amber-900">{paymentSummary()}</p>
+          <p className="mt-1 text-xs text-amber-800/80">{t("rental.tokenRate")}</p>
+          {isMixed && (
+            <p className="mt-2 text-xs font-medium text-blue-700">
+              {t("rental.cashDueAtPickup")}: ฿{cashDue}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/80 p-5 text-center shadow-sm">
+          <p className="text-sm font-semibold text-emerald-900">
+            {t("rental.payment.paidOnline", { amount: rental.price })}
+          </p>
+          <p className="mt-1 text-xs text-emerald-800/80">
+            {t("rental.checkout.payment.mockNote")}
+          </p>
+        </div>
+      )}
 
       <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-zinc-200/80">
         <div className="flex items-start justify-between gap-3">

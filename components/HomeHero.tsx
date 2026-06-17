@@ -63,40 +63,34 @@ export default async function HomeHero({
           <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-zinc-950/50 to-zinc-950/70" />
           <div className="home-hero-grid absolute inset-0 opacity-[0.06]" />
 
-          <div className="relative flex h-full flex-col justify-end px-5 py-6 sm:px-8 sm:py-8">
+          <div className="relative z-10 flex h-full flex-col justify-end px-5 py-6 sm:px-8 sm:py-8">
             <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-300/90 sm:text-[11px]">
               {t("home.tagline")}
             </p>
 
-            <h1 className="max-w-3xl text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-5xl">
+            <p className="text-sm font-medium text-white/70 sm:text-base">
               {t("home.heroTitle")}
-              <span className="text-blue-300">
-                {" "}
-                {t("home.heroTitleAccent")}
-              </span>
+            </p>
+
+            <h1 className="mt-1 max-w-3xl text-[2.125rem] font-extrabold leading-[1.05] tracking-tight text-blue-300 sm:text-5xl lg:text-6xl">
+              {t("home.heroHeadline")}
             </h1>
 
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
               {t("home.subtitle")}
             </p>
 
-            <div className="mt-5 grid gap-3 sm:flex sm:flex-wrap">
+            <div className="mt-5">
               <Link
                 href="/rentals/shop"
-                className="inline-flex items-center justify-center rounded-full bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-400"
+                className="flex w-full items-center justify-center rounded-2xl bg-blue-500 px-6 py-4 text-lg font-bold text-white shadow-lg shadow-blue-500/30 transition-colors hover:bg-blue-400 sm:w-auto sm:min-w-[280px] sm:rounded-full sm:px-10 sm:py-4 sm:text-xl"
               >
-                {t("home.rentGear")}
-              </Link>
-              <Link
-                href="/community"
-                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-blue-50"
-              >
-                {t("home.browseEvents")}
+                {t("home.heroCta")}
               </Link>
             </div>
 
-            <div className="mt-6 flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-6">
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
+            <div className="mt-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-4">
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-sm">
                 <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300/90">
                   {t("home.heroCommunityLabel")}
                 </p>
@@ -111,7 +105,7 @@ export default async function HomeHero({
                   ))}
                 </div>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-sm">
                 <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300/90">
                   {t("home.heroRentalLabel")}
                 </p>

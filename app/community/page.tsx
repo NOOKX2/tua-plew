@@ -1,28 +1,20 @@
 import type { Metadata } from "next";
 import CommunityList from "@/components/CommunityList";
 import CommunitySocialNav from "@/components/CommunitySocialNav";
-import { auth } from "@/auth";
-import { getUserEnrolledEventIds } from "@/lib/community-enrollments";
+import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getCommunityEvents } from "@/lib/community.server";
-import { getTranslator } from "@/lib/i18n/server";
+import { staticT } from "@/lib/i18n/static";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslator();
-  return {
-    title: t("meta.communityTitle"),
-    description: t("meta.communityDescription"),
-  };
-}
+export const revalidate = CATALOG_PAGE_REVALIDATE;
+
+export const metadata: Metadata = {
+  title: staticT("meta.communityTitle"),
+  description: staticT("meta.communityDescription"),
+};
 
 export default async function CommunityPage() {
-  const session = await auth();
-  const [events, t, enrolledEventIds] = await Promise.all([
-    getCommunityEvents(),
-    getTranslator(),
-    session?.user?.id
-      ? getUserEnrolledEventIds(session.user.id)
-      : Promise.resolve([] as string[]),
-  ]);
+  const events = await getCommunityEvents();
+  const t = staticT;
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
@@ -40,7 +32,7 @@ export default async function CommunityPage() {
 
       <CommunitySocialNav />
 
-      <CommunityList events={events} enrolledEventIds={enrolledEventIds} />
+      <CommunityList events={events} />
     </main>
   );
 }

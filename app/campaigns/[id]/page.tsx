@@ -1,22 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CampaignDetail from "@/components/CampaignDetail";
-import { auth } from "@/auth";
-import {
-  getCampaignEnrollmentCount,
-  isUserEnrolledInCampaign,
-} from "@/lib/campaign-enrollments";
-import { getCampaignProgressForUser } from "@/lib/campaign-progress";
+import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
+import { getCampaignEnrollmentCount } from "@/lib/campaign-enrollments";
 import {
   getCampaignByIdAsync,
+  getCampaignIds,
 } from "@/lib/campaigns.server";
-import { getTranslator } from "@/lib/i18n/server";
+import { staticT } from "@/lib/i18n/static";
 import { getRentalLocations } from "@/lib/locations.server";
-import { getCampaignIds } from "@/lib/campaigns.server";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+export const revalidate = CATALOG_PAGE_REVALIDATE;
 
 export async function generateStaticParams() {
   const ids = await getCampaignIds();
@@ -25,13 +23,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const [campaign, t] = await Promise.all([
-    getCampaignByIdAsync(id),
-    getTranslator(),
-  ]);
+  const campaign = await getCampaignByIdAsync(id);
 
   if (!campaign) {
-    return { title: t("meta.campaignNotFound") };
+    return { title: staticT("meta.campaignNotFound") };
   }
 
   return {
@@ -42,23 +37,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CampaignPage({ params }: Props) {
   const { id } = await params;
-  const session = await auth();
   const campaign = await getCampaignByIdAsync(id);
   if (!campaign) {
     notFound();
   }
 
-  const [rentalLocations, joined, enrollmentCount, progress] =
-    await Promise.all([
-      getRentalLocations(),
-      session?.user?.id
-        ? isUserEnrolledInCampaign(session.user.id, id)
-        : Promise.resolve(false),
-      getCampaignEnrollmentCount(id),
-      session?.user?.id
-        ? getCampaignProgressForUser(session.user.id, campaign)
-        : Promise.resolve(null),
-    ]);
+  const [rentalLocations, enrollmentCount] = await Promise.all([
+    getRentalLocations(),
+    getCampaignEnrollmentCount(id),
+  ]);
 
   const partnerLocations = rentalLocations.filter((location) =>
     campaign.partnerLocationIds.includes(location.id),
@@ -68,9 +55,7 @@ export default async function CampaignPage({ params }: Props) {
     <CampaignDetail
       campaign={campaign}
       partnerLocations={partnerLocations}
-      joined={joined}
       enrollmentCount={enrollmentCount}
-      progress={progress}
     />
   );
 }

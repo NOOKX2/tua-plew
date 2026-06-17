@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 import { submitProductReviewAction } from "@/lib/actions/reviews";
 import { useTranslations } from "@/lib/i18n/client";
 import StarRating from "./StarRating";
@@ -12,16 +11,17 @@ type Props = {
   productId: string;
   hasReviewed?: boolean;
   callbackUrl?: string;
+  isAuthenticated?: boolean;
 };
 
 export default function ProductReviewForm({
   productId,
   hasReviewed = false,
   callbackUrl,
+  isAuthenticated = false,
 }: Props) {
   const t = useTranslations();
   const router = useRouter();
-  const { status } = useSession();
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,11 +55,7 @@ export default function ProductReviewForm({
     router.refresh();
   }
 
-  if (status === "loading") {
-    return <p className="text-sm text-zinc-400">{t("common.loading")}</p>;
-  }
-
-  if (status === "unauthenticated") {
+  if (!isAuthenticated) {
     return (
       <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
         <p className="mb-3 text-sm text-zinc-600">{t("review.loginPrompt")}</p>

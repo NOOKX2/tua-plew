@@ -19,6 +19,7 @@ import {
 import CommunityJoinButton from "./CommunityJoinButton";
 import EventParticipantsPanel from "./EventParticipantsPanel";
 import StockBadge from "./StockBadge";
+import { useUser } from "./UserProvider";
 
 type Props = {
   event: CommunityEvent;
@@ -28,6 +29,7 @@ type Props = {
   joined?: boolean;
   participants?: EventParticipant[];
   currentUserId?: string | null;
+  isAuthenticated?: boolean;
 };
 
 function DetailBlock({
@@ -58,12 +60,21 @@ export default function CommunityDetail({
   location,
   locations,
   products,
-  joined = false,
+  joined: joinedProp,
   participants = [],
-  currentUserId = null,
+  currentUserId: currentUserIdProp,
+  isAuthenticated: isAuthenticatedProp,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const {
+    enrolledEventIds,
+    isAuthenticated: isAuthenticatedFromUser,
+    sessionUser,
+  } = useUser();
+  const joined = joinedProp ?? enrolledEventIds.includes(event.id);
+  const isAuthenticated = isAuthenticatedProp ?? isAuthenticatedFromUser;
+  const currentUserId = currentUserIdProp ?? sessionUser?.id ?? null;
   const [participantCount, setParticipantCount] = useState(event.participantCount);
   const recommended = event.recommendedProductIds
     .map((id) => getProductById(id, products))
@@ -387,6 +398,7 @@ export default function CommunityDetail({
                   onJoined={setParticipantCount}
                   onLeft={setParticipantCount}
                   variant="premium"
+                  isAuthenticated={isAuthenticated}
                 />
                 {joined && (
                   <Link
@@ -446,6 +458,7 @@ export default function CommunityDetail({
           initialJoined={joined}
           onJoined={setParticipantCount}
           onLeft={setParticipantCount}
+          isAuthenticated={isAuthenticated}
         />
       </div>
     </main>

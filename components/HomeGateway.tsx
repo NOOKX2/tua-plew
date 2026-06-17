@@ -19,7 +19,18 @@ export default async function HomeGateway({
 }: Props) {
   const t = await getTranslator();
 
-  const cards = [
+  const cards: Array<{
+    href: string;
+    image: string;
+    imageAlt: string;
+    eyebrow: string;
+    title: string;
+    description: string;
+    stats: string[];
+    cta: string;
+    ctaClass: string;
+    eyebrowClass: string;
+  }> = [
     {
       href: "/community",
       image: "/community/lumpini-run-club.jpg",

@@ -56,6 +56,25 @@ export type RentalStatus =
   | "cancelled"
   | "expired";
 
+export type RentalPaymentMethod = "cash" | "tokens" | "mixed";
+
+export type RentalTokenTransactionType =
+  | "welcome"
+  | "spend"
+  | "refund"
+  | "earn"
+  | "topup";
+
+export type RentalTokenTransaction = {
+  id: string;
+  userId: string;
+  amount: number;
+  type: RentalTokenTransactionType;
+  rentalId?: string;
+  description?: string;
+  createdAt: string;
+};
+
 export type RentalReservation = {
   id: string;
   userId: string;
@@ -65,6 +84,8 @@ export type RentalReservation = {
   status: RentalStatus;
   pickupCode: string;
   price: number;
+  paymentMethod: RentalPaymentMethod;
+  tokensSpent: number;
   productName: string;
   locationName: string;
   locationAddress: string;
@@ -168,6 +189,8 @@ export type Campaign = {
   endDate: string;
   terms: string[];
   featured?: boolean;
+  rewardLabel?: string;
+  howToClaimSteps?: string[];
 };
 
 export type CampaignProgress = {
@@ -177,11 +200,14 @@ export type CampaignProgress = {
   complete: boolean;
 };
 
+export type UserRole = "user" | "admin";
+
 export type UserProfile = {
   id: string;
   name: string;
   email: string;
   image?: string;
+  role?: UserRole;
 };
 
 export type FriendshipStatus = "pending" | "accepted" | "blocked";

@@ -209,18 +209,23 @@ export default function ProductCard({
           </div>
         )}
 
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-zinc-100/80 pt-3">
-          <p
-            className={`font-bold text-blue-600 ${
-              isFeatured ? "text-lg" : "text-sm"
-            }`}
-          >
-            ฿{product.pricePerRental}
-            <span className="text-[11px] font-normal text-zinc-500">
-              {" "}
-              {perRentalLabel}
-            </span>
-          </p>
+        <div className="mt-auto flex flex-wrap items-end justify-between gap-x-2 gap-y-1 border-t border-zinc-100/80 pt-3">
+          <div className="min-w-0">
+            <p
+              className={`font-bold text-blue-600 ${
+                isFeatured ? "text-lg" : "text-sm"
+              }`}
+            >
+              ฿{product.pricePerRental}
+              <span className="text-[11px] font-normal text-zinc-500">
+                {" "}
+                {perRentalLabel}
+              </span>
+            </p>
+            <p className="mt-0.5 text-[11px] font-medium text-amber-700/90">
+              {t("rental.productTokenPrice", { count: product.pricePerRental })}
+            </p>
+          </div>
           {isCatalog && displayTotal !== null && (
             <StockBadge
               total={displayTotal}
