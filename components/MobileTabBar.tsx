@@ -1,11 +1,18 @@
 "use client";
 
+import type { ComponentType } from "react";
 import Link from "next/link";
+import { Shirt } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { isAuthRoute, mainNavItems } from "@/lib/navigation";
+import {
+  isAuthRoute,
+  mainNavItems,
+  type MainNavItem,
+  type NavMessageKey,
+} from "@/lib/navigation";
 import { useTranslations } from "@/lib/i18n/client";
 
-function HomeIcon() {
+function HomeIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg
       aria-hidden
@@ -13,7 +20,7 @@ function HomeIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth="1.75"
-      className="h-5 w-5"
+      className={className}
     >
       <path
         strokeLinecap="round"
@@ -24,7 +31,7 @@ function HomeIcon() {
   );
 }
 
-function CommunityIcon() {
+function CommunityIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg
       aria-hidden
@@ -32,7 +39,7 @@ function CommunityIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth="1.75"
-      className="h-5 w-5"
+      className={className}
     >
       <path
         strokeLinecap="round"
@@ -43,7 +50,7 @@ function CommunityIcon() {
   );
 }
 
-function ChatIcon() {
+function ChatIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg
       aria-hidden
@@ -51,7 +58,7 @@ function ChatIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth="1.75"
-      className="h-5 w-5"
+      className={className}
     >
       <path
         strokeLinecap="round"
@@ -62,7 +69,7 @@ function ChatIcon() {
   );
 }
 
-function CampaignIcon() {
+function CampaignIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg
       aria-hidden
@@ -70,7 +77,7 @@ function CampaignIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth="1.75"
-      className="h-5 w-5"
+      className={className}
     >
       <path
         strokeLinecap="round"
@@ -81,7 +88,7 @@ function CampaignIcon() {
   );
 }
 
-function RentalIcon() {
+function MemberIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg
       aria-hidden
@@ -89,24 +96,47 @@ function RentalIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth="1.75"
-      className="h-5 w-5"
+      className={className}
     >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
       />
     </svg>
   );
 }
 
-const icons = [
-  HomeIcon,
-  CommunityIcon,
-  ChatIcon,
-  CampaignIcon,
-  RentalIcon,
-] as const;
+const iconByKey: Record<
+  NavMessageKey,
+  ComponentType<{ className?: string }>
+> = {
+  "nav.home": HomeIcon,
+  "nav.community": CommunityIcon,
+  "nav.chat": ChatIcon,
+  "nav.campaigns": CampaignIcon,
+  "nav.rental": Shirt,
+  "nav.member": MemberIcon,
+};
+
+function TabLink({ item, active }: { item: MainNavItem; active: boolean }) {
+  const t = useTranslations();
+  const Icon = iconByKey[item.messageKey];
+
+  return (
+    <Link
+      href={item.href}
+      className={`flex flex-1 flex-col items-center justify-center gap-0.5 px-1 py-2 transition-colors ${
+        active ? "text-blue-600" : "text-zinc-400"
+      }`}
+    >
+      <Icon />
+      <span className="max-w-full truncate text-[9px] font-semibold">
+        {t(item.messageKey)}
+      </span>
+    </Link>
+  );
+}
 
 export default function MobileTabBar() {
   const pathname = usePathname();
@@ -116,36 +146,63 @@ export default function MobileTabBar() {
     return null;
   }
 
+  const centerItem = mainNavItems.find((item) => item.centerAction);
+  const sideItems = mainNavItems.filter((item) => !item.centerAction);
+  const leftItems = sideItems.slice(0, 2);
+  const rightItems = sideItems.slice(2);
+
+  const centerActive = centerItem?.match(pathname) ?? false;
+
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-zinc-800 bg-zinc-950 pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="pointer-events-none fixed inset-x-3 bottom-3 z-50 md:hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       aria-label={t("nav.mobile")}
     >
-      <div className="mx-auto flex h-16 max-w-lg items-stretch">
-        {mainNavItems.map((item, index) => {
-          const active = item.match(pathname);
-          const Icon = icons[index];
-
-          return (
-            <Link
+      <div className="pointer-events-auto mx-auto flex max-w-lg items-end rounded-2xl border border-zinc-200/90 bg-white/95 px-1 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-md">
+        <div className="flex flex-1 items-stretch">
+          {leftItems.map((item) => (
+            <TabLink
               key={item.href}
-              href={item.href}
-              className={`relative flex flex-1 flex-col items-center justify-center gap-1 px-0.5 transition-colors ${
-                active ? "text-white" : "text-zinc-500"
+              item={item}
+              active={item.match(pathname)}
+            />
+          ))}
+        </div>
+
+        {centerItem && (
+          <div className="relative flex w-20 shrink-0 flex-col items-center">
+            <Link
+              href={centerItem.href}
+              aria-label={t(centerItem.messageKey)}
+              aria-current={centerActive ? "page" : undefined}
+              className={`absolute -top-7 flex h-16 w-16 items-center justify-center rounded-full shadow-lg transition-transform active:scale-95 ${
+                centerActive
+                  ? "bg-yellow-400 text-zinc-900 shadow-amber-900/30 ring-4 ring-yellow-100"
+                  : "bg-yellow-400 text-zinc-900 shadow-amber-900/25 hover:bg-yellow-300"
               }`}
             >
-              <span
-                className={`absolute inset-x-2 top-0 h-0.5 rounded-full transition-opacity ${
-                  active ? "bg-white opacity-100" : "opacity-0"
-                }`}
-              />
-              <Icon />
-              <span className="max-w-full truncate text-[8px] font-semibold uppercase tracking-wide sm:text-[9px]">
-                {t(item.messageKey)}
-              </span>
+              <Shirt className="h-9 w-9" strokeWidth={2.25} aria-hidden />
             </Link>
-          );
-        })}
+            <span
+              className={`pb-2 pt-9 text-[9px] font-bold ${
+                centerActive ? "text-amber-600" : "text-zinc-500"
+              }`}
+            >
+              {t(centerItem.messageKey)}
+            </span>
+          </div>
+        )}
+
+        <div className="flex flex-1 items-stretch">
+          {rightItems.map((item) => (
+            <TabLink
+              key={item.href}
+              item={item}
+              active={item.match(pathname)}
+            />
+          ))}
+        </div>
       </div>
     </nav>
   );

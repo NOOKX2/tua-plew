@@ -3,8 +3,9 @@ import Link from "next/link";
 import type { Product, RentalLocation } from "@/lib/types";
 import { getAggregatedProductInventory } from "@/lib/locations";
 import { getTranslator } from "@/lib/i18n/server";
-import ApparelTiers from "./ApparelTiers";
-import HomeCatalogSection, { type CatalogItem } from "./HomeCatalogSection";
+import ApparelTierCatalog, {
+  type CatalogItem,
+} from "./ApparelTierCatalog";
 import PartnerShoeCatalog from "./PartnerShoeCatalog";
 import type { ProductRatingSummary } from "@/lib/types";
 
@@ -81,9 +82,7 @@ export default async function HomeRentalSection({
         </div>
       </div>
 
-      <ApparelTiers />
-
-      <HomeCatalogSection items={catalogItems} embedded />
+      <ApparelTierCatalog items={catalogItems} />
 
       <PartnerShoeCatalog
         products={products}

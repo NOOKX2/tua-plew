@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { ProductAvailability } from "@/lib/locations";
-import type { Product, RentalReservation } from "@/lib/types";
+import type { Product } from "@/lib/types";
 import { createRentalReservationAction } from "@/lib/actions/rentals";
-import { useLocale, useTranslations } from "@/lib/i18n/client";
+import { useTranslations } from "@/lib/i18n/client";
 
 type Props = {
   product: Product;
@@ -25,7 +25,6 @@ export default function RentalBookingPanel({
   callbackUrl,
 }: Props) {
   const t = useTranslations();
-  const { locale } = useLocale();
   const router = useRouter();
   const { status } = useSession();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -34,9 +33,6 @@ export default function RentalBookingPanel({
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [reservation, setReservation] = useState<RentalReservation | null>(
-    null,
-  );
 
   const fixedAvailability = useMemo(
     () => availability.find((item) => item.location.id === fixedLocationId),
@@ -85,13 +81,6 @@ export default function RentalBookingPanel({
 
   const canReserve = Boolean(selectedSize && selectedLocationId);
 
-  function formatExpiry(iso: string) {
-    return new Date(iso).toLocaleString(locale === "th" ? "th-TH" : "en-US", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-  }
-
   async function handleReserve() {
     if (!selectedSize || !selectedLocationId) return;
 
@@ -111,7 +100,7 @@ export default function RentalBookingPanel({
       return;
     }
 
-    setReservation(result.data.rental);
+    router.push(`/rentals/checkout/${result.data.rental.id}`);
     router.refresh();
   }
 
@@ -120,66 +109,6 @@ export default function RentalBookingPanel({
       <p className={`text-xs text-zinc-400 ${compact ? "" : "mt-6"}`}>
         {t("common.loading")}
       </p>
-    );
-  }
-
-  if (reservation) {
-    return (
-      <div
-        className={`rounded-2xl border border-blue-200 bg-blue-50/60 p-4 ${compact ? "mt-3" : "mt-6"
-          }`}
-      >
-        <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
-          {t("rental.confirmed")}
-        </p>
-        <p className="mt-1 text-sm text-zinc-600">{t("rental.pickupInstructions")}</p>
-
-        <div className="mt-4 rounded-xl bg-white px-4 py-5 text-center ring-1 ring-blue-100">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
-            {t("rental.pickupCode")}
-          </p>
-          <p className="mt-1 font-mono text-3xl font-bold tracking-[0.2em] text-blue-700">
-            {reservation.pickupCode}
-          </p>
-        </div>
-
-        <dl className="mt-4 space-y-2 text-sm">
-          <div className="flex justify-between gap-3">
-            <dt className="text-zinc-500">{t("rental.location")}</dt>
-            <dd className="text-right font-medium text-zinc-900">
-              {reservation.locationName}
-            </dd>
-          </div>
-          <div className="flex justify-between gap-3">
-            <dt className="text-zinc-500">{t("product.size")}</dt>
-            <dd className="font-medium text-zinc-900">{reservation.size}</dd>
-          </div>
-          <div className="flex justify-between gap-3">
-            <dt className="text-zinc-500">{t("rental.price")}</dt>
-            <dd className="font-medium text-zinc-900">
-              ฿{reservation.price}
-              {t("common.perRental")}
-            </dd>
-          </div>
-          <div className="flex justify-between gap-3">
-            <dt className="text-zinc-500">{t("rental.pickupBy")}</dt>
-            <dd className="text-right font-medium text-amber-700">
-              {formatExpiry(reservation.expiresAt)}
-            </dd>
-          </div>
-        </dl>
-
-        <p className="mt-3 text-xs leading-relaxed text-zinc-500">
-          {t("rental.payAtPickup")}
-        </p>
-
-        <Link
-          href="/rentals"
-          className="mt-4 flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-        >
-          {t("rental.viewMyRentals")}
-        </Link>
-      </div>
     );
   }
 

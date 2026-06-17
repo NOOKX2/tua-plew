@@ -3,12 +3,14 @@ export type NavMessageKey =
   | "nav.community"
   | "nav.chat"
   | "nav.campaigns"
-  | "nav.rental";
+  | "nav.rental"
+  | "nav.member";
 
 export type MainNavItem = {
   href: string;
   messageKey: NavMessageKey;
   match: (path: string) => boolean;
+  centerAction?: boolean;
 };
 
 function isCommunityChatPath(path: string) {
@@ -43,10 +45,16 @@ export const mainNavItems: MainNavItem[] = [
   {
     href: "/rentals/shop",
     messageKey: "nav.rental",
+    centerAction: true,
     match: (path) =>
       path === "/map" ||
-      path.startsWith("/rentals/shop") ||
+      path.startsWith("/rentals") ||
       path.startsWith("/products"),
+  },
+  {
+    href: "/member",
+    messageKey: "nav.member",
+    match: (path) => path.startsWith("/member"),
   },
 ];
 

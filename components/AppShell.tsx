@@ -22,7 +22,7 @@ export default function AppShell({
         className={`flex min-h-0 flex-1 flex-col overflow-x-hidden ${
           hideChrome
             ? ""
-            : "pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0"
+            : "pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-0"
         }`}
       >
         {children}

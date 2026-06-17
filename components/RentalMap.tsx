@@ -6,11 +6,15 @@ import Link from "next/link";
 import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
 import type { Product, RentalLocation } from "@/lib/types";
 import { hasGoogleMapsApiKey } from "@/lib/google-maps";
-import { getProductById } from "@/lib/products";
 import { getStockTotal, getTotalStock } from "@/lib/locations";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getSizeUnitLabel } from "@/lib/i18n/labels";
 import { jettsBranches } from "@/lib/jetts-locations";
+import {
+  APPAREL_TIER_ACCENT,
+  groupStocksByApparelTier,
+  type TierStockItem,
+} from "@/lib/apparel-tiers";
 import GoogleMapsLoader from "./GoogleMapsLoader";
 
 const BANGKOK_CENTER = { lat: 13.7563, lng: 100.5018 };
@@ -173,6 +177,75 @@ function GoogleRentalMap({
     [locations, infoLocationId],
   );
 
+  const infoTierGroups = useMemo(
+    () =>
+      infoLocation
+        ? groupStocksByApparelTier(infoLocation.products, products)
+        : [],
+    [infoLocation, products],
+  );
+
+  function renderInfoProductRow({ stock, product }: TierStockItem) {
+    const qty = getStockTotal(stock.inventory);
+    const highlighted = highlightProductId === stock.productId;
+    const rowClass = `flex w-full items-center gap-2 rounded-lg border p-1.5 text-left transition-colors hover:border-blue-300 hover:bg-blue-50/50 ${
+      highlighted ? "border-blue-300 bg-blue-50" : "border-zinc-100"
+    }`;
+    const content = (
+      <>
+        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-neutral-50">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-contain p-0.5"
+            sizes="40px"
+          />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-medium text-zinc-800">
+            {product.name}
+          </p>
+          <p
+            className={`text-[10px] font-bold ${
+              qty === 0 ? "text-red-500" : "text-blue-600"
+            }`}
+          >
+            {qty === 0
+              ? t("stock.out")
+              : t("stock.remaining", {
+                  count: qty,
+                  unit: getSizeUnitLabel(
+                    product.sizeUnit,
+                    locale,
+                    messages,
+                  ),
+                })}
+          </p>
+        </div>
+      </>
+    );
+
+    if (onProductClick && infoLocation) {
+      return (
+        <button
+          key={stock.productId}
+          type="button"
+          onClick={() => onProductClick(stock.productId, infoLocation.id)}
+          className={rowClass}
+        >
+          {content}
+        </button>
+      );
+    }
+
+    return (
+      <Link key={stock.productId} href={`/products/${product.id}`} className={rowClass}>
+        {content}
+      </Link>
+    );
+  }
+
   const onMapLoad = useCallback((loadedMap: google.maps.Map) => {
     setMap(loadedMap);
   }, []);
@@ -277,97 +350,23 @@ function GoogleRentalMap({
                 count: getTotalStock(infoLocation),
               })}
             </p>
-            <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
-              {infoLocation.products.map((stock) => {
-                const product = getProductById(stock.productId, products);
-                if (!product) return null;
-                const qty = getStockTotal(stock.inventory);
-                const highlighted = highlightProductId === stock.productId;
-                return (
-                  onProductClick ? (
-                    <button
-                      key={stock.productId}
-                      type="button"
-                      onClick={() =>
-                        onProductClick(stock.productId, infoLocation.id)
-                      }
-                      className={`flex w-full items-center gap-2 rounded-lg border p-1.5 text-left transition-colors hover:border-blue-300 hover:bg-blue-50/50 ${highlighted
-                          ? "border-blue-300 bg-blue-50"
-                          : "border-zinc-100"
-                        }`}
-                    >
-                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-neutral-50">
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          fill
-                          className="object-contain p-0.5"
-                          sizes="40px"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-xs font-medium text-zinc-800">
-                          {product.name}
-                        </p>
-                        <p
-                          className={`text-[10px] font-bold ${qty === 0 ? "text-red-500" : "text-blue-600"
-                            }`}
-                        >
-                          {qty === 0
-                            ? t("stock.out")
-                            : t("stock.remaining", {
-                              count: qty,
-                              unit: getSizeUnitLabel(
-                                product.sizeUnit,
-                                locale,
-                                messages,
-                              ),
-                            })}
-                        </p>
-                      </div>
-                    </button>
-                  ) : (
-                    <Link
-                      key={stock.productId}
-                      href={`/products/${product.id}`}
-                      className={`flex items-center gap-2 rounded-lg border p-1.5 transition-colors hover:border-blue-300 hover:bg-blue-50/50 ${highlighted
-                          ? "border-blue-300 bg-blue-50"
-                          : "border-zinc-100"
-                        }`}
-                    >
-                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-neutral-50">
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          fill
-                          className="object-contain p-0.5"
-                          sizes="40px"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-xs font-medium text-zinc-800">
-                          {product.name}
-                        </p>
-                        <p
-                          className={`text-[10px] font-bold ${qty === 0 ? "text-red-500" : "text-blue-600"
-                            }`}
-                        >
-                          {qty === 0
-                            ? t("stock.out")
-                            : t("stock.remaining", {
-                              count: qty,
-                              unit: getSizeUnitLabel(
-                                product.sizeUnit,
-                                locale,
-                                messages,
-                              ),
-                            })}
-                        </p>
-                      </div>
-                    </Link>
-                  )
-                );
-              })}
+            <div className="flex max-h-56 flex-col gap-3 overflow-y-auto">
+              {infoTierGroups.map((group) => (
+                <div key={group.tier}>
+                  <div className="mb-1 flex items-center gap-1.5">
+                    <span
+                      className={`h-2.5 w-0.5 shrink-0 rounded-full ${APPAREL_TIER_ACCENT[group.tier]}`}
+                      aria-hidden
+                    />
+                    <p className="truncate text-[10px] font-semibold text-zinc-600">
+                      {t(`apparelTiers.tiers.${group.tier}.name`)}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    {group.items.map((item) => renderInfoProductRow(item))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </InfoWindow>

@@ -72,6 +72,7 @@ export async function createRentalReservationAction(input: {
     });
 
     revalidatePath("/rentals");
+    revalidatePath(`/rentals/checkout/${rental.id}`);
     revalidatePath(`/products/${productId}`);
     revalidatePath("/map");
     revalidatePath("/", "layout");

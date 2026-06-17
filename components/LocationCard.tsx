@@ -1,8 +1,14 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product, RentalLocation } from "@/lib/types";
+import {
+  APPAREL_TIER_ACCENT,
+  groupStocksByApparelTier,
+  type TierStockItem,
+} from "@/lib/apparel-tiers";
 import { getProductById } from "@/lib/products";
 import { getStockTotal, getTotalStock } from "@/lib/locations";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
@@ -41,6 +47,88 @@ export default function LocationCard({
   const expandedProduct = expandedProductId
     ? getProductById(expandedProductId, products)
     : null;
+
+  const tierGroups = useMemo(
+    () => groupStocksByApparelTier(location.products, products),
+    [location.products, products],
+  );
+
+  function renderProductThumb({ stock, product }: TierStockItem) {
+    const qty = getStockTotal(stock.inventory);
+    const unitLabel = getSizeUnitLabel(product.sizeUnit, locale, messages);
+    const isActive =
+      expandedProductId === stock.productId ||
+      highlightProductId === stock.productId;
+    const thumbClass = `relative shrink-0 rounded-lg border p-1.5 transition-colors ${
+      onProductClick
+        ? "cursor-pointer hover:border-blue-300 hover:shadow-sm"
+        : ""
+    } ${
+      isActive
+        ? "border-blue-500 bg-blue-100 ring-2 ring-blue-500/30"
+        : "border-zinc-100 bg-zinc-50"
+    }`;
+
+    const thumbInner = (
+      <>
+        <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-50">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-contain p-1"
+            sizes="48px"
+          />
+        </div>
+        <span
+          className="mt-0.5 block max-w-[52px] truncate text-center text-[9px] font-medium text-zinc-700"
+          title={product.name}
+        >
+          {product.name}
+        </span>
+        <span
+          className={`block text-center text-[10px] font-bold ${
+            qty === 0 ? "text-red-400" : "text-zinc-600"
+          }`}
+        >
+          {qty === 0 ? t("stock.out") : qty}
+        </span>
+      </>
+    );
+
+    const title =
+      qty === 0
+        ? `${product.name} — ${t("stock.out")}`
+        : `${product.name} — ${t("stock.remaining", { count: qty, unit: unitLabel })}`;
+
+    if (onProductClick) {
+      return (
+        <button
+          key={stock.productId}
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onProductClick(stock.productId);
+          }}
+          className={thumbClass}
+          title={title}
+        >
+          {thumbInner}
+        </button>
+      );
+    }
+
+    return (
+      <Link
+        key={stock.productId}
+        href={`/products/${product.id}?from=map`}
+        className={thumbClass}
+        title={title}
+      >
+        {thumbInner}
+      </Link>
+    );
+  }
 
   return (
     <div
@@ -88,85 +176,23 @@ export default function LocationCard({
         </div>
       </button>
 
-      <div className="flex gap-2 overflow-x-auto px-4 pb-3">
-        {location.products.map((stock) => {
-          const product = getProductById(stock.productId, products);
-          if (!product) return null;
-          const qty = getStockTotal(stock.inventory);
-          const unitLabel = getSizeUnitLabel(product.sizeUnit, locale, messages);
-          const isActive =
-            expandedProductId === stock.productId ||
-            highlightProductId === stock.productId;
-          const thumbClass = `relative shrink-0 rounded-lg border p-1.5 transition-colors ${
-            onProductClick
-              ? "cursor-pointer hover:border-blue-300 hover:shadow-sm"
-              : ""
-          } ${
-            isActive
-              ? "border-blue-500 bg-blue-100 ring-2 ring-blue-500/30"
-              : "border-zinc-100 bg-zinc-50"
-          }`;
-
-          const thumbInner = (
-            <>
-              <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-50">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-contain p-1"
-                  sizes="48px"
-                />
-              </div>
+      <div className="space-y-3 px-4 pb-3">
+        {tierGroups.map((group) => (
+          <div key={group.tier}>
+            <div className="mb-1.5 flex items-center gap-2">
               <span
-                className={`mt-0.5 block max-w-[52px] truncate text-center text-[9px] font-medium text-zinc-700`}
-                title={product.name}
-              >
-                {product.name}
-              </span>
-              <span
-                className={`block text-center text-[10px] font-bold ${
-                  qty === 0 ? "text-red-400" : "text-zinc-600"
-                }`}
-              >
-                {qty === 0 ? t("stock.out") : qty}
-              </span>
-            </>
-          );
-
-          const title =
-            qty === 0
-              ? `${product.name} — ${t("stock.out")}`
-              : `${product.name} — ${t("stock.remaining", { count: qty, unit: unitLabel })}`;
-
-          if (onProductClick) {
-            return (
-              <button
-                key={stock.productId}
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onProductClick(stock.productId);
-                }}
-                className={thumbClass}
-                title={title}
-              >
-                {thumbInner}
-              </button>
-            );
-          }
-
-          return (
-            <Link
-              key={stock.productId}
-              href={`/products/${product.id}?from=map`}
-              className={thumbClass}
-              title={title}
-            >
-              {thumbInner}
-            </Link>
-          );
-        })}
+                className={`h-3 w-0.5 shrink-0 rounded-full ${APPAREL_TIER_ACCENT[group.tier]}`}
+                aria-hidden
+              />
+              <p className="truncate text-[10px] font-semibold text-zinc-600">
+                {t(`apparelTiers.tiers.${group.tier}.name`)}
+              </p>
+            </div>
+            <div className="flex gap-2 overflow-x-auto">
+              {group.items.map((item) => renderProductThumb(item))}
+            </div>
+          </div>
+        ))}
       </div>
 
       {expandedProduct && expandedStock && onCloseProduct && (

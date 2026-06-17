@@ -1,4 +1,4 @@
-import type { Product } from "./types";
+import type { LocationProductStock, Product } from "./types";
 
 export type ApparelTier = "essential" | "studio" | "tactical";
 
@@ -7,6 +7,22 @@ export const APPAREL_TIER_ORDER: ApparelTier[] = [
   "studio",
   "tactical",
 ];
+
+export const APPAREL_TIER_ACCENT: Record<ApparelTier, string> = {
+  essential: "bg-blue-500",
+  studio: "bg-violet-500",
+  tactical: "bg-zinc-800",
+};
+
+export type TierStockItem = {
+  stock: LocationProductStock;
+  product: Product;
+};
+
+export type TierStockGroup = {
+  tier: ApparelTier;
+  items: TierStockItem[];
+};
 
 const TIER_BY_PRODUCT_ID: Record<string, ApparelTier> = {
   "dri-fit-tee": "essential",
@@ -23,4 +39,18 @@ const TIER_BY_PRODUCT_ID: Record<string, ApparelTier> = {
 
 export function getProductTier(product: Product): ApparelTier {
   return TIER_BY_PRODUCT_ID[product.id] ?? "essential";
+}
+
+export function groupStocksByApparelTier(
+  stocks: LocationProductStock[],
+  products: Product[],
+): TierStockGroup[] {
+  return APPAREL_TIER_ORDER.map((tier) => ({
+    tier,
+    items: stocks.flatMap((stock) => {
+      const product = products.find((p) => p.id === stock.productId);
+      if (!product || getProductTier(product) !== tier) return [];
+      return [{ stock, product }];
+    }),
+  })).filter((group) => group.items.length > 0);
 }
