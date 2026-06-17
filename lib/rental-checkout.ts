@@ -89,17 +89,20 @@ export async function getRentalCheckoutPeers(
   const profiles = await getUserProfilesByIds(userIds);
   const profilesById = new Map(profiles.map((profile) => [profile.id, profile]));
 
-  return rows
-    .map((row) => {
-      const profile = profilesById.get(row.userId);
-      if (!profile) return null;
-      return {
-        userId: row.userId,
-        name: profile.name,
-        image: profile.image,
-        size: row.size,
-        reservedAt: row.reservedAt.toISOString(),
-      };
-    })
-    .filter((peer): peer is RentalCheckoutPeer => peer !== null);
+  const peers: RentalCheckoutPeer[] = [];
+
+  for (const row of rows) {
+    const profile = profilesById.get(row.userId);
+    if (!profile) continue;
+
+    peers.push({
+      userId: row.userId,
+      name: profile.name,
+      size: row.size,
+      reservedAt: row.reservedAt.toISOString(),
+      ...(profile.image ? { image: profile.image } : {}),
+    });
+  }
+
+  return peers;
 }
