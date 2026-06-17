@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -32,6 +33,7 @@ export function LocaleProvider({
 }) {
   const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   useEffect(() => {
     setLocaleState(readLocaleCookie());
@@ -50,9 +52,10 @@ export function LocaleProvider({
       startTransition(async () => {
         await setLocaleAction(next);
         setLocaleState(next);
+        router.refresh();
       });
     },
-    [locale],
+    [locale, router],
   );
 
   const value = useMemo(

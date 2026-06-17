@@ -11,6 +11,7 @@ import type {
 import { getStockTotal } from "@/lib/locations";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getCategoryLabel } from "@/lib/i18n/labels";
+import { useLocalizedProduct } from "@/lib/i18n/use-localized-catalog";
 import SizeInventory from "./SizeInventory";
 import StockBadge from "./StockBadge";
 import StarRating from "./StarRating";
@@ -29,7 +30,7 @@ type Props = {
 };
 
 export default function ProductCard({
-  product,
+  product: productProp,
   stock,
   globalInventory,
   variant = "catalog",
@@ -42,6 +43,7 @@ export default function ProductCard({
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const product = useLocalizedProduct(productProp);
   const categoryLabel =
     categoryLabelProp ?? getCategoryLabel(product.category, locale, messages);
   const colorLabel = colorLabelProp ?? t("common.color");

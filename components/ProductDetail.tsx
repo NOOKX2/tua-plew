@@ -11,6 +11,11 @@ import {
 import { getRelatedProducts } from "@/lib/products";
 import { useLocale, useTranslations } from "@/lib/i18n/client";
 import { getCategoryLabel } from "@/lib/i18n/labels";
+import {
+  useLocalizedLocations,
+  useLocalizedProduct,
+  useLocalizedProducts,
+} from "@/lib/i18n/use-localized-catalog";
 import ProductAvailabilityList from "./ProductAvailabilityList";
 import ProductReviewSection from "./ProductReviewSection";
 import RentalBookingPanel from "./RentalBookingPanel";
@@ -51,9 +56,9 @@ function DetailSection({
 }
 
 export default function ProductDetail({
-  product,
-  products,
-  locations,
+  product: productProp,
+  products: productsProp,
+  locations: locationsProp,
   compact = false,
   reviews = [],
   ratingSummary = { averageRating: 0, count: 0 },
@@ -62,6 +67,9 @@ export default function ProductDetail({
   const t = useTranslations();
   const { locale, messages } = useLocale();
   const { isAuthenticated } = useUser();
+  const product = useLocalizedProduct(productProp);
+  const products = useLocalizedProducts(productsProp);
+  const locations = useLocalizedLocations(locationsProp);
   const availability = getLocationsWithProduct(product.id, locations);
   const aggregatedInventory = getAggregatedProductInventory(
     product.id,

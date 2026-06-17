@@ -10,6 +10,7 @@ import {
   formatDiscount,
   getCampaignTypeLabel,
 } from "@/lib/i18n/labels";
+import { useLocalizedCampaign } from "@/lib/i18n/use-localized-catalog";
 import CampaignJoinButton from "./CampaignJoinButton";
 import CampaignCoverImage from "./CampaignCoverImage";
 import CampaignProgressBar from "./CampaignProgressBar";
@@ -29,6 +30,7 @@ export default function CampaignCard({
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const localized = useLocalizedCampaign(campaign);
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-all hover:border-amber-300 hover:shadow-md">
@@ -45,8 +47,8 @@ export default function CampaignCard({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/10" />
           <span className="absolute left-3 top-3 rounded-full bg-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
-            {campaign.rewardLabel ??
-              formatDiscount(campaign.discountPercent, locale, messages)}
+            {localized.rewardLabel ??
+              formatDiscount(localized.discountPercent, locale, messages)}
           </span>
           {joined && (
             <span className="absolute right-3 top-3 rounded-full bg-blue-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
@@ -59,10 +61,10 @@ export default function CampaignCard({
               {getCampaignTypeLabel(campaign.campaignType, locale, messages)}
             </span>
             <h3 className="text-lg font-bold leading-snug drop-shadow-sm group-hover:underline">
-              {campaign.title}
+              {localized.title}
             </h3>
             <p className="mt-1 line-clamp-2 text-sm text-white/90">
-              {campaign.shortDescription}
+              {localized.shortDescription}
             </p>
           </div>
         </div>
@@ -90,7 +92,7 @@ export default function CampaignCard({
 
           <div className="mt-auto flex items-center justify-between">
             <span className="text-xs text-zinc-500">
-              {campaign.rewardLabel
+              {localized.rewardLabel
                 ? t("campaign.rewardCta")
                 : campaign.campaignType === "loyalty"
                   ? t("campaign.loyaltyCta")

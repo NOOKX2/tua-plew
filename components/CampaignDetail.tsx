@@ -15,6 +15,7 @@ import {
 import CampaignCoverImage from "./CampaignCoverImage";
 import CampaignJoinButton from "./CampaignJoinButton";
 import CampaignProgressBar from "./CampaignProgressBar";
+import { useLocalizedCampaign, useLocalizedLocations } from "@/lib/i18n/use-localized-catalog";
 import { useUser } from "./UserProvider";
 
 type Props = {
@@ -50,8 +51,8 @@ function DetailBlock({
 }
 
 export default function CampaignDetail({
-  campaign,
-  partnerLocations,
+  campaign: campaignProp,
+  partnerLocations: partnerLocationsProp,
   joined: joinedProp,
   enrollmentCount = 0,
   progress = null,
@@ -59,6 +60,8 @@ export default function CampaignDetail({
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const campaign = useLocalizedCampaign(campaignProp);
+  const partnerLocations = useLocalizedLocations(partnerLocationsProp);
   const { enrolledCampaignIds, isAuthenticated: isAuthenticatedFromUser } =
     useUser();
   const joined = joinedProp ?? enrolledCampaignIds.includes(campaign.id);

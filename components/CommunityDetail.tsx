@@ -19,6 +19,7 @@ import {
 import CommunityJoinButton from "./CommunityJoinButton";
 import EventParticipantsPanel from "./EventParticipantsPanel";
 import StockBadge from "./StockBadge";
+import { useLocalizedEvent, useLocalizedLocations, useLocalizedProducts } from "@/lib/i18n/use-localized-catalog";
 import { useUser } from "./UserProvider";
 
 type Props = {
@@ -56,10 +57,10 @@ function DetailBlock({
 }
 
 export default function CommunityDetail({
-  event,
-  location,
-  locations,
-  products,
+  event: eventProp,
+  location: locationProp,
+  locations: locationsProp,
+  products: productsProp,
   joined: joinedProp,
   participants = [],
   currentUserId: currentUserIdProp,
@@ -67,6 +68,12 @@ export default function CommunityDetail({
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const event = useLocalizedEvent(eventProp);
+  const locations = useLocalizedLocations(locationsProp);
+  const products = useLocalizedProducts(productsProp);
+  const location = locationProp
+    ? locations.find((loc) => loc.id === locationProp.id)
+    : undefined;
   const {
     enrolledEventIds,
     isAuthenticated: isAuthenticatedFromUser,

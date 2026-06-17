@@ -13,6 +13,7 @@ import {
   getActivityLabel,
   getDifficultyLabel,
 } from "@/lib/i18n/labels";
+import { useLocalizedEvent } from "@/lib/i18n/use-localized-catalog";
 import CommunityJoinButton from "./CommunityJoinButton";
 
 type Props = {
@@ -30,6 +31,7 @@ export default function CommunityCard({
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
+  const localized = useLocalizedEvent(event);
   const remaining = spotsLeft(event);
 
   return (
@@ -43,7 +45,7 @@ export default function CommunityCard({
         >
           <Image
             src={event.image}
-            alt={event.title}
+            alt={localized.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -64,11 +66,11 @@ export default function CommunityCard({
               </span>
             </div>
             <h3 className="text-lg font-bold leading-snug drop-shadow-sm group-hover:underline">
-              {event.title}
+              {localized.title}
             </h3>
             {!compact && (
               <p className="mt-1 line-clamp-2 text-sm text-white/90">
-                {event.shortDescription}
+                {localized.shortDescription}
               </p>
             )}
           </div>
@@ -93,7 +95,7 @@ export default function CommunityCard({
             </span>
           </div>
 
-          <p className="mb-3 line-clamp-1 text-sm text-zinc-500">{event.venue}</p>
+          <p className="mb-3 line-clamp-1 text-sm text-zinc-500">{localized.venue}</p>
 
           <div className="mt-auto flex items-center justify-between gap-2">
             <p className="text-xs text-zinc-500">
