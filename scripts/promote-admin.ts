@@ -16,7 +16,7 @@ if (!email) {
 }
 
 async function main() {
-  await mongoose.connect(url);
+  await mongoose.connect(url!);
 
   const user = await User.findOneAndUpdate(
     { email },

@@ -25,7 +25,6 @@ type Props = {
   onProductClick?: (productId: string) => void;
   onCloseProduct?: () => void;
   hideEmbeddedQuickView?: boolean;
-  isAuthenticated?: boolean;
 };
 
 export default function LocationCard({
@@ -38,7 +37,6 @@ export default function LocationCard({
   onProductClick,
   onCloseProduct,
   hideEmbeddedQuickView = false,
-  isAuthenticated = false,
 }: Props) {
   const t = useTranslations();
   const { locale, messages } = useLocale();
@@ -205,7 +203,6 @@ export default function LocationCard({
             stock={expandedStock}
             location={location}
             onClose={onCloseProduct}
-            isAuthenticated={isAuthenticated}
           />
         </div>
       )}

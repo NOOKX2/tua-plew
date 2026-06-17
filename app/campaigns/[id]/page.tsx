@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CampaignDetail from "@/components/CampaignDetail";
-import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getCampaignEnrollmentCount } from "@/lib/campaign-enrollments";
 import {
   getCampaignByIdAsync,
@@ -14,7 +13,7 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-export const revalidate = CATALOG_PAGE_REVALIDATE;
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   const ids = await getCampaignIds();

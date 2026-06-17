@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CommunityDetail from "@/components/CommunityDetail";
-import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getEventParticipants } from "@/lib/community-participants";
 import {
   getCommunityEventByIdAsync,
@@ -15,7 +14,7 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-export const revalidate = CATALOG_PAGE_REVALIDATE;
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   const ids = await getCommunityEventIds();

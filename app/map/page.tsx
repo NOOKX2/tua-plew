@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import RentalMapView from "@/components/RentalMapView";
 import RentalViewTabs from "@/components/RentalViewTabs";
-import { auth } from "@/auth";
-import { isAuthenticatedUser } from "@/lib/auth-session";
 import { getRentalLocationsFresh } from "@/lib/locations.server";
 import { getProducts } from "@/lib/products.server";
 import { getTranslator } from "@/lib/i18n/server";
@@ -23,10 +21,9 @@ type Props = {
 
 export default async function MapPage({ searchParams }: Props) {
   const { product, location } = await searchParams;
-  const [locations, products, session] = await Promise.all([
+  const [locations, products] = await Promise.all([
     getRentalLocationsFresh(),
     getProducts(),
-    auth(),
   ]);
 
   const filteredLocations = locations.filter((loc) =>
@@ -41,7 +38,6 @@ export default async function MapPage({ searchParams }: Props) {
         initialLocationId={location ?? null}
         locations={filteredLocations}
         products={products}
-        isAuthenticated={isAuthenticatedUser(session)}
       />
     </div>
   );

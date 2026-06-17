@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import CampaignList from "@/components/CampaignList";
-import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getCampaigns } from "@/lib/campaigns.server";
 import { staticT } from "@/lib/i18n/static";
 
-export const revalidate = CATALOG_PAGE_REVALIDATE;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: staticT("meta.campaignsTitle"),

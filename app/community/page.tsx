@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import CommunityList from "@/components/CommunityList";
 import CommunitySocialNav from "@/components/CommunitySocialNav";
-import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getCommunityEvents } from "@/lib/community.server";
 import { staticT } from "@/lib/i18n/static";
 
-export const revalidate = CATALOG_PAGE_REVALIDATE;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: staticT("meta.communityTitle"),

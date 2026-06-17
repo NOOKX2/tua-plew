@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductDetail from "@/components/ProductDetail";
-import { CATALOG_PAGE_REVALIDATE } from "@/lib/catalog-revalidate";
 import { getRentalLocations } from "@/lib/locations.server";
 import {
   getProductByIdAsync,
@@ -19,7 +18,7 @@ type Props = {
   searchParams: Promise<{ from?: string }>;
 };
 
-export const revalidate = CATALOG_PAGE_REVALIDATE;
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   const ids = await getProductIds();

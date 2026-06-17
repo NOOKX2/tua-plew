@@ -10,7 +10,6 @@ type Props = {
   stock: LocationProductStock;
   location: RentalLocation;
   onClose: () => void;
-  isAuthenticated?: boolean;
 };
 
 export default function MobileMapProductSheet({
@@ -18,7 +17,6 @@ export default function MobileMapProductSheet({
   stock,
   location,
   onClose,
-  isAuthenticated = false,
 }: Props) {
   const t = useTranslations();
 
@@ -54,7 +52,6 @@ export default function MobileMapProductSheet({
             stock={stock}
             location={location}
             onClose={onClose}
-            isAuthenticated={isAuthenticated}
           />
         </div>
       </div>
