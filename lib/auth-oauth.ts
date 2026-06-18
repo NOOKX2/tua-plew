@@ -2,7 +2,7 @@ import { connectDB } from "@/lib/mongoose";
 import { Account as AccountModel, User } from "@/lib/models";
 import { grantWelcomeBonus } from "@/lib/rental-tokens";
 
-export const OAUTH_PROVIDERS = ["google", "line"] as const;
+export const OAUTH_PROVIDERS = ["google"] as const;
 export type OAuthProviderId = (typeof OAUTH_PROVIDERS)[number];
 
 export function isOAuthProvider(
@@ -120,13 +120,4 @@ export async function upsertOAuthUser(input: {
   );
 
   return dbUser._id.toString();
-}
-
-export function getConfiguredOAuthProviders() {
-  return {
-    google: Boolean(
-      process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET,
-    ),
-    line: Boolean(process.env.AUTH_LINE_ID && process.env.AUTH_LINE_SECRET),
-  };
 }

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
+import { GoogleSignInButton } from "@/components/AuthButton";
 import { AuthDivider, CredentialsSignInForm } from "@/components/AuthForms";
-import OAuthSignInSection from "@/components/OAuthSignInSection";
 import AuthLayout from "@/components/AuthLayout";
 import { auth } from "@/auth";
 import { safeCallbackPath } from "@/lib/auth-redirect";
@@ -22,7 +22,7 @@ export default async function LoginPage({ searchParams }: Props) {
     <AuthLayout variant="login">
       <CredentialsSignInForm callbackUrl={nextPath} />
       <AuthDivider />
-      <OAuthSignInSection callbackUrl={nextPath} />
+      <GoogleSignInButton callbackUrl={nextPath} />
     </AuthLayout>
   );
 }

@@ -153,7 +153,6 @@ export const th = {
   auth: {
     login: "เข้าสู่ระบบ",
     loginWithGoogle: "เข้าสู่ระบบด้วย Google",
-    loginWithLine: "เข้าสู่ระบบด้วย LINE",
     logout: "ออกจากระบบ",
     register: "สมัครสมาชิก",
     signingIn: "กำลังเข้าสู่ระบบ...",

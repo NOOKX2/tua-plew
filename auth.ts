@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import Line from "next-auth/providers/line";
 import { connectDB } from "@/lib/mongoose";
 import { User } from "@/lib/models";
 import { verifyPassword } from "@/lib/password";
@@ -43,13 +42,6 @@ if (
 
 const providers = [
   Google,
-  Line({
-    authorization: {
-      params: {
-        bot_prompt: "normal",
-      },
-    },
-  }),
   Credentials({
     name: "credentials",
     credentials: {
