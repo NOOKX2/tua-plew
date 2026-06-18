@@ -159,6 +159,7 @@ export const en: Messages = {
   auth: {
     login: "Log in",
     loginWithGoogle: "Log in with Google",
+    loginWithLine: "Log in with LINE",
     logout: "Log out",
     register: "Sign up",
     signingIn: "Signing in...",

@@ -29,9 +29,9 @@ export default function RootLayout({
   return (
     <html
       lang={DEFAULT_LOCALE}
-      className={`${geistSans.variable} ${geistMono.variable} h-full overflow-x-hidden antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full overflow-x-clip antialiased`}
     >
-      <body className="flex min-h-screen max-w-full flex-col overflow-x-hidden bg-[#faf9f6] text-zinc-900">
+      <body className="flex min-h-screen w-full max-w-full flex-col overflow-x-clip bg-[#faf9f6] text-zinc-900">
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>

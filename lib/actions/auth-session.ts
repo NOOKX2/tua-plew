@@ -28,6 +28,10 @@ export async function signInWithGoogleAction(callbackUrl = "/") {
   await signIn("google", { redirectTo: callbackUrl });
 }
 
+export async function signInWithLineAction(callbackUrl = "/") {
+  await signIn("line", { redirectTo: callbackUrl });
+}
+
 export async function signOutAction() {
   await signOut({ redirectTo: "/" });
 }

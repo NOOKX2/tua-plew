@@ -28,13 +28,22 @@ const TIER_BY_PRODUCT_ID: Record<string, ApparelTier> = {
   "dri-fit-tee": "essential",
   "running-shorts": "essential",
   "running-shoes": "essential",
+  "sports-tank-top": "essential",
+  "training-pants": "essential",
+  "walk-shoes": "essential",
   "nike-pegasus": "essential",
   "nb-1080": "essential",
   "on-cloudrunner": "essential",
   leggings: "studio",
   "yoga-set": "studio",
+  "yoga-bra": "studio",
+  "pilates-shorts": "studio",
+  "pilates-set": "studio",
   "training-shoes": "tactical",
   "adidas-ultraboost": "tactical",
+  "compression-tee": "tactical",
+  "crossfit-shorts": "tactical",
+  "crossfit-shoes": "tactical",
 };
 
 export function getProductTier(product: Product): ApparelTier {

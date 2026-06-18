@@ -37,7 +37,7 @@ export default async function RentalShopPage() {
     }));
 
   return (
-    <main className="flex min-h-0 flex-1 flex-col bg-[#faf9f6]">
+    <main className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-x-clip bg-[#faf9f6]">
       <RentalViewTabs />
       <HomeRentalSection
         locations={locations}

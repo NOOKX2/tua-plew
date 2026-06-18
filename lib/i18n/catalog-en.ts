@@ -306,6 +306,224 @@ export const catalogEn = {
       careNote:
         "Every partner-brand pair is cleaned, UV- and ozone-sanitized, and packed in a separate zip bag.",
     },
+    "sports-tank-top": {
+      name: "Sports Tank Top",
+      description: "Light, breathable tank for cardio and multi-sport use",
+      longDescription:
+        "Lightweight polyester sports tank with moisture-wicking fabric and a roomy fit. Great for running, badminton, aerobics, or outdoor workouts in warm weather.",
+      material: "92% polyester + 8% spandex",
+      color: "Blue",
+      features: [
+        "Ultra-lightweight",
+        "Breathable",
+        "Roomy armholes",
+        "Quick-dry after washing",
+      ],
+      activities: ["Running", "Badminton", "Aerobics", "Cycling"],
+      sizeGuide: cmGuide([
+        { size: "XS", chest: "74–79 cm" },
+        { size: "S", chest: "79–84 cm" },
+        { size: "M", chest: "84–89 cm" },
+        { size: "L", chest: "89–95 cm" },
+        { size: "XL", chest: "95–100 cm" },
+      ]),
+      careNote:
+        "Every piece is washed, ozone-sanitized, and packed in a biodegradable zip bag before handover.",
+    },
+    "training-pants": {
+      name: "Warm-Up Training Pants",
+      description: "Light long pants — comfortable for warm-ups",
+      longDescription:
+        "Lightweight warm-up pants with stretch and an elastic waist. Comfortable before and after workouts, or for easy recovery walks.",
+      material: "85% polyester + 15% spandex",
+      color: "Grey",
+      features: [
+        "Lightweight and comfortable",
+        "Elastic waistband",
+        "Great for warm-ups",
+        "Quick-dry",
+      ],
+      activities: ["Warm-up", "Walking", "Stretching", "Recovery"],
+      sizeGuide: cmGuide([
+        { size: "XS", waist: "58–61 cm" },
+        { size: "S", waist: "61–66 cm" },
+        { size: "M", waist: "66–71 cm" },
+        { size: "L", waist: "71–76 cm" },
+        { size: "XL", waist: "76–81 cm" },
+      ]),
+      careNote:
+        "Elastic waistbands are checked before every handover. Washed to Tua Plew hygiene standards.",
+    },
+    "walk-shoes": {
+      name: "Walking Shoes",
+      description: "Light, comfortable shoes for walking and light cardio",
+      longDescription:
+        "Lightweight walking shoes with heel cushioning and a grippy outsole. Great for power walking, light cardio, or general gym use.",
+      material: "Mesh upper + EVA foam + rubber sole",
+      color: "Grey-white",
+      features: [
+        "Lightweight",
+        "Comfortable fit",
+        "Non-slip rubber sole",
+        "Cleaned every time",
+      ],
+      activities: ["Power walking", "Cardio", "Treadmill", "Recovery"],
+      sizeGuide: cmGuide([
+        { size: "38", footLength: "24.0 cm" },
+        { size: "39", footLength: "24.5 cm" },
+        { size: "40", footLength: "25.0 cm" },
+        { size: "41", footLength: "25.5 cm" },
+        { size: "42", footLength: "26.0 cm" },
+        { size: "43", footLength: "26.5 cm" },
+      ]),
+      careNote:
+        "Every pair is cleaned, UV- and ozone-sanitized, and packed in a separate zip bag.",
+    },
+    "yoga-bra": {
+      name: "Sports Bra",
+      description: "Supportive, comfortable bra for yoga and pilates",
+      longDescription:
+        "Stretch sports bra with medium support and secure straps that stay in place. Great for yoga, pilates, barre, and indoor classes.",
+      material: "80% nylon + 20% spandex",
+      color: "Purple",
+      features: [
+        "Medium support",
+        "Highly stretchy fabric",
+        "Secure straps",
+        "Non-irritating",
+      ],
+      activities: ["Yoga", "Pilates", "Barre", "Stretching"],
+      sizeGuide: cmGuide([
+        { size: "XS", chest: "74–79 cm" },
+        { size: "S", chest: "79–84 cm" },
+        { size: "M", chest: "84–89 cm" },
+        { size: "L", chest: "89–95 cm" },
+        { size: "XL", chest: "95–100 cm" },
+      ]),
+      careNote:
+        "Washed to hygiene standards. Fabric stretch is checked after every wash.",
+    },
+    "pilates-shorts": {
+      name: "Yoga Shorts",
+      description: "Fitted four-way stretch shorts — not see-through",
+      longDescription:
+        "High-waist yoga shorts with four-way stretch and a snug fit. Not see-through when bending or stretching. Great for yoga, pilates, and barre.",
+      material: "78% nylon + 22% spandex",
+      color: "Hot pink",
+      features: [
+        "High waist for support",
+        "Four-way stretch",
+        "Not see-through",
+        "Seamless sides",
+      ],
+      activities: ["Yoga", "Pilates", "Barre", "Stretching"],
+      sizeGuide: cmGuide([
+        { size: "XS", waist: "56–59 cm" },
+        { size: "S", waist: "59–64 cm" },
+        { size: "M", waist: "64–69 cm" },
+        { size: "L", waist: "69–74 cm" },
+        { size: "XL", waist: "74–79 cm" },
+      ]),
+      careNote:
+        "Stretch and opacity are checked after every wash.",
+    },
+    "pilates-set": {
+      name: "Pilates Set (Full)",
+      description: "Bra + shorts in one set — ready for class",
+      longDescription:
+        "Complete pilates set with a sports bra and fitted shorts in soft, stretchy fabric. Flattering fit for pilates, yoga, and barre.",
+      material: "75% nylon + 25% spandex",
+      color: "Light purple",
+      features: [
+        "Full set: bra + shorts",
+        "Flattering fit",
+        "Soft, stretchy fabric",
+        "Cheaper than renting separately",
+      ],
+      activities: ["Pilates", "Yoga", "Barre", "Stretching"],
+      sizeGuide: cmGuide([
+        { size: "XS", chest: "74–79 cm", waist: "56–59 cm" },
+        { size: "S", chest: "79–84 cm", waist: "59–64 cm" },
+        { size: "M", chest: "84–89 cm", waist: "64–69 cm" },
+        { size: "L", chest: "89–95 cm", waist: "69–74 cm" },
+        { size: "XL", chest: "95–100 cm", waist: "74–79 cm" },
+      ]),
+      careNote:
+        "Set pieces are packed separately in paired zip bags for hygiene and inspection.",
+    },
+    "compression-tee": {
+      name: "Compression Tee",
+      description: "Fitted top for muscle support — great for weights and CrossFit",
+      longDescription:
+        "Four-way stretch compression tee that supports muscles and reduces vibration. Ideal for weight training, CrossFit, and strength work.",
+      material: "82% polyester + 18% spandex",
+      color: "Black",
+      features: [
+        "Muscle support fit",
+        "Four-way stretch",
+        "Abrasion resistant",
+        "Low odor retention",
+      ],
+      activities: ["Weight training", "CrossFit", "HIIT", "Functional"],
+      sizeGuide: cmGuide([
+        { size: "XS", chest: "76–81 cm" },
+        { size: "S", chest: "81–86 cm" },
+        { size: "M", chest: "86–91 cm" },
+        { size: "L", chest: "91–97 cm" },
+        { size: "XL", chest: "97–102 cm" },
+      ]),
+      careNote:
+        "Fabric stretch is checked after every wash for proper support.",
+    },
+    "crossfit-shorts": {
+      name: "CrossFit Shorts",
+      description: "Durable, stretchy shorts with a hidden pocket",
+      longDescription:
+        "CrossFit shorts in abrasion-resistant stretch fabric with a side pocket. Built for weights, functional training, and WODs.",
+      material: "90% polyester + 10% spandex",
+      color: "Charcoal",
+      features: [
+        "Durable fabric",
+        "High stretch",
+        "Hidden side pocket",
+        "WOD-ready",
+      ],
+      activities: ["CrossFit", "Weight training", "HIIT", "Functional"],
+      sizeGuide: cmGuide([
+        { size: "XS", waist: "58–61 cm" },
+        { size: "S", waist: "61–66 cm" },
+        { size: "M", waist: "66–71 cm" },
+        { size: "L", waist: "71–76 cm" },
+        { size: "XL", waist: "76–81 cm" },
+      ]),
+      careNote:
+        "Pockets and seams are checked before every handover. Washed to hygiene standards.",
+    },
+    "crossfit-shoes": {
+      name: "CrossFit Shoes",
+      description: "Flat, stable shoes built for lifting and WODs",
+      longDescription:
+        "CrossFit shoes with a wide toe box, flat grippy sole, and heel cushioning. Built to handle stretching, abrasion, and high-intensity WODs.",
+      material: "Synthetic leather + foam + rubber sole",
+      color: "Black-green",
+      features: [
+        "Flat sole for stability",
+        "Wide toe box",
+        "Stretch and abrasion resistant",
+        "Cleaned every time",
+      ],
+      activities: ["CrossFit", "Weight training", "HIIT", "Functional"],
+      sizeGuide: cmGuide([
+        { size: "38", footLength: "24.0 cm" },
+        { size: "39", footLength: "24.5 cm" },
+        { size: "40", footLength: "25.0 cm" },
+        { size: "41", footLength: "25.5 cm" },
+        { size: "42", footLength: "26.0 cm" },
+        { size: "43", footLength: "26.5 cm" },
+      ]),
+      careNote:
+        "Soles and seams are inspected after every return. Cleaned and sanitized before the next customer.",
+    },
   } satisfies Record<string, ProductOverride>,
 
   locations: {

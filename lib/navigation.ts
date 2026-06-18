@@ -44,7 +44,7 @@ export const mainNavItems: MainNavItem[] = [
     centerAction: true,
     match: (path) =>
       path === "/map" ||
-      path.startsWith("/rentals") ||
+      (path.startsWith("/rentals") && path !== "/rentals") ||
       path.startsWith("/products"),
   },
   {

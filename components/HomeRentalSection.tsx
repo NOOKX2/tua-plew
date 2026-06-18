@@ -40,7 +40,7 @@ export default async function HomeRentalSection({
         <div className="relative mb-8 overflow-hidden rounded-[1.5rem] border border-zinc-200/80 shadow-md shadow-zinc-900/5">
           <div className="relative min-h-[200px] sm:min-h-[240px]">
             <Image
-              src="/products/running-shorts.jpg"
+              src="/products/running-shorts-navy.jpg"
               alt={t("home.rentalBannerImageAlt")}
               fill
               sizes="(max-width: 1280px) 100vw, 1280px"

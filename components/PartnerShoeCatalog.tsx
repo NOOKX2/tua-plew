@@ -55,10 +55,10 @@ export default async function PartnerShoeCatalog({
           {t("home.scrollForMore")}
         </p>
 
-        <div className="relative">
+        <div className="relative min-w-0 w-full overflow-hidden">
           <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-blue-50/90 via-blue-50/70 to-transparent sm:hidden" />
 
-          <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4 lg:gap-5">
+          <div className="flex min-w-0 w-full max-w-full gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4 lg:gap-5">
             {partnerShoes.map((product, index) => (
               <div
                 key={product.id}
