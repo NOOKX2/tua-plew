@@ -44,11 +44,15 @@ export default async function RentalCheckoutView({
   locale,
 }: Props) {
   const t = await getTranslator();
+  const isSubscription = rental.paymentMethod === "subscription";
   const paidWithTokens = rental.tokensSpent > 0;
   const isMixed = rental.paymentMethod === "mixed";
   const cashDue = rental.price - rental.tokensSpent;
 
   function paymentSummary() {
+    if (isSubscription) {
+      return t("subscription.paidWithPlan");
+    }
     if (rental.paymentMethod === "tokens") {
       return t("rental.paidWithTokens", { count: rental.tokensSpent });
     }
@@ -99,14 +103,16 @@ export default async function RentalCheckoutView({
           {rental.pickupCode}
         </p>
         <p className="mt-4 text-center text-xs leading-relaxed text-blue-100/80">
-          {paidWithTokens
-            ? isMixed
-              ? t("rental.mixedPaymentSummary", {
-                  tokens: rental.tokensSpent,
-                  cash: cashDue,
-                })
-              : t("rental.paidWithTokens", { count: rental.tokensSpent })
-            : t("rental.payment.paidOnlineShort", { amount: rental.price })}
+          {isSubscription
+            ? t("subscription.paidWithPlan")
+            : paidWithTokens
+              ? isMixed
+                ? t("rental.mixedPaymentSummary", {
+                    tokens: rental.tokensSpent,
+                    cash: cashDue,
+                  })
+                : t("rental.paidWithTokens", { count: rental.tokensSpent })
+              : t("rental.payment.paidOnlineShort", { amount: rental.price })}
         </p>
       </div>
 
@@ -127,7 +133,13 @@ export default async function RentalCheckoutView({
           <DetailRow
             label={t("rental.selectPayment")}
             value={paymentSummary()}
-            valueClassName={paidWithTokens ? "text-amber-700" : "text-zinc-900"}
+            valueClassName={
+              isSubscription
+                ? "text-violet-700"
+                : paidWithTokens
+                  ? "text-amber-700"
+                  : "text-zinc-900"
+            }
           />
           {isMixed && (
             <DetailRow
@@ -144,7 +156,16 @@ export default async function RentalCheckoutView({
         </dl>
       </div>
 
-      {paidWithTokens ? (
+      {isSubscription ? (
+        <div className="rounded-2xl border border-violet-200/80 bg-violet-50/80 p-5 text-center shadow-sm">
+          <p className="text-sm font-semibold text-violet-900">
+            {t("subscription.paidWithPlan")}
+          </p>
+          <p className="mt-1 text-xs text-violet-800/80">
+            {t("subscription.planCredit")}
+          </p>
+        </div>
+      ) : paidWithTokens ? (
         <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 p-5 text-center shadow-sm">
           <p className="text-sm font-semibold text-amber-900">{paymentSummary()}</p>
           <p className="mt-1 text-xs text-amber-800/80">{t("rental.tokenRate")}</p>

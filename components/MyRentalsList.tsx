@@ -80,6 +80,22 @@ export default function MyRentalsList({
     return t(`rental.status.${status}`);
   }
 
+  function paymentLabel(rental: RentalReservation) {
+    if (rental.paymentMethod === "subscription") {
+      return t("subscription.paidWithPlan");
+    }
+    if (rental.paymentMethod === "tokens" && rental.tokensSpent > 0) {
+      return t("rental.paidWithTokens", { count: rental.tokensSpent });
+    }
+    if (rental.paymentMethod === "mixed" && rental.tokensSpent > 0) {
+      return t("rental.mixedPaymentSummary", {
+        tokens: rental.tokensSpent,
+        cash: rental.price - rental.tokensSpent,
+      });
+    }
+    return null;
+  }
+
   async function handleCancel(id: string) {
     setError(null);
     setCancellingId(id);
@@ -295,6 +311,11 @@ export default function MyRentalsList({
                           <span className="text-sm font-medium text-zinc-500">
                             {t("common.perRental")}
                           </span>
+                          {paymentLabel(rental) && (
+                            <span className="mt-1 block text-xs font-medium text-violet-700">
+                              {paymentLabel(rental)}
+                            </span>
+                          )}
                         </dd>
                       </div>
                       <div className="rounded-xl bg-zinc-50/80 px-4 py-3 ring-1 ring-zinc-100 sm:col-span-2">

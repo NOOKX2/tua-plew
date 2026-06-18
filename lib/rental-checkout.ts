@@ -15,7 +15,7 @@ type RentalRow = {
   status: string;
   pickupCode: string;
   price: number;
-  paymentMethod?: "cash" | "tokens" | "mixed";
+  paymentMethod?: "cash" | "tokens" | "mixed" | "subscription";
   tokensSpent?: number;
   productName: string;
   locationName: string;

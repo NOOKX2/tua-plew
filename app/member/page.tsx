@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import MemberPageContent from "@/components/MemberPageContent";
 import MemberTopUpSuccessBanner from "@/components/MemberTopUpSuccessBanner";
+import MemberSubscribeSuccessBanner from "@/components/MemberSubscribeSuccessBanner";
 import { auth } from "@/auth";
 import { getActiveRentalCountForSession } from "@/lib/rentals.server";
 import { getRentalTokenBalanceForSession } from "@/lib/rental-tokens.server";
+import { getSubscriptionStatusForSession } from "@/lib/subscription.server";
 import { getTranslator } from "@/lib/i18n/server";
 import { isAdminUser } from "@/lib/user-role.server";
 
@@ -17,12 +19,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MemberPage() {
-  const [session, t, activeRentals, tokenBalance] = await Promise.all([
-    auth(),
-    getTranslator(),
-    getActiveRentalCountForSession(),
-    getRentalTokenBalanceForSession(),
-  ]);
+  const [session, t, activeRentals, tokenBalance, subscriptionStatus] =
+    await Promise.all([
+      auth(),
+      getTranslator(),
+      getActiveRentalCountForSession(),
+      getRentalTokenBalanceForSession(),
+      getSubscriptionStatusForSession(),
+    ]);
 
   const user = session?.user?.id
     ? {
@@ -57,6 +61,7 @@ export default async function MemberPage() {
 
         <Suspense fallback={null}>
           <MemberTopUpSuccessBanner />
+          <MemberSubscribeSuccessBanner />
         </Suspense>
 
         <MemberPageContent
@@ -64,6 +69,7 @@ export default async function MemberPage() {
           activeRentals={activeRentals}
           showAdmin={Boolean(showAdmin)}
           tokenBalance={tokenBalance}
+          subscriptionStatus={subscriptionStatus}
         />
       </div>
     </main>

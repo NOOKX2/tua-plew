@@ -3,15 +3,17 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Coins, CreditCard } from "lucide-react";
+import { Coins, CreditCard, Sparkles } from "lucide-react";
 import type { ProductAvailability } from "@/lib/locations";
 import type { Product } from "@/lib/types";
 import { createRentalReservationAction } from "@/lib/actions/rentals";
 import { getRentalTokenBalanceAction } from "@/lib/actions/rental-tokens";
+import { getSubscriptionStatusAction } from "@/lib/actions/subscription";
+import type { SubscriptionStatus } from "@/lib/subscription";
 import { useTranslations } from "@/lib/i18n/client";
 import { useUser } from "./UserProvider";
 
-type PaymentMode = "tokens" | "cash";
+type PaymentMode = "subscription" | "tokens" | "cash";
 
 type Props = {
   product: Product;
@@ -35,12 +37,16 @@ export default function RentalBookingPanel({
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
     fixedLocationId ?? null,
   );
-  const [paymentMode, setPaymentMode] = useState<PaymentMode>("tokens");
+  const [paymentMode, setPaymentMode] = useState<PaymentMode>("cash");
   const [tokenBalance, setTokenBalance] = useState<number | null>(null);
+  const [subscriptionStatus, setSubscriptionStatus] =
+    useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const tokenCost = product.pricePerRental;
+  const hasSubscriptionCredit =
+    subscriptionStatus?.isActive && (subscriptionStatus.remaining ?? 0) > 0;
   const hasEnoughTokens =
     tokenBalance !== null && tokenBalance >= tokenCost && tokenCost > 0;
 
@@ -72,11 +78,25 @@ export default function RentalBookingPanel({
 
     let cancelled = false;
 
-    getRentalTokenBalanceAction().then((result) => {
-      if (cancelled || !result.ok) return;
-      const balance = result.data.balance;
-      setTokenBalance(balance);
-      if (balance >= tokenCost && tokenCost > 0) {
+    Promise.all([
+      getRentalTokenBalanceAction(),
+      getSubscriptionStatusAction(),
+    ]).then(([tokenResult, subscriptionResult]) => {
+      if (cancelled) return;
+
+      if (tokenResult.ok) {
+        setTokenBalance(tokenResult.data.balance);
+      }
+
+      if (subscriptionResult.ok) {
+        setSubscriptionStatus(subscriptionResult.data);
+        if (subscriptionResult.data.isActive && subscriptionResult.data.remaining > 0) {
+          setPaymentMode("subscription");
+          return;
+        }
+      }
+
+      if (tokenResult.ok && tokenResult.data.balance >= tokenCost && tokenCost > 0) {
         setPaymentMode("tokens");
       } else {
         setPaymentMode("cash");
@@ -89,10 +109,13 @@ export default function RentalBookingPanel({
   }, [isAuthenticated, tokenCost]);
 
   useEffect(() => {
+    if (paymentMode === "subscription" && !hasSubscriptionCredit) {
+      setPaymentMode(hasEnoughTokens ? "tokens" : "cash");
+    }
     if (paymentMode === "tokens" && !hasEnoughTokens) {
       setPaymentMode("cash");
     }
-  }, [paymentMode, hasEnoughTokens]);
+  }, [paymentMode, hasEnoughTokens, hasSubscriptionCredit]);
 
   useEffect(() => {
     if (fixedLocationId) return;
@@ -119,7 +142,9 @@ export default function RentalBookingPanel({
   const detailsReady = Boolean(selectedSize && selectedLocationId);
   const canProceed =
     detailsReady &&
-    (paymentMode === "cash" || (paymentMode === "tokens" && hasEnoughTokens));
+    (paymentMode === "cash" ||
+      (paymentMode === "tokens" && hasEnoughTokens) ||
+      (paymentMode === "subscription" && hasSubscriptionCredit));
 
   async function handleProceed() {
     if (!selectedSize || !selectedLocationId || !canProceed) return;
@@ -142,7 +167,7 @@ export default function RentalBookingPanel({
       productId: product.id,
       locationId: selectedLocationId,
       size: selectedSize,
-      paymentMethod: "tokens",
+      paymentMethod: paymentMode === "subscription" ? "subscription" : "tokens",
     });
 
     setLoading(false);
@@ -209,12 +234,22 @@ export default function RentalBookingPanel({
           <p className="text-sm font-semibold text-zinc-900">{t("rental.title")}</p>
           <p className="mt-1 text-xs text-zinc-500">{t("rental.subtitle")}</p>
         </div>
-        {tokenBalance !== null && (
-          <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 ring-1 ring-amber-100">
-            <Coins className="h-3.5 w-3.5" aria-hidden />
-            {tokenBalance}
-          </div>
-        )}
+        <div className="flex shrink-0 flex-col items-end gap-1.5">
+          {hasSubscriptionCredit && subscriptionStatus?.plan && (
+            <div className="flex items-center gap-1.5 rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-800 ring-1 ring-violet-100">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden />
+              {t("subscription.remaining", {
+                remaining: subscriptionStatus.remaining,
+              })}
+            </div>
+          )}
+          {tokenBalance !== null && (
+            <div className="flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 ring-1 ring-amber-100">
+              <Coins className="h-3.5 w-3.5" aria-hidden />
+              {tokenBalance}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="mt-4">
@@ -288,7 +323,30 @@ export default function RentalBookingPanel({
         <p className="mb-2 text-xs font-medium text-zinc-600">
           {t("rental.selectPayment")}
         </p>
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid gap-2 sm:grid-cols-3">
+          <button
+            type="button"
+            onClick={() => setPaymentMode("subscription")}
+            disabled={!hasSubscriptionCredit}
+            className={`rounded-xl border px-3.5 py-3 text-left text-sm transition-colors ${
+              paymentMode === "subscription"
+                ? "border-violet-500 bg-violet-50 text-violet-900 ring-1 ring-violet-500/20"
+                : hasSubscriptionCredit
+                  ? "border-zinc-200 bg-zinc-50/50 text-zinc-700 hover:border-zinc-300 hover:bg-white"
+                  : "cursor-not-allowed border-zinc-100 bg-zinc-50 text-zinc-400"
+            }`}
+          >
+            <p className="flex items-center gap-2 font-semibold">
+              <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
+              {t("rental.payWithSubscription")}
+            </p>
+            <p className="mt-1 text-xs opacity-80">
+              {hasSubscriptionCredit && subscriptionStatus
+                ? t("subscription.planCredit")
+                : t("subscription.subscribeCta")}
+            </p>
+          </button>
+
           <button
             type="button"
             onClick={() => setPaymentMode("tokens")}
@@ -327,6 +385,20 @@ export default function RentalBookingPanel({
           </button>
         </div>
 
+        {!hasSubscriptionCredit && (
+          <div className="mt-3 rounded-xl border border-violet-200 bg-violet-50/60 px-3.5 py-3">
+            <p className="text-xs font-medium text-violet-900">
+              {t("subscription.noPlan")}
+            </p>
+            <Link
+              href="/member/subscribe"
+              className="mt-2 inline-flex text-xs font-semibold text-violet-700 hover:text-violet-800"
+            >
+              {t("subscription.subscribeCta")} →
+            </Link>
+          </div>
+        )}
+
         {paymentMode === "tokens" && !hasEnoughTokens && tokenBalance !== null && (
           <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/80 px-3.5 py-3">
             <p className="text-xs font-medium text-amber-900">
@@ -363,9 +435,11 @@ export default function RentalBookingPanel({
       {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
 
       <p className="mt-2 text-center text-[11px] leading-relaxed text-zinc-400">
-        {paymentMode === "tokens"
-          ? t("rental.paidWithTokens", { count: tokenCost })
-          : t("rental.payment.cashHint")}
+        {paymentMode === "subscription"
+          ? t("subscription.paidWithPlan")
+          : paymentMode === "tokens"
+            ? t("rental.paidWithTokens", { count: tokenCost })
+            : t("rental.payment.cashHint")}
       </p>
     </div>
   );

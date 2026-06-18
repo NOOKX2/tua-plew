@@ -9,6 +9,11 @@ import {
   refundRentalTokensForReservation,
   resolveRentalTokenPayment,
 } from "./rental-tokens";
+import {
+  canUseSubscriptionCredit,
+  consumeSubscriptionCredit,
+  refundSubscriptionCredit,
+} from "./subscription";
 import { connectDB } from "./mongoose";
 import {
   LocationStock,
@@ -102,6 +107,11 @@ async function incrementStock(
 }
 
 async function refundTokensIfNeeded(row: RentalRow): Promise<void> {
+  if (row.paymentMethod === "subscription") {
+    await refundSubscriptionCredit(row.userId);
+    return;
+  }
+
   if (!row.tokensSpent || row.tokensSpent <= 0) return;
 
   await refundRentalTokensForReservation({
@@ -163,6 +173,11 @@ export async function createRentalReservation(input: {
   if (!location) throw new Error("LOCATION_NOT_FOUND");
   if (!product.sizes.includes(input.size)) throw new Error("INVALID_SIZE");
 
+  if (paymentMethod === "subscription") {
+    const canUse = await canUseSubscriptionCredit(input.userId);
+    if (!canUse) throw new Error("NO_SUBSCRIPTION_CREDIT");
+  }
+
   const balance = await getRentalTokenBalance(input.userId);
   const tokensSpent = resolveRentalTokenPayment({
     paymentMethod,
@@ -209,6 +224,18 @@ export async function createRentalReservation(input: {
               amount: tokensSpent,
               rentalId: doc._id.toString(),
             });
+          } catch (error) {
+            await RentalReservationModel.deleteOne({ _id: doc._id });
+            throw error;
+          }
+        }
+
+        if (paymentMethod === "subscription") {
+          try {
+            await consumeSubscriptionCredit(
+              input.userId,
+              doc._id.toString(),
+            );
           } catch (error) {
             await RentalReservationModel.deleteOne({ _id: doc._id });
             throw error;

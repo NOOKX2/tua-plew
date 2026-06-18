@@ -44,7 +44,7 @@ export function resolveRentalTokenPayment(input: {
 }): number {
   const { paymentMethod, pricePerRental, tokensToUse, balance } = input;
 
-  if (paymentMethod === "cash") return 0;
+  if (paymentMethod === "cash" || paymentMethod === "subscription") return 0;
 
   if (paymentMethod === "tokens") {
     if (balance < pricePerRental) throw new Error("INSUFFICIENT_TOKENS");

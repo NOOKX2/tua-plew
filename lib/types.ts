@@ -56,7 +56,7 @@ export type RentalStatus =
   | "cancelled"
   | "expired";
 
-export type RentalPaymentMethod = "cash" | "tokens" | "mixed";
+export type RentalPaymentMethod = "cash" | "tokens" | "mixed" | "subscription";
 
 export type RentalTokenTransactionType =
   | "welcome"

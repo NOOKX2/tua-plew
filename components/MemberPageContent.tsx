@@ -10,7 +10,9 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import MemberTokenSection from "./MemberTokenSection";
+import MemberSubscriptionSection from "./MemberSubscriptionSection";
 import { getTranslator } from "@/lib/i18n/server";
+import type { SubscriptionStatus } from "@/lib/subscription";
 
 type User = {
   id: string;
@@ -24,6 +26,7 @@ type Props = {
   activeRentals: number;
   showAdmin?: boolean;
   tokenBalance?: number;
+  subscriptionStatus?: SubscriptionStatus;
 };
 
 type MenuItem = {
@@ -61,6 +64,7 @@ export default async function MemberPageContent({
   activeRentals,
   showAdmin = false,
   tokenBalance = 0,
+  subscriptionStatus,
 }: Props) {
   const t = await getTranslator();
 
@@ -193,6 +197,10 @@ export default async function MemberPageContent({
           )}
         </div>
       </div>
+
+      {subscriptionStatus ? (
+        <MemberSubscriptionSection status={subscriptionStatus} />
+      ) : null}
 
       <MemberTokenSection balance={tokenBalance} />
 

@@ -15,7 +15,8 @@ export default function RentalViewTabs() {
 
   return (
     <div className="flex w-full items-center gap-1 border-b border-zinc-200 bg-white px-3 py-2 sm:px-4">
-      <div className="mx-auto flex w-full max-w-7xl gap-1.5">
+      <div className="mx-auto flex w-full max-w-7xl items-center gap-1.5">
+        <div className="flex flex-1 gap-1.5">
         {tabs.map((tab) => {
           const active =
             tab.href === "/map"
@@ -36,6 +37,14 @@ export default function RentalViewTabs() {
             </Link>
           );
         })}
+        </div>
+        <Link
+          href="/member/subscribe"
+          className="hidden shrink-0 items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-800 transition-colors hover:border-violet-300 hover:bg-violet-100 sm:inline-flex"
+        >
+          <span aria-hidden>✨</span>
+          {t("subscription.title")}
+        </Link>
       </div>
     </div>
   );

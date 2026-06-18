@@ -29,6 +29,10 @@ function mapRentalError(
       return t("rental.errors.insufficientTokens");
     case "INVALID_TOKEN_AMOUNT":
       return t("rental.errors.invalidTokenAmount");
+    case "NO_SUBSCRIPTION_CREDIT":
+      return t("rental.errors.noSubscriptionCredit");
+    case "SUBSCRIPTION_EXPIRED":
+      return t("rental.errors.subscriptionExpired");
     default:
       return t("rental.errors.reserveFailed");
   }

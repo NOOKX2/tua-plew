@@ -144,7 +144,7 @@ const rentalReservationSchema = new Schema(
     price: { type: Number, required: true },
     paymentMethod: {
       type: String,
-      enum: ["cash", "tokens", "mixed"],
+      enum: ["cash", "tokens", "mixed", "subscription"],
       default: "cash",
     },
     tokensSpent: { type: Number, default: 0 },
@@ -171,6 +171,12 @@ const userSchema = new Schema(
     passwordHash: { type: String },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     rentalTokenBalance: { type: Number, default: 0, min: 0 },
+    subscriptionPlan: {
+      type: String,
+      enum: ["basic", "standard", "premium"],
+    },
+    subscriptionPeriodStart: { type: Date, default: null },
+    subscriptionRentalsUsed: { type: Number, default: 0, min: 0 },
   },
   { timestamps: true },
 );

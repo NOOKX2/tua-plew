@@ -20,6 +20,9 @@ export const th = {
     chatDescription: "รวมแชทกับเพื่อนและแชทกลุ่มกิจกรรมทั้งหมดของคุณ",
     memberTitle: "สมาชิก | Tua Plew",
     memberDescription: "จัดการบัญชี การจองเช่า และบริการของคุณ",
+    subscribeTitle: "แพ็กเกจรายเดือน | Tua Plew",
+    subscribeDescription:
+      "สมัครแพ็กเกจเช่าชุดรายเดือน — ใช้สิทธิ์เช่าได้หลายครั้งในราคาคุ้มค่า",
   },
   notFound: {
     productTitle: "ไม่พบสินค้า",
@@ -53,6 +56,61 @@ export const th = {
     adminPanel: "หลังบ้าน",
     tokenBalance: "โทเค็นเช่าชุด",
     tokenUnit: "โทเค็น",
+  },
+  subscription: {
+    title: "แพ็กเกจรายเดือน",
+    subtitle: "เช่าชุดได้หลายครั้งในราคาคุ้มกว่าเช่ารายครั้ง",
+    perMonth: "/เดือน",
+    rentalsPerMonth: "{count} ครั้ง/เดือน",
+    pricePerRental: "≈ ฿{price}/ครั้ง",
+    remaining: "เหลือ {remaining} ครั้ง",
+    used: "ใช้ไป {used}/{limit} ครั้ง",
+    renewsOn: "รอบบิลถัดไป {date}",
+    subscribeCta: "ดูแพ็กเกจ",
+    changePlan: "เปลี่ยนแพ็กเกจ",
+    payWithPlan: "ใช้สิทธิ์แพ็กเกจ",
+    planCredit: "ใช้ 1 ครั้งจากแพ็กเกจ",
+    noPlan: "ยังไม่มีแพ็กเกจ — สมัครเพื่อเช่าในราคาคุ้มกว่า",
+    paidWithPlan: "ใช้สิทธิ์แพ็กเกจแล้ว",
+    plans: {
+      basic: {
+        name: "Basic",
+        segment: "เริ่มต้น",
+      },
+      standard: {
+        name: "Standard",
+        segment: "ยอดนิยม",
+      },
+      premium: {
+        name: "Premium",
+        segment: "คุ้มสุด",
+      },
+    },
+    picker: {
+      title: "เลือกแพ็กเกจรายเดือน",
+      subtitle: "ชำระรายเดือน แล้วใช้สิทธิ์เช่าชุดได้ทันทีเมื่อจอง",
+      select: "เลือกแพ็กเกจนี้",
+      note: "สิทธิ์เช่าจะรีเซ็ตทุก 30 วันนับจากวันที่ชำระ",
+    },
+    payment: {
+      metaTitle: "สมัครแพ็กเกจ {plan} | Tua Plew",
+      title: "ชำระค่าแพ็กเกจ",
+      subtitle: "ยืนยันการสมัครแพ็กเกจรายเดือน",
+      back: "กลับหน้าสมาชิก",
+      orderLabel: "แพ็กเกจ {plan}",
+      payButton: "ชำระ ฿{amount}",
+      demoNote: "ระบบชำระเงินตัวอย่าง — ยังไม่มีการตัดเงินจริง",
+      loading: "กำลังยืนยัน...",
+    },
+    success: {
+      title: "สมัครแพ็กเกจสำเร็จ",
+      body: "คุณมีสิทธิ์เช่า {limit} ครั้งในรอบนี้แล้ว",
+    },
+    errors: {
+      loginRequired: "กรุณาเข้าสู่ระบบก่อน",
+      invalidPlan: "แพ็กเกจไม่ถูกต้อง",
+      activateFailed: "สมัครแพ็กเกจไม่สำเร็จ กรุณาลองใหม่",
+    },
   },
   chat: {
     inbox: {
@@ -572,6 +630,7 @@ export const th = {
     selectPayment: "การชำระเงิน",
     payWithTokens: "ชำระด้วยโทเค็น",
     payWithNormal: "ชำระเงินปกติ",
+    payWithSubscription: "ใช้แพ็กเกจรายเดือน",
     continueToPayment: "ไปชำระเงิน",
     payment: {
       metaTitle: "ชำระค่าเช่า | Tua Plew",
@@ -589,6 +648,7 @@ export const th = {
     tokenCost: "ใช้ {count} โทเค็น",
     tokenRate: "1 โทเค็น = ฿1",
     paidWithTokens: "ชำระด้วย {count} โทเค็นแล้ว",
+    paidWithSubscription: "ใช้สิทธิ์แพ็กเกจรายเดือนแล้ว",
     mixedPaymentSummary: "{tokens} โทเค็น + ฿{cash} ที่จุดรับ",
     tokensToUse: "จำนวนโทเค็นที่ใช้",
     cashDueAtPickup: "ชำระที่จุดรับ",
@@ -687,6 +747,8 @@ export const th = {
       invalidSize: "ไซส์ไม่ถูกต้อง",
       insufficientTokens: "โทเค็นไม่พอ — เลือกชำระที่จุดรับหรือสะสมเพิ่ม",
       invalidTokenAmount: "จำนวนโทเค็นไม่ถูกต้องสำหรับการเช่านี้",
+      noSubscriptionCredit: "ไม่มีสิทธิ์แพ็กเกจเหลือ — สมัครหรือเปลี่ยนวิธีชำระ",
+      subscriptionExpired: "แพ็กเกจหมดอายุแล้ว — ต่ออายุเพื่อใช้สิทธิ์ต่อ",
       reserveFailed: "จองไม่สำเร็จ กรุณาลองใหม่",
       notFound: "ไม่พบการจอง",
       notCancellable: "ไม่สามารถยกเลิกการจองนี้ได้",
